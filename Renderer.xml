@@ -65,7 +65,7 @@
         <Property type="Bool" name="m_debugUI" value="false"/>
         <Property type="Bool" name="m_enableUI2D" value="true"/>
         <Property type="Bool" name="m_enableUI3D" value="true"/>
-        <Property type="Uint2" name="m_gridSize" x="51" y="51"/>
+        <Property type="Uint2" name="m_gridSize" x="63" y="63"/>
         <Property type="Float" name="m_gridScale" value="2"/>
         <Property type="Float4" name="m_gridColor" x="0.015686275" y="0.015686275" z="0.015686275" w="0.50196081"/>
         <Property type="Uint32" name="m_gridSubdivCount" value="3"/>

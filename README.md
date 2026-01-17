@@ -244,22 +244,7 @@ Most assets are using permissive licenses, while some are restricted to use only
 
 # Assets
 
-## Assets with usage restrictions
-
-The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
-
-Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
-
-| Asset folders<img width=50/>						   | Author<img width=180/>                            
-| ---------------------------------------------------- | --------------------------------- 
-| `data/Meshes/GJ`<br>`data/Textures/GJ`               | [JOYxt](https://github.com/Joyxt)  
-| `data/Meshes/VGF_Bo`<br>`data/Textures/VGF_Boy`      | [JOYxt](https://github.com/Joyxt) 
-| `data/Meshes/GrosCovid`<br>`data/Textures/GrosCovid` | [JOYxt](https://github.com/Joyxt)  
-
-## Other assets
-
 The following assets are provided under permissive licenses. Please follow the provided links for details about those licenses:
-
 
 ### Animations
 
@@ -293,9 +278,8 @@ The following models have been modified for engine-compatible materials and/or g
 | [Generic Passenger Car Pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | Comrade1280                                           | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
 | [Road Barrier](                https://sketchfab.com/3d-models/road-barrier-509578ba0a4143ef8af3826ab2217044                                                ) | [Faheem Yusuf](https://sketchfab.com/FameProductions) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
 | [Road Block_B](                https://sketchfab.com/3d-models/road-block-b-3fb46f4de80244849abdf992047dafad                                                ) | [Den](https://sketchfab.com/dfomenco)                 | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [GJ](                          https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GJ/J_G_Combine.fbx                                        ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
-| [VGF_Boy](                     https://github.com/vimontgames/vgframework/blob/master/data/Meshes/VGF_Boy/VGF_Boy.fbx                                       ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
-| [GrosCovid](                   https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GrosCovid/GrosCovid.fbx                                   ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+| [BBQ Grills](                  https://sketchfab.com/3d-models/bbq-grills-99f8e23e8d38459eb75a82d5092251af                                                  ) | [Caboose3d](https://sketchfab.com/caboose3d)          | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+
 
 ### Textures
 
@@ -320,6 +304,18 @@ The following models have been modified for engine-compatible materials and/or g
 | [Broken mirror](        https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)             | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
 | [Rally Car Idle Loop](  https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)         | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
   
+## Assets with usage restrictions
+
+The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
+
+Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
+
+| Name<img width=140/>                                                                                                                                          | Author<img width=200/>                                | License 
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------  
+| [GJ](                          https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GJ/J_G_Combine.fbx                                        ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+| [VGF_Boy](                     https://github.com/vimontgames/vgframework/blob/master/data/Meshes/VGF_Boy/VGF_Boy.fbx                                       ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+| [GrosCovid](                   https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GrosCovid/GrosCovid.fbx                                   ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+
 
 # Misc
 
@@ -329,3 +325,4 @@ These tools are not mandatory but can be useful for development.
 | ---------------------------------------------------- | ------------------------- 
 | [Radeon Developer Panel]( https://gpuopen.com/rdp/ ) | GPU debugging & profiling 
 | [RenderDoc](              https://renderdoc.org/   ) | GPU debugging 
+

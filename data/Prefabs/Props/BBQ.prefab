@@ -1,0 +1,670 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="BBQ"/>
+        <Property type="Uint32" name="m_uid" value="204891233"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="77656677"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children">
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="BBQ"/>
+                        <Property type="Uint32" name="m_uid" value="525044519"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Mesh"/>
+                                <Property type="Uint32" name="m_uid" value="2537773935"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.12914848" Ty="-0.022121429" Tz="0.77403259" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="PhysicsBodyComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3860670066"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="Bool" name="m_useCollisionMask" value="false"/>
+                                        <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
+                                        <Property type="ObjectPtr" name="m_bodyDesc">
+                                            <Object class="PhysicsBodyDesc">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #1207"/>
+                                                <Property type="Uint32" name="m_uid" value="2581321324"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_trigger" value="false"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
+                                                <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                                <Property type="Bool" name="m_staticMerge" value="true"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                                <Property type="Bool" name="m_overrideMass" value="true"/>
+                                                <Property type="Float" name="m_mass" value="30"/>
+                                                <Property type="Bool" name="m_overrideCenterOfMassOffset" value="false"/>
+                                                <Property type="Float3" name="m_centerOfMassOffset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_friction" value="0.5"/>
+                                                <Property type="Float" name="m_restitution" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3482336797"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="BoxShapeDesc">
+                                                <Property type="String" name="m_name" value="BoxShapeDesc #1446"/>
+                                                <Property type="Uint32" name="m_uid" value="403091372"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="0.125" y="0" z="-0.2"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_size" x="0.87932914" y="0.81954479" z="1.1873498"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3307409256"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="4226725695"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Props/BBQ/BBQ.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3720166242"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Wood"/>
+                                                        <Property type="Uint32" name="m_uid" value="772265285"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_Wood.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Plastic"/>
+                                                        <Property type="Uint32" name="m_uid" value="899605405"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_Plastic.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Chrome"/>
+                                                        <Property type="Uint32" name="m_uid" value="88477613"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_Chrome.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="GrillMetal"/>
+                                                        <Property type="Uint32" name="m_uid" value="752909373"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_GridMetal.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="BlackMetal"/>
+                                                        <Property type="Uint32" name="m_uid" value="581754570"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_BlackMetal.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="5" Value="0x000000000000001F"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children">
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Light"/>
+                                        <Property type="Uint32" name="m_uid" value="4288498153"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="1.8180394" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="String" name="m_name" value="New LightComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2268726336"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value=""/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" value="OmniLightDesc #2"/>
+                                                        <Property type="Uint32" name="m_uid" value="3007193851"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" value="0.0099999998"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="EnumI8" name="m_shadowResolution" value="Medium"/>
+                                                        <Property type="Float" name="m_shadowIntensity" value="1"/>
+                                                        <Property type="EnumU8" name="m_shadowCameraMode" value="Fixed"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="0.90290785" z="0.50627613" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="3.9000003"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" value="true"/>
+                                                        <Property type="Float" name="m_maxRadius" value="2.79193"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Particles"/>
+                                        <Property type="Uint32" name="m_uid" value="802902371"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.13437955" Ty="0.040684059" Tz="0.20981973" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="ParticleComponent">
+                                                <Property type="String" name="m_name" value="New ParticleComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2156259464"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="Bool" name="m_playOnStart" value="true"/>
+                                                <Property type="Bool" name="m_worldSpace" value="false"/>
+                                                <Property type="Object" name="m_particleEmitters">
+                                                    <Object class="ParticleEmitterList">
+                                                        <Property type="String" name="m_name" value="New ParticleComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="3084151811"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="ObjectVector" name="m_objects">
+                                                            <Object class="ParticleEmitterDesc">
+                                                                <Property type="String" name="m_name" value="Smoke"/>
+                                                                <Property type="Uint32" name="m_uid" value="1096968964"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Float" name="m_params.m_spawnRate" value="2"/>
+                                                                <Property type="Float" name="m_params.m_lifeTime" value="3"/>
+                                                                <Property type="Bool" name="m_params.m_neverDie" value="false"/>
+                                                                <Property type="Uint16" name="m_params.m_maxParticleCount" value="10"/>
+                                                                <Property type="EnumU8" name="m_params.m_sizeValueType" value="Curve"/>
+                                                                <Property type="Float3" name="m_params.m_constantSize" x="1" y="1" z="1"/>
+                                                                <Property type="Object" name="m_params.m_sizeOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="2429940629"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Smooth"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="3"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="4"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="2698729495"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="3">
+                                                                                    <Point t="0" value="0.49572656"/>
+                                                                                    <Point t="1.423077" value="2.119658"/>
+                                                                                    <Point t="3" value="4"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="817856854"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="3">
+                                                                                    <Point t="0" value="0.56410265"/>
+                                                                                    <Point t="1.4358976" value="2.08547"/>
+                                                                                    <Point t="3" value="4"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="3765873245"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="3" value="0"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="false"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="EnumU8" name="m_params.m_velocityValueType" value="Constant"/>
+                                                                <Property type="Float3" name="m_params.m_constantVelocity" x="0" y="0" z="0.60000002"/>
+                                                                <Property type="Object" name="m_params.m_velocityOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="2556644486"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="710295668"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="3777641358"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="3884823356"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="EnumU8" name="m_params.m_colorValueType" value="Constant"/>
+                                                                <Property type="Float3" name="m_params.m_constantColor" x="1" y="1" z="1"/>
+                                                                <Property type="Object" name="m_params.m_colorOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="554663350"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="2066891361"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1732808281"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1288871349"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="Bool" name="m_params.m_cullZeroAlpha" value="true"/>
+                                                                <Property type="EnumU8" name="m_params.m_opacityValueType" value="Curve"/>
+                                                                <Property type="Float" name="m_params.m_constantOpacity" value="1"/>
+                                                                <Property type="Object" name="m_params.m_opacityOverLifeTime">
+                                                                    <Object class="Float1Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="2655521551"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Smooth"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="3"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="4130898841"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="4">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="0.25213677" value="1"/>
+                                                                                    <Point t="0.55128211" value="0.559829"/>
+                                                                                    <Point t="3" value="0"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="Float" name="m_params.m_framerate" value="10"/>
+                                                                <Property type="Bool" name="m_params.m_randomStartFrame" value="false"/>
+                                                                <Property type="Resource" name="m_materialResource">
+                                                                    <Object class="MaterialResource">
+                                                                        <Property type="String" name="m_name" value="Smoke"/>
+                                                                        <Property type="Uint32" name="m_uid" value="3828895010"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Particle/SmokeParticle.mat"/>
+                                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                            <Object class="ParticleEmitterDesc">
+                                                                <Property type="String" name="m_name" value="Fire"/>
+                                                                <Property type="Uint32" name="m_uid" value="3912404846"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Float" name="m_params.m_spawnRate" value="60"/>
+                                                                <Property type="Float" name="m_params.m_lifeTime" value="3"/>
+                                                                <Property type="Bool" name="m_params.m_neverDie" value="true"/>
+                                                                <Property type="Uint16" name="m_params.m_maxParticleCount" value="1"/>
+                                                                <Property type="EnumU8" name="m_params.m_sizeValueType" value="Constant"/>
+                                                                <Property type="Float3" name="m_params.m_constantSize" x="0.25" y="0.25" z="0"/>
+                                                                <Property type="Object" name="m_params.m_sizeOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3852213357"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1966850955"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="929006849"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="3002785303"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="EnumU8" name="m_params.m_velocityValueType" value="Constant"/>
+                                                                <Property type="Float3" name="m_params.m_constantVelocity" x="0" y="0" z="0"/>
+                                                                <Property type="Object" name="m_params.m_velocityOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="769482485"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="2385139294"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1764054158"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="2380552111"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="EnumU8" name="m_params.m_colorValueType" value="Constant"/>
+                                                                <Property type="Float3" name="m_params.m_constantColor" x="1" y="1" z="1"/>
+                                                                <Property type="Object" name="m_params.m_colorOverLifeTime">
+                                                                    <Object class="Float3Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="1555196665"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float3"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1959632572"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="2156101924"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="3648768136"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="1" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="Bool" name="m_params.m_cullZeroAlpha" value="true"/>
+                                                                <Property type="EnumU8" name="m_params.m_opacityValueType" value="Constant"/>
+                                                                <Property type="Float" name="m_params.m_constantOpacity" value="1"/>
+                                                                <Property type="Object" name="m_params.m_opacityOverLifeTime">
+                                                                    <Object class="Float1Curve">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="2172257184"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="EnumU8" name="m_type" value="Float"/>
+                                                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                                                        <Property type="Float2" name="m_rangeX" x="0" y="1"/>
+                                                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                        <Property type="ObjectVector" name="m_data">
+                                                                            <Object class="FloatCurveDataContainer">
+                                                                                <Property type="String" name="m_name" value=""/>
+                                                                                <Property type="Uint32" name="m_uid" value="1787021196"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="FloatCurveData" name="m_curve" count="2">
+                                                                                    <Point t="0" value="0"/>
+                                                                                    <Point t="3" value="1"/>
+                                                                                </Property>
+                                                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                            </Object>
+                                                                        </Property>
+                                                                    </Object>
+                                                                </Property>
+                                                                <Property type="Float" name="m_params.m_framerate" value="64"/>
+                                                                <Property type="Bool" name="m_params.m_randomStartFrame" value="false"/>
+                                                                <Property type="Resource" name="m_materialResource">
+                                                                    <Object class="MaterialResource">
+                                                                        <Property type="String" name="m_name" value="ParticleTest"/>
+                                                                        <Property type="Uint32" name="m_uid" value="2339230819"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Particle/BBQSmoke.mat"/>
+                                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Grid"/>
+                                <Property type="Uint32" name="m_uid" value="4072505768"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="1.1779923" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="PhysicsBodyComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="654073511"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="Bool" name="m_useCollisionMask" value="false"/>
+                                        <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
+                                        <Property type="ObjectPtr" name="m_bodyDesc">
+                                            <Object class="PhysicsBodyDesc">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #1208"/>
+                                                <Property type="Uint32" name="m_uid" value="2892627092"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_trigger" value="false"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
+                                                <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                                <Property type="Bool" name="m_staticMerge" value="true"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                                <Property type="Bool" name="m_overrideMass" value="true"/>
+                                                <Property type="Float" name="m_mass" value="10"/>
+                                                <Property type="Bool" name="m_overrideCenterOfMassOffset" value="false"/>
+                                                <Property type="Float3" name="m_centerOfMassOffset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_friction" value="0.5"/>
+                                                <Property type="Float" name="m_restitution" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="211722651"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="BoxShapeDesc">
+                                                <Property type="String" name="m_name" value="BoxShapeDesc #1447"/>
+                                                <Property type="Uint32" name="m_uid" value="766318540"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="-0.00044098496" y="-0.002986908" z="-0.00074954983"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_size" x="0.64239109" y="0.64135015" z="0.011896172"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2101111909"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2071723103"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Props/BBQ/BBQGrid.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="469799112"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Grid Metal"/>
+                                                        <Property type="Uint32" name="m_uid" value="424617017"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_GridMetal.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                        </Property>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>
