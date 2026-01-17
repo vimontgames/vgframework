@@ -1191,7 +1191,7 @@
                                                 <Property type="Bool" name="m_shadow" value="true"/>
                                                 <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                 <Property type="Float" name="m_shadowBias" value="0.075000003"/>
-                                                <Property type="Uint2" name="m_shadowSize" x="64" y="64"/>
+                                                <Property type="Uint2" name="m_shadowSize" x="70" y="70"/>
                                                 <Property type="EnumI8" name="m_shadowResolution" value="High"/>
                                                 <Property type="Float" name="m_shadowIntensity" value="1"/>
                                                 <Property type="EnumU8" name="m_shadowCameraMode" value="FollowCameraTranslation"/>
@@ -18301,45 +18301,57 @@
                                     </Object>
                                 </Property>
                             </Object>
-                            <Object class="PrefabGameObject">
-                                <Property type="String" name="m_name" value="RoadBlock_B"/>
-                                <Property type="Uint32" name="m_uid" value="1802961617"/>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="RoadBlocks"/>
+                                <Property type="Uint32" name="m_uid" value="1663332439"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="2.4040276e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="2.4040276e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="5.5000019" Ty="27" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                                <Property type="Resource" name="m_prefabResource">
-                                    <Object class="PrefabResource">
-                                        <Property type="String" name="m_name" value=""/>
-                                        <Property type="Uint32" name="m_uid" value="851894904"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/RoadBlock_B.prefab"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                            </Object>
-                            <Object class="PrefabGameObject">
-                                <Property type="String" name="m_name" value="RoadBlock_B_01"/>
-                                <Property type="Uint32" name="m_uid" value="4021305574"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3.9999981" Ty="24" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components"/>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                                <Property type="Resource" name="m_prefabResource">
-                                    <Object class="PrefabResource">
+                                <Property type="ObjectPtrVector" name="m_children">
+                                    <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="RoadBlock_B_01"/>
-                                        <Property type="Uint32" name="m_uid" value="3166853289"/>
+                                        <Property type="Uint32" name="m_uid" value="4021305574"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/RoadBlock_B.prefab"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3.9999981" Ty="24" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="RoadBlock_B_01"/>
+                                                <Property type="Uint32" name="m_uid" value="3166853289"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/RoadBlock_B.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="RoadBlock_B"/>
+                                        <Property type="Uint32" name="m_uid" value="1802961617"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="2.4040276e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="2.4040276e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="5.5000019" Ty="27" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="851894904"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/RoadBlock_B.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                             </Object>
                         </Property>
                     </Object>

@@ -2,13 +2,11 @@
     <Object class="PrefabScene">
         <Property type="String" name="m_name" value="PlayerCamera"/>
         <Property type="Uint32" name="m_uid" value="1664855196"/>
-        <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="3158081566"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
@@ -19,7 +17,6 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="PlayerCamera"/>
                         <Property type="Uint32" name="m_uid" value="1065651505"/>
-                        <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
@@ -29,7 +26,6 @@
                             <Object class="GameCameraBehaviour">
                                 <Property type="String" name="m_name" value="GameCameraBehaviour #0"/>
                                 <Property type="Uint32" name="m_uid" value="884797414"/>
-                                <Property type="Uint32" name="m_originalUID" value="1740531556"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="ObjectHandle" name="m_target" value="0"/>
@@ -39,7 +35,6 @@
                                     <Object class="Float1Curve">
                                         <Property type="String" name="m_name" value=""/>
                                         <Property type="Uint32" name="m_uid" value="1221646015"/>
-                                        <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumU8" name="m_type" value="Float"/>
                                         <Property type="EnumU8" name="m_interpolation" value="Linear"/>
@@ -49,7 +44,6 @@
                                             <Object class="FloatCurveDataContainer">
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="1522538492"/>
-                                                <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="FloatCurveData" name="m_curve" count="3">
                                                     <Point t="0" value="0.5"/>
@@ -66,7 +60,6 @@
                             <Object class="CameraComponent">
                                 <Property type="String" name="m_name" value="CameraComponent #0"/>
                                 <Property type="Uint32" name="m_uid" value="1553686324"/>
-                                <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Game"/>
@@ -78,7 +71,6 @@
                                     <Object class="CameraSettings">
                                         <Property type="String" name="m_name" value="CameraSettings #2"/>
                                         <Property type="Uint32" name="m_uid" value="2257072415"/>
-                                        <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Float" name="m_near" value="1"/>
                                         <Property type="Float" name="m_far" value="500"/>
@@ -86,7 +78,6 @@
                                             <Object class="LensResource">
                                                 <Property type="String" name="m_name" value="LensResource #4"/>
                                                 <Property type="Uint32" name="m_uid" value="3582750266"/>
-                                                <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Lens/CanonRF24-70mmf2.8.lens"/>
                                                 <Property type="ObjectPtr" name="m_cameraLens"/>
@@ -98,6 +89,8 @@
                                         <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
                                         <Property type="Bool" name="m_depthOfField" value="true"/>
                                         <Property type="Bool" name="m_motionBlur" value="false"/>
+                                        <Property type="Bool" name="m_fade" value="false"/>
+                                        <Property type="Float4" name="m_fadeColor" x="0" y="0" z="0" w="1"/>
                                     </Object>
                                 </Property>
                             </Object>
