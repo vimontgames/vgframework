@@ -125,7 +125,9 @@ namespace vg::engine
             }
 
             UpdateFlagsFromGameObject();
-            //registerGraphicInstance();
+
+            if (GetGameObject()->IsEnabledInHierarchy())
+                registerGraphicInstance();
 
             return true;
         }
