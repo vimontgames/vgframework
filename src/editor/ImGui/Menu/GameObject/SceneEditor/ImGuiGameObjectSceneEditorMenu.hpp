@@ -151,7 +151,7 @@ namespace vg::editor
                     ImGui::SetTooltip("Add new GameObject as child of the selected GameObject");
 
                 // AddParentGameObject
-                ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
+                ImGui::BeginDisabled(isPrefabChild);
                 if (ImGui::MenuItem("Add Parent"))
                 {
                     m_selected = (uint)GameObjectSceneEditorMenuOption::AddParentGameObject;
