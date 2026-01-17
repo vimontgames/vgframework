@@ -125,7 +125,7 @@ namespace vg::engine
             }
 
             UpdateFlagsFromGameObject();
-            registerGraphicInstance();
+            //registerGraphicInstance();
 
             return true;
         }
