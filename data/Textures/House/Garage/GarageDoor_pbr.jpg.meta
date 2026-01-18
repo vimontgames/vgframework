@@ -1,9 +1,9 @@
 <Root>
     <Object class="TextureResourceMeta">
-        <Property type="String" name="m_name" value="GrosCovid_Albedo.tga.meta"/>
+        <Property type="String" name="m_name" value="GarageDoor_pbr.jpg.meta"/>
         <Property type="EnumU8" name="m_importSettings.m_importerType" value="Auto"/>
         <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Auto"/>
-        <Property type="Bool" name="m_importSettings.m_sRGB" value="true"/>
+        <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
         <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="TextureImporterMip_Auto"/>
         <Property type="EnumU8" name="m_importSettings.m_downscale" value="None"/>
     </Object>

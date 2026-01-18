@@ -244,6 +244,19 @@ Most assets are using permissive licenses, while some are restricted to use only
 
 # Assets
 
+## Assets with usage restrictions
+
+The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
+
+Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
+
+| Name<img width=140/>                                                                                                                                          | Author<img width=200/>                                | License 
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------  
+| [GJ](                          https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GJ/J_G_Combine.fbx                                        ) | [JOYxt](https://github.com/Joyxt)                     | [VGF CC BY-NC 4.0](ASSETS_LICENSE.md)
+| [VGF_Boy](                     https://github.com/vimontgames/vgframework/blob/master/data/Meshes/VGF_Boy/VGF_Boy.fbx                                       ) | [JOYxt](https://github.com/Joyxt)                     | [VGF CC BY-NC 4.0](ASSETS_LICENSE.md)
+| [GrosCovid](                   https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GrosCovid/GrosCovid.fbx                                   ) | [JOYxt](https://github.com/Joyxt)                     | [VGF CC BY-NC 4.0](ASSETS_LICENSE.md)
+
+
 The following assets are provided under permissive licenses. Please follow the provided links for details about those licenses:
 
 ### Animations
@@ -263,35 +276,34 @@ This project uses character animations generated via [Mixamo](https://www.mixamo
 
 The following models have been modified for engine-compatible materials and/or geometry adjustments.
 
-| Name<img width=140/>                                                                                                                                          | Author<img width=200/>                                | License 
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------  
-| [3D Football](                 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | prabath-weerapana                                     | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
-| [Baseball Bat](                https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | sepandjahrominejad                                    | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
-| [FootBall American](           https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | orsbone                                               | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
-| [Katana Samurai Sword](        https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | kizaru                                                | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
-| [Traffic Cone](                https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia                                               | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
-| [Modern Outdoor Bench](        https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat                   ) | VVei                                                  | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
-| [Traffic Light](               https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia                                         | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)  
-| [Luigi](                       https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | Anthony Yanez                                         | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
-| [Soccergoal](                  https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga                                          | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
-| [BBQ Grills](                  https://sketchfab.com/3d-models/bbq-grills-99f8e23e8d38459eb75a82d5092251af                                                  ) | [Caboose3d](https://sketchfab.com/caboose3d)          | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Clio Williams](               https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | [Mona x Supercars](https://sketchfab.com/Car2022)     | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Garage](                      https://sketchfab.com/3d-models/garage-9850e7215e5a4da2a1837d26e4b65d30#download                                             ) | [ValePro10](https://sketchfab.com/Valepro10)          | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Generic Passenger Car Pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | [Comrade1280](https://sketchfab.com/comrade1280)      | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Road Barrier](                https://sketchfab.com/3d-models/road-barrier-509578ba0a4143ef8af3826ab2217044                                                ) | [Faheem Yusuf](https://sketchfab.com/FameProductions) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Road Block_B](                https://sketchfab.com/3d-models/road-block-b-3fb46f4de80244849abdf992047dafad                                                ) | [Den](https://sketchfab.com/dfomenco)                 | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Woord door collection](       https://sketchfab.com/3d-models/wood-door-collection-948ae091149548d3a5e604ecec63735b                                        ) | [PremModel](https://sketchfab.com/PremModel)          | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
-| [Window](                      https://sketchfab.com/3d-models/window-13ca5449e53043ceb4523dfb656ba827                                                      ) | [Geug](https://sketchfab.com/Geug)                    | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| Name<img width=140/>                                                                                                                                          | Author<img width=200/>                                                       | License 
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------   | ----------------------  
+| [3D Football](                 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | [Prabath Weerapana](https://www.cgtrader.com/designers/prabath-weerapana)    | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Baseball Bat](                https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | [Sepand Jahrominejad](https://www.cgtrader.com/designers/sepandjahrominejad) | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [FootBall American](           https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | [orsbone](https://www.cgtrader.com/designers/orsbone)                        | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Katana Samurai Sword](        https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | [kizaru](https://www.cgtrader.com/designers/kizaru)                          | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Traffic Cone](                https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | [hinndia](https://www.cgtrader.com/designers/hinndia)                        | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
+| [Modern Outdoor Bench](        https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat                   ) | [VVei](https://www.cgtrader.com/designers/vvei)                              | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
+| [Traffic Light](               https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | [Misam Rizvi](https://www.cgtrader.com/designers/dastan-persia)              | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)  
+| [Luigi](                       https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | [Anthony Yanez](https://www.turbosquid.com/Search/Artists/Anthony-Yanez)     | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
+| [Soccergoal](                  https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | [NorbertVarga](https://www.turbosquid.com/Search/Artists/NorbertVarga)       | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
+| [BBQ Grills](                  https://sketchfab.com/3d-models/bbq-grills-99f8e23e8d38459eb75a82d5092251af                                                  ) | [Caboose3d](https://sketchfab.com/caboose3d)                                 | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Clio Williams](               https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | [Mona x Supercars](https://sketchfab.com/Car2022)                            | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Generic Passenger Car Pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | [Comrade1280](https://sketchfab.com/comrade1280)                             | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Road Barrier](                https://sketchfab.com/3d-models/road-barrier-509578ba0a4143ef8af3826ab2217044                                                ) | [Faheem Yusuf](https://sketchfab.com/FameProductions)                        | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Road Block_B](                https://sketchfab.com/3d-models/road-block-b-3fb46f4de80244849abdf992047dafad                                                ) | [Den](https://sketchfab.com/dfomenco)                                        | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Woord door collection](       https://sketchfab.com/3d-models/wood-door-collection-948ae091149548d3a5e604ecec63735b                                        ) | [PremModel](https://sketchfab.com/PremModel)                                 | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Window](                      https://sketchfab.com/3d-models/window-13ca5449e53043ceb4523dfb656ba827                                                      ) | [Geug](https://sketchfab.com/Geug)                                           | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
 
 
 
 ### Textures
 
-| Name<img width=140/>                                          | Author<img width=200/> 	              | License 											
-| ------------------------------------------------------------- | --------------------------------------- | ----------------------
-| [Asphalt005](     https://ambientcg.com/view?id=Asphalt005  ) | [ambientcg.com](https://ambientcg.com)  | [CC0 1.0](https://docs.ambientcg.com/license/)   
-| [Concrete020](    https://ambientcg.com/view?id=Concrete020 ) | [ambientcg.com](https://ambientcg.com)  | [CC0 1.0](https://docs.ambientcg.com/license/)   
-
+| Name<img width=140/>                                                     | Author<img width=200/> 	                                      | License 											
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------- | ----------------------
+| [Asphalt005](  https://ambientcg.com/view?id=Asphalt005                ) | [ambientcg.com](https://ambientcg.com)                           | [CC0 1.0](https://docs.ambientcg.com/license/)   
+| [Concrete020]( https://ambientcg.com/view?id=Concrete020               ) | [ambientcg.com](https://ambientcg.com)                           | [CC0 1.0](https://docs.ambientcg.com/license/)   
+| [Garage Door]( https://www.sharetextures.com/textures/wood/garage-door ) | [Tolga Arslan]https://www.sharetextures.com/author/mtolgaarslan) | [CC0 1.0](https://www.sharetextures.com/p/terms)   
 
            
 ### Sounds
@@ -310,17 +322,6 @@ The following models have been modified for engine-compatible materials and/or g
 | [Broken mirror](        https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)             | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
 | [Rally Car Idle Loop](  https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)         | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
   
-## Assets with usage restrictions
-
-The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
-
-Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
-
-| Name<img width=140/>                                                                                                                                          | Author<img width=200/>                                | License 
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------  
-| [GJ](                          https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GJ/J_G_Combine.fbx                                        ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
-| [VGF_Boy](                     https://github.com/vimontgames/vgframework/blob/master/data/Meshes/VGF_Boy/VGF_Boy.fbx                                       ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
-| [GrosCovid](                   https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GrosCovid/GrosCovid.fbx                                   ) | [JOYxt](https://github.com/Joyxt)                     | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
 
 
 # Misc
