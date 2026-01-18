@@ -21,7 +21,7 @@
                 <Property type="EnumFlagsU8" name="m_vertexColorMask" value="Albedo"/>
                 <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU8" name="m_UVSource" value="UV0"/>
-                <Property type="Float2" name="m_tiling" x="6" y="6"/>
+                <Property type="Float2" name="m_tiling" x="1" y="1"/>
                 <Property type="Float2" name="m_offset" x="0" y="0"/>
                 <Property type="Bool" name="m_enableAlbedo" value="true"/>
                 <Property type="Resource" name="m_albedoMap">

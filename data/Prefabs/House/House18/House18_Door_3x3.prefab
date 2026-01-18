@@ -30,7 +30,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="0" Iw="0" Jx="0" Jy="3" Jz="0" Jw="0" Kx="0" Ky="0" Kz="3" Kw="0" Tx="0" Ty="0" Tz="1.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="1.5" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsBodyComponent">
@@ -100,7 +100,7 @@
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="3933547072"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="String" name="m_resourcePath" value="data/Meshes/unitcube.fbx"/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/House/generic3x3x3.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -130,7 +130,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.55" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.525" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
@@ -173,7 +173,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.55" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.525" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
