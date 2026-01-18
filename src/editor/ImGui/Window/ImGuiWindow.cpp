@@ -3018,26 +3018,19 @@ namespace vg::editor
                     if (prevScale[0] != scale[0])
                     {
                         float ratio = scale[0] / prevScale[0];
-                        m[0].x *= ratio;
-                        m[1].x *= ratio;
-                        m[2].x *= ratio;
-                        //m[3].x *= ratio;
+                        m[0].xyz *= ratio;
                     }
-                    else if (prevScale[1] != scale[1])
+
+                    if (prevScale[1] != scale[1])
                     {
                         float ratio = scale[1] / prevScale[1];
-                        m[0].y *= ratio;
-                        m[1].y *= ratio;
-                        m[2].y *= ratio;
-                        //m[3].y *= ratio;
+                        m[1].xyz *= ratio;
                     }
-                    else if (prevScale[2] != scale[2])
+
+                    if (prevScale[2] != scale[2])
                     {
                         float ratio = scale[2] / prevScale[2];
-                        m[0].z *= ratio;
-                        m[1].z *= ratio;
-                        m[2].z *= ratio;
-                        //m[3].z *= ratio;
+                        m[2].xyz *= ratio;
                     }
 
                     store_float4x4(m, temp);
