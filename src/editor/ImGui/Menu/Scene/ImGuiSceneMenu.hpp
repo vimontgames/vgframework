@@ -59,8 +59,8 @@ namespace vg::editor
             {
                 m_selected = SceneMenuOption::Save;
                 m_popup = fmt::sprintf("Save %s \"%s\" As ...###Save As ...", asString(m_sceneType), scene->GetName().c_str());
-
                 saveFileDialog = true;
+                m_popupObject = scene;
             }
 
             if (m_sceneType == BaseSceneType::Prefab)
@@ -122,14 +122,20 @@ namespace vg::editor
         switch (m_selected)
         {
             case SceneMenuOption::Save:
-            if (ImGui::DisplayFileDialog(m_popup))
+            if (m_popupObject == scene && ImGui::DisplayFileDialog(m_popup))
             {
                 if (ImGui::IsFileDialogOK())
                 {
                     string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), typeInfo.fileExt.c_str());
+
+                    // Change name during save
+                    const string name = scene->GetName();
                     scene->SetName(io::getFileNameWithoutExt(newFilePath));
                     factory->SaveToXML(scene, newFilePath);
+                    scene->SetName(name);
+
                     status = Status::Saved;
+                    m_popupObject = nullptr;
                 }
 
                 ImGui::CloseFileDialog();
@@ -154,12 +160,16 @@ namespace vg::editor
 
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;
+                        m_popupObject = nullptr;
                     }
 
                     ImGui::SameLine();
 
                     if (ImGui::Button("No", style::button::SizeMedium))
+                    {
                         ImGui::CloseCurrentPopup();
+                        m_popupObject = nullptr;
+                    }
 
                     ImGui::EndPopup();
                 }
