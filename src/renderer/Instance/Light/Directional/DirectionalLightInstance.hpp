@@ -94,9 +94,6 @@ namespace vg::renderer
                 view->addShadowView(shadowView);
 
                 float4x4 lightWorld = getGlobalMatrix();
-                lightWorld[0].xyz *= -1;
-                lightWorld[1].xyz *= -1;
-                lightWorld[2].xyz *= -1;
 
                 switch (m_shadowCameraMode)
                 {

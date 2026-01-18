@@ -260,10 +260,10 @@ namespace vg::renderer
                 cullMode = CullMode::None;
                 break;
             case CullMode::Back:
-                cullMode = CullMode::Back;
+                cullMode = _renderContext.m_reverseCullMode ? CullMode::Front : CullMode::Back;
                 break;
             case CullMode::Front:
-                cullMode = CullMode::Front;
+                cullMode = _renderContext.m_reverseCullMode ? CullMode::Back : CullMode::Front;
                 break;
 
         }

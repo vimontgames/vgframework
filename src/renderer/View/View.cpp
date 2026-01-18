@@ -264,14 +264,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     float4x4 View::setOrthoProjectionRH(float _w, float _h, float _near, float _far)
     {
-        const float d = _near - _far;
+        const float d = _far - _near;
 
         float4x4 mProj
         (
             2.0f/_w, 0,           0,   0,
                   0, 2.0f/_h,     0,   0,
                   0, 0,       1.0f/d,  0,
-                  0, 0,      _near/d,  1
+                  0, 0,     -_near/d,  1
         );
 
         return mProj;

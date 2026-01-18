@@ -24,6 +24,7 @@ namespace vg::renderer
             m_wireframe(false),
             m_outline(false),
             m_particle(false),
+            m_reverseCullMode(false),
             m_surfaceType((SurfaceType)-1)
         {
 
@@ -33,11 +34,12 @@ namespace vg::renderer
         core::float4x4                  m_proj;
         const gfx::RenderPassContext *  m_renderPass;
         ShaderPass                      m_shaderPass;
-        bool                            m_toolmode     : 1;
-        bool                            m_raytracing   : 1;
-        bool                            m_wireframe    : 1;
-        bool                            m_outline      : 1;
-        bool                            m_particle     : 1;
-        SurfaceType                     m_surfaceType  : 8;
+        bool                            m_toolmode          : 1;
+        bool                            m_raytracing        : 1;
+        bool                            m_wireframe         : 1;
+        bool                            m_outline           : 1;
+        bool                            m_particle          : 1;
+        bool                            m_reverseCullMode   : 1;
+        SurfaceType                     m_surfaceType       : 8;
     };
 }
