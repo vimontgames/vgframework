@@ -29,11 +29,11 @@
                         <Property type="Object" name="m_meshMaterials">
                             <Object class="MaterialResourceList">
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
-                                <Property type="Uint32" name="m_uid" value="0"/>
+                                <Property type="Uint32" name="m_uid" value="3640689799"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="ResourceVector" name="m_resources">
                                     <Object class="MaterialResource">
-                                        <Property type="String" name="m_name" value="new Material"/>
+                                        <Property type="String" name="m_name" value="CosmoDog"/>
                                         <Property type="Uint32" name="m_uid" value="556500739"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Materials/CosmoDog/CosmoDog.mat"/>

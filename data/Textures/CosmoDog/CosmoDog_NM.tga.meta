@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" value="CosmoDog_NM.tga.meta"/>
         <Property type="EnumU8" name="m_importSettings.m_importerType" value="Auto"/>
         <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Auto"/>
-        <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
+        <Property type="Bool" name="m_importSettings.m_sRGB" value="true"/>
         <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="TextureImporterMip_Auto"/>
         <Property type="EnumU8" name="m_importSettings.m_downscale" value="None"/>
     </Object>
