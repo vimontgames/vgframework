@@ -447,12 +447,12 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             IGameObject * go = info.gameObject;
                             if (enterVehicle(go))
                             {
-                                VG_INFO("[Player] %s enters vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName(), go->GetFullName().c_str());
+                                VG_INFO("[Player] %s enters vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName().c_str(), go->GetFullName().c_str());
                                 break;
                             }
                             else
                             {
-                                VG_INFO("[Player] %s could not enter vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName(), go->GetFullName().c_str());
+                                VG_INFO("[Player] %s could not enter vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName().c_str(), go->GetFullName().c_str());
                             }
                         }
                     }
