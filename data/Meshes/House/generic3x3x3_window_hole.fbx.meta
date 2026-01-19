@@ -1,0 +1,8 @@
+<Root>
+    <Object class="MeshResourceMeta">
+        <Property type="String" name="m_name" value="generic3x3x3_window_hole.fbx.meta"/>
+        <Property type="Bool" name="m_importSettings.m_physicsCollisionData" value="false"/>
+        <Property type="Bool" name="m_importSettings.m_ignoreScale" value="false"/>
+        <Property type="Bool" name="m_importSettings.m_rotateYUpAABB" value="false"/>
+    </Object>
+</Root>
