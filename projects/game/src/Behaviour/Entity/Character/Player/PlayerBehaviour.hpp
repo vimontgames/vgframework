@@ -421,7 +421,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             float dist;
                         };
 
-                        const vector<IVehicleComponent*> & vehicles = Game::get()->getVehicles();
+                        const vector<IVehicleComponent *> & vehicles = Game::get()->getVehicles();
                         vector<VehicleGameObjectInfo> closeVehicleGameObjects;
 
                         for (uint i = 0; i < vehicles.size(); ++i)
@@ -437,9 +437,9 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         }
 
                         sort(closeVehicleGameObjects.begin(), closeVehicleGameObjects.end(), [](const VehicleGameObjectInfo & a, const VehicleGameObjectInfo & b)
-                        {
-                            return (a.dist < b.dist);
-                        }
+                            {
+                                return (a.dist < b.dist);
+                            }
                         );
 
                         for (auto & info : closeVehicleGameObjects)
@@ -456,7 +456,10 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             }
                         }
                     }
+                }
 
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
+                {
                     // Pick closest weapon
                     if (nullptr == m_rightHandItem)
                     {
