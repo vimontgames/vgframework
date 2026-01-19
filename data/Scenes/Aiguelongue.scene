@@ -15953,7 +15953,7 @@
                                             <Object class="GameObject">
                                                 <Property type="String" name="m_name" value="Parkings"/>
                                                 <Property type="Uint32" name="m_uid" value="2334852271"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -21067,7 +21067,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="RoadBlocks"/>
                                 <Property type="Uint32" name="m_uid" value="1663332439"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -21161,7 +21161,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -21499,7 +21499,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Weapons"/>
                                 <Property type="Uint32" name="m_uid" value="2238613537"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
@@ -21592,7 +21592,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.3826836" Iy="-0.92387962" Iz="0" Iw="0" Jx="0.92387962" Jy="-0.3826836" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-39" Ty="5.5" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.3826836" Iy="-0.92387962" Iz="0" Iw="0" Jx="0.92387962" Jy="-0.3826836" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-38.5" Ty="4.5" Tz="0.5" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -21701,7 +21701,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Bonuses"/>
                                 <Property type="Uint32" name="m_uid" value="1210253354"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
@@ -21764,7 +21764,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-69.5" Ty="10" Tz="0.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-69.5" Ty="-10" Tz="0.5" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -21784,7 +21784,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="10" Tz="0.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="-10" Tz="0.5" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -21804,7 +21804,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="10" Tz="1.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="-10" Tz="1.5" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -26069,6 +26069,298 @@
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Trashcans"/>
+                                <Property type="Uint32" name="m_uid" value="1658494733"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children">
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Grey_Trashcan_00"/>
+                                        <Property type="Uint32" name="m_uid" value="1030636933"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.061708845" Iy="-0.99809432" Iz="0" Iw="0" Jx="0.99809432" Jy="-0.061708845" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-16.823128" Ty="6.5" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Grey_Trashcan_00"/>
+                                                <Property type="Uint32" name="m_uid" value="147919266"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Grey_Trashcan_01"/>
+                                        <Property type="Uint32" name="m_uid" value="1015263251"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.1252553" Iy="-0.99212456" Iz="0" Iw="0" Jx="0.99212456" Jy="-0.1252553" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-29" Ty="6.5" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Grey_Trashcan_01"/>
+                                                <Property type="Uint32" name="m_uid" value="2159238916"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Grey_Trashcan_02"/>
+                                        <Property type="Uint32" name="m_uid" value="1086149375"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.00034511089" Iy="-0.99999976" Iz="0" Iw="0" Jx="0.99999976" Jy="0.00034511089" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-44.000008" Ty="0.9998312" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Grey_Trashcan_02"/>
+                                                <Property type="Uint32" name="m_uid" value="2145207950"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Grey_Trashcan_03"/>
+                                        <Property type="Uint32" name="m_uid" value="1476237504"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.99895436" Iy="-0.04571531" Iz="0" Iw="0" Jx="0.04571531" Jy="0.99895436" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-43.000008" Ty="-14.000168" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Grey_Trashcan_03"/>
+                                                <Property type="Uint32" name="m_uid" value="3875003091"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Grey_Trashcan_04"/>
+                                        <Property type="Uint32" name="m_uid" value="2745833861"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.022877647" Iy="-0.99973804" Iz="0" Iw="0" Jx="0.99973804" Jy="-0.022877647" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-44.815323" Ty="9.7698593" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Grey_Trashcan_04"/>
+                                                <Property type="Uint32" name="m_uid" value="140560908"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Yellow_Trashcan_00"/>
+                                        <Property type="Uint32" name="m_uid" value="3145121022"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.059043273" Iy="-0.99825555" Iz="0" Iw="0" Jx="0.99825555" Jy="-0.059043273" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-16" Ty="6.5" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Yellow_Trashcan_00"/>
+                                                <Property type="Uint32" name="m_uid" value="3806669920"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="3291987504"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3921806210"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat4">
+                                                        <Property type="String" name="m_name" value="m_color"/>
+                                                        <Property type="Uint32" name="m_uid" value="451684841"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float4" name="m_value" x="0.89515573" y="0.96652722" z="0.068748772" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Yellow_Trashcan_01"/>
+                                        <Property type="Uint32" name="m_uid" value="1861939760"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="-1.0000001" Iz="0" Iw="0" Jx="1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-28" Ty="6.5" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Yellow_Trashcan_01"/>
+                                                <Property type="Uint32" name="m_uid" value="3493185121"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="3291987504"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3921806210"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat4">
+                                                        <Property type="String" name="m_name" value="m_color"/>
+                                                        <Property type="Uint32" name="m_uid" value="2949553958"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float4" name="m_value" x="0.89515573" y="0.96652722" z="0.068748772" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Yellow_Trashcan_02"/>
+                                        <Property type="Uint32" name="m_uid" value="4015402156"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.00034511089" Iy="-0.99999976" Iz="0" Iw="0" Jx="0.99999976" Jy="0.00034511089" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-45.000011" Ty="1.0001869" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Yellow_Trashcan_02"/>
+                                                <Property type="Uint32" name="m_uid" value="728213016"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="3291987504"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3921806210"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat4">
+                                                        <Property type="String" name="m_name" value="m_color"/>
+                                                        <Property type="Uint32" name="m_uid" value="1426257435"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float4" name="m_value" x="0.89515573" y="0.96652722" z="0.068748772" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Yellow_Trashcan_03"/>
+                                        <Property type="Uint32" name="m_uid" value="380926448"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.99999952" Iy="0.00083348155" Iz="0" Iw="0" Jx="-0.00083348155" Jy="0.99999952" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-42.97961" Ty="-13.036423" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Yellow_Trashcan_03"/>
+                                                <Property type="Uint32" name="m_uid" value="2248999959"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="3291987504"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3921806210"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat4">
+                                                        <Property type="String" name="m_name" value="m_color"/>
+                                                        <Property type="Uint32" name="m_uid" value="2919259595"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float4" name="m_value" x="0.89515573" y="0.96652722" z="0.068748772" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Yellow_Trashcan_04"/>
+                                        <Property type="Uint32" name="m_uid" value="3491552240"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.022734988" Iy="-0.99974132" Iz="0" Iw="0" Jx="0.99974132" Jy="-0.022734988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-43.851845" Ty="9.7471504" Tz="0.20766306" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Yellow_Trashcan_04"/>
+                                                <Property type="Uint32" name="m_uid" value="823514718"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Props/Trashcan.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="3291987504"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3921806210"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat4">
+                                                        <Property type="String" name="m_name" value="m_color"/>
+                                                        <Property type="Uint32" name="m_uid" value="207495210"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float4" name="m_value" x="0.89515573" y="0.96652722" z="0.068748772" w="1"/>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                         </Property>
                                     </Object>

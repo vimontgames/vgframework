@@ -2,13 +2,11 @@
     <Object class="WorldResourceData">
         <Property type="String" name="m_name" value="Game"/>
         <Property type="Uint32" name="m_uid" value="3076880924"/>
-        <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_world">
             <Object class="World">
                 <Property type="String" name="m_name" value="Game"/>
                 <Property type="Uint32" name="m_uid" value="0"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
             </Object>
         </Property>
@@ -16,19 +14,10 @@
             <Object class="SceneResource">
                 <Property type="String" name="m_name" value=""/>
                 <Property type="Uint32" name="m_uid" value="3838941322"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Scenes/Aiguelongue.scene"/>
             </Object>
         </Property>
-        <Property type="ResourcePtrVector" name="m_prefabsResources">
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" value=""/>
-                <Property type="Uint32" name="m_uid" value="3154916087"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                <Property type="String" name="m_resourcePath" value="data/Prefabs/Player.prefab"/>
-            </Object>
-        </Property>
+        <Property type="ResourcePtrVector" name="m_prefabsResources"/>
     </Object>
 </Root>
