@@ -354,7 +354,7 @@ void Game::Update(float _dt)
                                     {
                                         uint prevSlot = newAvatarIndex;
 
-                                        for (int n = 1; n < avatarCount; ++n)
+                                        for (int n = 1; n < (int)avatarCount; ++n)
                                         {
                                             int prev = (newAvatarIndex - n + avatarCount) % (int)avatarCount;
 
@@ -378,7 +378,7 @@ void Game::Update(float _dt)
                                     {
                                         uint nextSlot = newAvatarIndex;
 
-                                        for (int n = 1; n < avatarCount; ++n)
+                                        for (int n = 1; n < (int)avatarCount; ++n)
                                         {
                                             int next = (newAvatarIndex + n + avatarCount) % (int)avatarCount;
 

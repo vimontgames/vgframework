@@ -408,15 +408,21 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
                 const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
 
-                if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::Y))
                 {
-                    // Enter closed vehicle if any
+                    // Enter closest vehicle with empty driver seat
                     if (!m_vehicle.getObject())
                     {
                         float closestVehicleDist = 3.0f;
 
-                        auto & vehicles = Game::get()->getVehicles();
-                        IGameObject * closestVehicle = nullptr;
+                        struct VehicleGameObjectInfo
+                        {
+                            IGameObject * gameObject;
+                            float dist;
+                        };
+
+                        const vector<IVehicleComponent*> & vehicles = Game::get()->getVehicles();
+                        vector<VehicleGameObjectInfo> closeVehicleGameObjects;
 
                         for (uint i = 0; i < vehicles.size(); ++i)
                         {
@@ -427,16 +433,27 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             const float dist = length(delta);
 
                             if (dist < closestVehicleDist)
-                            {
-                                closestVehicleDist = dist;
-                                closestVehicle = vehicle->GetGameObject();
-                            }
+                                closeVehicleGameObjects.push_back({ vehicleGO, dist });
                         }
 
-                        if (closestVehicle)
+                        sort(closeVehicleGameObjects.begin(), closeVehicleGameObjects.end(), [](const VehicleGameObjectInfo & a, const VehicleGameObjectInfo & b)
                         {
-                            VG_INFO("[Player] Found vehicle \"%s\" close to player", closestVehicle->GetFullName().c_str());
-                            enterVehicle(closestVehicle);
+                            return (a.dist < b.dist);
+                        }
+                        );
+
+                        for (auto & info : closeVehicleGameObjects)
+                        {
+                            IGameObject * go = info.gameObject;
+                            if (enterVehicle(go))
+                            {
+                                VG_INFO("[Player] %s enters vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName(), go->GetFullName().c_str());
+                                break;
+                            }
+                            else
+                            {
+                                VG_INFO("[Player] %s could not enter vehicle \"%s\"", playerGO->GetParent()->GetParent()->GetName(), go->GetFullName().c_str());
+                            }
                         }
                     }
 
