@@ -26,7 +26,7 @@
                             <Object class="EnemyBehaviour">
                                 <Property type="String" name="m_name" value="New EnemyBehaviour"/>
                                 <Property type="Uint32" name="m_uid" value="3367698246"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Int32" name="m_life" value="1"/>
                                 <Property type="Float" name="m_hp" value="75"/>
@@ -34,8 +34,8 @@
                                 <Property type="Float" name="m_runSpeed" value="2"/>
                                 <Property type="Float" name="m_jumpSpeed" value="2"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="3"/>
-                                <Property type="Float" name="m_detectionRadius" value="6"/>
-                                <Property type="Float" name="m_attackRadius" value="1"/>
+                                <Property type="Float" name="m_detectionRadius" value="16"/>
+                                <Property type="Float" name="m_attackRadius" value="1.15"/>
                             </Object>
                             <Object class="CharacterControllerComponent">
                                 <Property type="String" name="m_name" value="New CharacterControllerComponent"/>
@@ -234,7 +234,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="-0.96235913" Iy="0.027814887" Iz="-0.27035365" Iw="0" Jx="0.27178031" Jy="0.096667454" Jz="-0.95749229" Jw="0" Kx="-0.00049831835" Ky="-0.99492836" Kz="-0.10058851" Kw="0" Tx="-0.77116716" Ty="-0.00041482865" Tz="0.68521106" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.16135882" Iy="-0.051726088" Iz="-0.98553938" Iw="0" Jx="0.98681921" Jy="0.0039888308" Jz="-0.16177775" Jw="0" Kx="0.012298973" Ky="-0.99865341" Kz="0.050400872" Kw="0" Tx="-0.42571628" Ty="0.31241828" Tz="0.26982266" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsBodyComponent">
@@ -318,7 +318,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.96235836" Iy="0.027812282" Iz="-0.27035624" Iw="0" Jx="-0.2717824" Jy="0.096668184" Jz="-0.9574914" Jw="0" Kx="-0.0004950178" Ky="0.99492824" Kz="0.10058852" Kw="0" Tx="0.77116823" Ty="-0.00041527787" Tz="0.68520892" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.5400126" Iy="-0.46289566" Iz="-0.7029326" Iw="0" Jx="-0.043585479" Jy="0.84943658" Jz="-0.52588773" Jw="0" Kx="0.84052759" Ky="-0.25334832" Kz="-0.47888207" Kw="0" Tx="0.34296662" Ty="-0.48607323" Tz="0.35361832" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsBodyComponent">

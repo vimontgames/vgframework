@@ -26,7 +26,7 @@
                             <Object class="EnemyBehaviour">
                                 <Property type="String" name="m_name" value="New EnemyBehaviour"/>
                                 <Property type="Uint32" name="m_uid" value="794804662"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Int32" name="m_life" value="1"/>
                                 <Property type="Float" name="m_hp" value="50"/>
@@ -34,8 +34,8 @@
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="Float" name="m_jumpSpeed" value="3"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="4"/>
-                                <Property type="Float" name="m_detectionRadius" value="8"/>
-                                <Property type="Float" name="m_attackRadius" value="1"/>
+                                <Property type="Float" name="m_detectionRadius" value="18"/>
+                                <Property type="Float" name="m_attackRadius" value="1.5"/>
                             </Object>
                             <Object class="CharacterControllerComponent">
                                 <Property type="String" name="m_name" value="New CharacterControllerComponent"/>
