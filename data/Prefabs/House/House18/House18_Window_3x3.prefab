@@ -153,16 +153,23 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="ResourceVector" name="m_resources">
                                                     <Object class="MaterialResource">
-                                                        <Property type="String" name="m_name" value="Window"/>
+                                                        <Property type="String" name="m_name" value="Window_Wood"/>
                                                         <Property type="Uint32" name="m_uid" value="1608798077"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/House/Window.mat"/>
                                                         <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Windows_Glass"/>
+                                                        <Property type="Uint32" name="m_uid" value="2543636542"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/House/OpaqueGlass.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
                                                 </Property>
                                             </Object>
                                         </Property>
-                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
