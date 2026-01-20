@@ -989,6 +989,11 @@ namespace vg::editor
 
             return ImGuizmo::IsOver();
         }
+        else
+        {
+            // invalidate snap cache
+            m_selectedObjectCount = -1;
+        }
 
         return false;
     }
