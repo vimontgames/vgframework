@@ -74,7 +74,7 @@
                             <Object class="AnimationComponent">
                                 <Property type="String" name="m_name" value="New AnimationComponent"/>
                                 <Property type="Uint32" name="m_uid" value="3886946172"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
@@ -97,8 +97,8 @@
                                                 <Property type="String" name="m_name" value="Idle"/>
                                                 <Property type="Uint32" name="m_uid" value="2627576850"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="String" name="m_resourcePath" value="data/Animations/GrosCovid/GrosCovid_idle.fbx"/>
-                                                <Property type="Bool" name="m_loop" value="false"/>
+                                                <Property type="String" name="m_resourcePath" value="data/Animations/GrosCovid/GrosCovid_Hello.fbx"/>
+                                                <Property type="Bool" name="m_loop" value="true"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" value=""/>
