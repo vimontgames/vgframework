@@ -19,7 +19,7 @@
                 <Property type="Float" name="m_depthFade" value="0.1"/>
                 <Property type="EnumFlagsU8" name="m_instanceColorMask" value="Albedo"/>
                 <Property type="EnumFlagsU8" name="m_vertexColorMask" value="Albedo"/>
-                <Property type="EnumU8" name="m_cullMode" value="None"/>
+                <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU8" name="m_UVSource" value="UV0"/>
                 <Property type="Float2" name="m_tiling" x="1" y="1"/>
                 <Property type="Float2" name="m_offset" x="0" y="0"/>
