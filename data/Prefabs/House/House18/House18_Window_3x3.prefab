@@ -288,6 +288,92 @@
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Shutter holdback_left"/>
+                                <Property type="Uint32" name="m_uid" value="1623108586"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.9986282" Iy="0.052335888" Iz="0" Iw="0" Jx="-0.052335888" Jy="0.9986282" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="-0.62912011" Ty="-1.5287752" Tz="1.9466687" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1892781230"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1970728209"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/House/french_shutter_holdback_left.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3476308535"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="new Material"/>
+                                                        <Property type="Uint32" name="m_uid" value="729554148"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_BlackMetal.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x000000000000000F"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Shutter holdback_right"/>
+                                <Property type="Uint32" name="m_uid" value="2746858195"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.9986282" Iy="0.052335888" Iz="0" Iw="0" Jx="-0.052335888" Jy="0.9986282" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="0.62899995" Ty="-1.5607702" Tz="1.9466687" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="722487436"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3156346522"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/House/french_shutter_holdback_right.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3143957675"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="new Material"/>
+                                                        <Property type="Uint32" name="m_uid" value="603051039"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Props/BBQ/BBQ_BlackMetal.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x000000000000000F"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
                         </Property>
                     </Object>
                 </Property>
