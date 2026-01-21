@@ -232,7 +232,7 @@
                                                             </Object>
                                                         </Property>
                                                         <Property type="Float" name="m_focalLength" value="25"/>
-                                                        <Property type="Float" name="m_focusDistance" value="4.75"/>
+                                                        <Property type="Float" name="m_focusDistance" value="7"/>
                                                         <Property type="Float" name="m_aperture" value="2.8"/>
                                                         <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
                                                         <Property type="Bool" name="m_depthOfField" value="true"/>
@@ -299,7 +299,7 @@
                                                         <Property type="Bool" name="m_useCenter" value="false"/>
                                                         <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" value="true"/>
-                                                        <Property type="Float3" name="m_offset" x="0" y="-350" z="0"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="-292" z="0"/>
                                                         <Property type="Bool" name="m_useColor" value="true"/>
                                                         <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
                                                         <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
@@ -18487,7 +18487,7 @@
                                             <Object class="PrefabGameObject">
                                                 <Property type="String" name="m_name" value="House18_Window_3x3_22"/>
                                                 <Property type="Uint32" name="m_uid" value="3827762874"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="6" Ty="-2.9999542" Tz="-9.5367432e-07" Tw="1"/>
@@ -27452,7 +27452,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-22.75" Ty="27" Tz="0.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-25.25" Ty="27" Tz="0.5" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>
