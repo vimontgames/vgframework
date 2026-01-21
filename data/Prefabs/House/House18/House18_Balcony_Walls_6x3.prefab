@@ -98,16 +98,30 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="ResourceVector" name="m_resources">
                                                     <Object class="MaterialResource">
-                                                        <Property type="String" name="m_name" value="WallStuco"/>
+                                                        <Property type="String" name="m_name" value="Outside"/>
                                                         <Property type="Uint32" name="m_uid" value="4204966452"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/House/WallStuco.mat"/>
                                                         <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Inside"/>
+                                                        <Property type="Uint32" name="m_uid" value="940258284"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Walls/Walls_default.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Floor"/>
+                                                        <Property type="Uint32" name="m_uid" value="1959913587"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Floor/FloorTiles.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
                                                 </Property>
                                             </Object>
                                         </Property>
-                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="3" Value="0x0000000000000007"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -118,7 +132,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.25" Tz="1.25" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1.4611367" Tz="1.25" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
@@ -158,49 +172,6 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                            </Object>
-                            <Object class="GameObject">
-                                <Property type="String" name="m_name" value="Floor"/>
-                                <Property type="Uint32" name="m_uid" value="720075521"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="2.5" Iy="0" Iz="0" Iw="0" Jx="0" Jy="5.5000005" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="1.5" Tz="0.001" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components">
-                                    <Object class="MeshComponent">
-                                        <Property type="String" name="m_name" value="New MeshComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="1188059182"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Resource" name="m_meshResource">
-                                            <Object class="MeshResource">
-                                                <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                <Property type="Uint32" name="m_uid" value="1360452683"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="String" name="m_resourcePath" value="data/Meshes/unitplane.fbx"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="Object" name="m_meshMaterials">
-                                            <Object class="MaterialResourceList">
-                                                <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                <Property type="Uint32" name="m_uid" value="3132990787"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="ResourceVector" name="m_resources">
-                                                    <Object class="MaterialResource">
-                                                        <Property type="String" name="m_name" value="Floor"/>
-                                                        <Property type="Uint32" name="m_uid" value="3254533041"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Floor/FloorTiles.mat"/>
-                                                        <Property type="Bool" name="m_instanciate" value="false"/>
-                                                    </Object>
-                                                </Property>
-                                            </Object>
-                                        </Property>
-                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000003"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>

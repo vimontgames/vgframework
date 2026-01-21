@@ -110,16 +110,30 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="ResourceVector" name="m_resources">
                                                     <Object class="MaterialResource">
-                                                        <Property type="String" name="m_name" value="WallStuco"/>
+                                                        <Property type="String" name="m_name" value="Outside"/>
                                                         <Property type="Uint32" name="m_uid" value="4204966452"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/House/WallStuco.mat"/>
                                                         <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Inside"/>
+                                                        <Property type="Uint32" name="m_uid" value="1516001246"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Walls/Walls_default.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Floor"/>
+                                                        <Property type="Uint32" name="m_uid" value="4079131666"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Floor/FloorTiles.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
                                                 </Property>
                                             </Object>
                                         </Property>
-                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000003"/>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="3" Value="0x0000000000000007"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -163,7 +177,7 @@
                                                         <Property type="String" name="m_name" value="Windows_Glass"/>
                                                         <Property type="Uint32" name="m_uid" value="2543636542"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Materials/House/OpaqueGlass.mat"/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/House/TransparentGlass.mat"/>
                                                         <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                 </Property>
