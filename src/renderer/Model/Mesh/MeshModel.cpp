@@ -22,8 +22,12 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", PropertyFlags::Transient);
-        
+        registerPropertyGroupBegin(MeshModel, "Geometry");
+        {
+            registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", PropertyFlags::Flatten | PropertyFlags::Transient);
+        }
+        registerPropertyGroupEnd(MeshModel);
+
         return true;
     }
 
@@ -210,8 +214,9 @@ namespace vg::renderer
         }
 
         MeshModel * meshModel = new MeshModel(_data.name, nullptr);
+        meshModel->RegisterUID();
 
-        MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
+        MeshGeometry * meshGeometry = new MeshGeometry(_data.name, meshModel);
 
         meshGeometry->setAABB(_data.aabb);
         meshGeometry->setVertexFormat(vtxFmt);

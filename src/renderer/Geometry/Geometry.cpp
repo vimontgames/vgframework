@@ -20,6 +20,9 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
+        //setPropertyFlag(Geometry, m_name, PropertyFlags::Hidden, false);
+        //setPropertyFlag(Geometry, m_name, PropertyFlags::ReadOnly, true);
+
         registerPropertyEx(Geometry, m_aabb.m_min, "AABBMin", PropertyFlags::ReadOnly);
         setPropertyDescription(Geometry, m_aabb.m_min, "Axis-Aligned Bounding Box minimum bounds");
 

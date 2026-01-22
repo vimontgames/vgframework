@@ -1,9 +1,9 @@
 #pragma once
 
+#include "core/Misc/BitMask/BitMask.h"
 #include "engine/IMeshComponent.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "engine/Component/Renderer/MaterialResourceList.h"
-#include "core/Misc/BitMask/BitMask.h"
 
 namespace vg::renderer
 {

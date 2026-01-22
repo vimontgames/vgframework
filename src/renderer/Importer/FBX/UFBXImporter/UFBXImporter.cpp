@@ -149,9 +149,12 @@ namespace vg::renderer
     {
         const auto start = Timer::getTick();
 
-        string name = _UFbxMesh->name.data;
-        if (_UFbxMesh->instances.count > 0)
-            name = _UFbxMesh->instances.data[0]->name.data;
+        //string name = _UFbxMesh->name.data;
+        //if (_UFbxMesh->instances.count > 0)
+        //    name = _UFbxMesh->instances.data[0]->name.data;
+
+        // use FBX file name as Mesh name as we're importing one FBX file per object
+        string name = io::getFileNameWithoutExt(_UFBXScene->metadata.filename.data);
 
         VG_INFO("[UFBXImporter] Importing FBX Mesh \"%s\" ...", name.c_str());
         _data.name = name;

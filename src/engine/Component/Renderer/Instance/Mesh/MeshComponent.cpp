@@ -48,11 +48,14 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
+        
         registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
+        
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, editor::style::label::Materials, PropertyFlags::Flatten);
+        
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         setPropertyNamesCallback(MeshComponent, m_batchMask, getBatchNames);
-        
+         
         return true;
     }
 

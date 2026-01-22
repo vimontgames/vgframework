@@ -34,7 +34,7 @@ namespace vg::core
         setPropertyHiddenCallback(Resource, m_instanciate, IsInstanciateHidden);
 
         // This is used for the inspector to display resource preview, but not serialized
-        registerPropertyObjectPtrEx(Resource, m_shared, "Object", PropertyFlags::Transient);
+        registerPropertyObjectPtrEx(Resource, m_shared, "Object", PropertyFlags::Flatten | PropertyFlags::Transient);
 
         return true;
     }
