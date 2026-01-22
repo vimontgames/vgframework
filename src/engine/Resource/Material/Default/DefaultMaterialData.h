@@ -30,7 +30,7 @@ namespace vg::engine
         VertexColorMask             m_vertexColorMask;
 
         // Culling
-        gfx::CullMode               m_cullMode;
+        CullMode                    m_cullMode;
 
         // UV
         UVSource                    m_UVSource;

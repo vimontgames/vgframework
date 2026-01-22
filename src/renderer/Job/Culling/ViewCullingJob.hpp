@@ -201,13 +201,36 @@ namespace vg::renderer
                                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(listType);
                                     break;
 
+                                // The following lists do not need sort
                                 case GraphicInstanceListType::All:
-                                case GraphicInstanceListType::Opaque:
-                                case GraphicInstanceListType::AlphaTest:
                                 case GraphicInstanceListType::Decal:
                                 case GraphicInstanceListType::Particle:
+                                case GraphicInstanceListType::Outline:
                                     break;
 
+                                // Opaques should be sorted front-to-back to improve ZCull, but sorting 
+                                // opaques front-to-back is not worth it with the current implementation 
+                                // and only saved -0.04 ms on the GPU bust cost +0.44 ms on the CPU. 
+                                case GraphicInstanceListType::Opaque:
+                                case GraphicInstanceListType::AlphaTest:
+                                {
+                                    //VG_PROFILE_CPU("front-to-back");
+                                    //
+                                    //sort(list.begin(), list.end(), [=](GraphicInstance * const a, GraphicInstance * const b)
+                                    //    {
+                                    //        const float4x4 & matA = a->GetGlobalMatrix();
+                                    //        const float4 & viewPosA = mul(viewMatrix, matA[3]);
+                                    //
+                                    //        const float4x4 & matB = b->GetGlobalMatrix();
+                                    //        const float4 & viewPosB = mul(viewMatrix, matB[3]);
+                                    //
+                                    //        return (bool)(viewPosA.z > viewPosB.z);
+                                    //    }
+                                    //);
+                                }
+                                break;
+
+                                // Transparent should be sorted back-to-front for alpha blending
                                 case GraphicInstanceListType::Transparent:
                                 {
                                     VG_PROFILE_CPU("Back-to-front");
@@ -225,9 +248,6 @@ namespace vg::renderer
                                     );
                                 }
                                 break;
-
-                                case GraphicInstanceListType::Outline:
-                                    break;
                             }
                         }
                     }

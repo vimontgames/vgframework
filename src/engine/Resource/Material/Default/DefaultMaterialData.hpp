@@ -71,7 +71,7 @@ namespace vg::engine
         setPropertyDescription(DefaultMaterialData, m_vertexColorMask, "Vertex color usage");
 
         // Culling
-        registerPropertyEnum(DefaultMaterialData, gfx::CullMode, m_cullMode, "Cull");
+        registerPropertyEnum(DefaultMaterialData, CullMode, m_cullMode, "Cull");
         setPropertyDescription(DefaultMaterialData, m_cullMode, "Change culling to hide backfaces, frontfaces, or none");
 
         // UV
@@ -168,7 +168,7 @@ namespace vg::engine
     DefaultMaterialData::DefaultMaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
         m_surfaceType(SurfaceType::Opaque),
-        m_cullMode(gfx::CullMode::Back), 
+        m_cullMode(CullMode::Back), 
         m_alphaSource(AlphaSource::Albedo),
         m_depthFade(0.1f),
         m_instanceColorMask(InstanceColorMask::Albedo),

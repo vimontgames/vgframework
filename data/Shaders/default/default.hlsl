@@ -101,7 +101,7 @@ struct PS_Output
 };
 
 //--------------------------------------------------------------------------------------
-float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world)
+float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world, bool _isFrontFace = true)
 {
     float3 T = normalize(_vertexTangent);
     float3 B = normalize(_vertexBinormal);
@@ -109,15 +109,18 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
 
     float3 worldNormal = normalize(T * _normal.x + B * _normal.y + N * _normal.z);
            worldNormal = mul(float4(worldNormal.xyz, 0.0f), clearScale(_world)).xyz;
+    
+    if (!_isFrontFace)
+        worldNormal.xyz *= -1;
 
     return worldNormal;
 }
 
 //--------------------------------------------------------------------------------------
 #if _ZONLY
-void PS_Forward(VS_Output _input)
+void PS_Forward(VS_Output _input, bool _isFrontFace : SV_IsFrontFace)
 #else
-PS_Output PS_Forward(VS_Output _input)
+PS_Output PS_Forward(VS_Output _input, bool _isFrontFace : SV_IsFrontFace)
 #endif
 {
     PS_Output output = (PS_Output)0;
@@ -175,10 +178,9 @@ PS_Output PS_Forward(VS_Output _input)
         pbr      = lerp(     pbr, pbr2, frameBlend);
         emissive = lerp(emissive, emissive2, frameBlend);
         alpha    = lerp(   alpha, alpha2, frameBlend);
-        
     }
 
-    float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
+    float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix(), _isFrontFace);
 
     // Compute & Apply lighting
     LightingResult lighting = computeLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb);
@@ -207,7 +209,7 @@ PS_Output PS_Forward(VS_Output _input)
     #endif
     
     #if _TOOLMODE && !_ZONLY
-    output.color0 = forwardDebugDisplay(output.color0, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.color0 = forwardDebugDisplay(output.color0, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb, _isFrontFace);
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
     {
         output.color0 = getWireframeColor(instanceData.getGPUInstanceType(), instanceData.getGPUInstanceFlags());
@@ -286,9 +288,9 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
 
 //--------------------------------------------------------------------------------------
 #if _ZONLY
-void PS_Deferred(VS_Output _input)
+void PS_Deferred(VS_Output _input, bool _isFrontFace : SV_IsFrontFace)
 #else
-PS_GBufferOutput PS_Deferred(VS_Output _input)
+PS_GBufferOutput PS_Deferred(VS_Output _input, bool _isFrontFace : SV_IsFrontFace)
 #endif
 {
     PS_GBufferOutput output = (PS_GBufferOutput)0;
@@ -320,7 +322,7 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
     
     float alpha = materialData.getAlpha(albedo.a, emissive.a);
     
-    float3 worldNormal = getWorldNormal(normal.xyz, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
+    float3 worldNormal = getWorldNormal(normal.xyz, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix()/*, _isFrontFace*/);
     
     output.Store(albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb, alpha);
 
@@ -330,7 +332,7 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
-    output.albedo = forwardDebugDisplay(output.albedo, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.albedo = forwardDebugDisplay(output.albedo, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb, _isFrontFace);
     #endif // _TOOLMODE && !_ZONLY
 
     #if _ALPHATEST

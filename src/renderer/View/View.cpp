@@ -674,14 +674,14 @@ namespace vg::renderer
     bool View::IsComputePostProcessNeeded() const
     {
         const auto options = RendererOptions::get();
-        return options->isPostProcessEnabled() || (isToolmode() && IsUsingRayTracing() && options->anyRayTracingDebugDisplay());
+        return options->isPostProcessEnabled() || IsOutlinePassNeeded() || (isToolmode() && IsUsingRayTracing() && options->anyRayTracingDebugDisplay());
     }
 
     //--------------------------------------------------------------------------------------
     bool View::IsOutlinePassNeeded() const
     {
         const auto options = RendererOptions::get();
-        return IsComputePostProcessNeeded() && isToolmode();
+        return isToolmode();
     }
 
     //--------------------------------------------------------------------------------------

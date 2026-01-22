@@ -1,7 +1,7 @@
 #ifndef _MATERIAL_CONSTS__HLSLI_
 #define _MATERIAL_CONSTS__HLSLI_
 
-#include "types.hlsli"
+#include "device_consts.hlsli"
 
 vg_enum_class_global(SurfaceType, u8,
     Opaque = 0,

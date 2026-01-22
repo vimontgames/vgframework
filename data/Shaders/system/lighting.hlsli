@@ -85,6 +85,7 @@ float getRangeAttenuation(float _dist, float _maxRange)
 #endif
 }
 
+//--------------------------------------------------------------------------------------
 float SampleDirectionalShadowMap(Texture2D _shadowMap, float3 _shadowUV, float _bias)
 {
 	float shadow = 0;
@@ -116,42 +117,204 @@ float SampleDirectionalShadowMap(Texture2D _shadowMap, float3 _shadowUV, float _
 }
 
 //--------------------------------------------------------------------------------------
-// Raytraced specular ray
+bool isFaceVisible(CullMode _cullMode, bool _isFrontFace)
+{           
+    switch (_cullMode)
+    {
+        default:
+        case CullMode::None:
+            return true;
+        
+        case CullMode::Back:
+            return !_isFrontFace;
+        
+         case CullMode::Front:
+            return _isFrontFace;
+    }
+}
+
 //--------------------------------------------------------------------------------------
-float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 Lr, float roughness)
+float4 getRaytracedColor(RaytracingAccelerationStructure _tlas, float3 _origin, float3 _dir, float _min, float _max, bool _opaque, bool _alpha, DisplayFlags _flags = DefaultDisplayFlags, DisplayMode _mode = DisplayMode::None)
 {
-    float4 rtSpecular = (float4)0.0f;
+    float4 color = (float4)0.0f;
+
+    bool hitOpaque = false;
+    float hitOpaqueDist = _max;
+            
+    // 1. Opaque + alphatest
+    #define RAY_FLAGS_OPAQUE (RAY_FLAG_NONE /*| RAY_FLAG_CULL_FRONT_FACING_TRIANGLES*/)
     
-    if (roughness < 0.02)
-    {		
-        RayQuery<RAY_FLAG_NONE> query;
-		
+    if (_opaque)
+    {                    
+        RayQuery< RAY_FLAGS_OPAQUE> query;
+    
         RayDesc ray;
-        ray.Origin = _worldPos;
-        ray.Direction = Lr;
-        ray.TMin = 0.1; // prevent self-reflection
-        ray.TMax = 100;
-		
+        ray.Origin = _origin;
+        ray.Direction = _dir;
+        ray.TMin = _min;
+        ray.TMax = _max;
+        
         query.TraceRayInline(_tlas, RAY_FLAG_NONE, 0xff, ray);
-		
+        
         while (query.Proceed())
         {
             switch (query.CandidateType())
             {
-                
+                case CANDIDATE_NON_OPAQUE_TRIANGLE:
+			    {
+                    MaterialSample mat = getRaytracingCandidateMaterial(query, _flags, _mode);
+                    
+                    if (isFaceVisible(mat.cullMode, query.CandidateTriangleFrontFace()))
+                    {
+                        // Opaque aren't tested here (because CANDIDATE_NON_OPAQUE_TRIANGLE)
+                        // AlphaBlend will be processed in the next pass
+                        // Only AlphaTest and Decals are processed here
+                        if (mat.surfaceType != SurfaceType::AlphaBlend && mat.albedo.a > 0.5f)
+                        {
+                            query.CommitNonOpaqueTriangleHit();
+                            break;
+                        }
+                    }
+                }
+                break;
             }
         }
-		
+            
         switch (query.CommittedStatus())
         {
             case COMMITTED_TRIANGLE_HIT:
 		    {
-				MaterialSample mat = getRaytracingCommittedMaterial(query);
-				
-                rtSpecular = float4(mat.albedo.rgb,1);
+			    // Triangle hit
+                hitOpaque = true;
+                hitOpaqueDist = query.CommittedRayT();
+            
+                MaterialSample mat = getRaytracingCommittedMaterial(query, _flags, _mode);
+                color = mat.albedo;
+            }
+            break;
+        
+		    // We do not need this case because we initialize the values by default to be as if the ray missed
+            case COMMITTED_NOTHING:
+		    {
+                color.rgb = float3(1, 0, 1);
             }
             break;
         }
+    }
+    
+    if (_alpha)
+    {
+        #define MAX_ALPHA_HITS 16
+    
+        struct AlphaHit
+        {
+            float dist;
+            float3 color;
+            float alpha;
+        };
+    
+        AlphaHit alphaHits[MAX_ALPHA_HITS];
+        uint hitCount = 0;
+        uint candidateCount = 0;
+    
+        float eps = 1e-4;  
+        float tMin = _min;
+    
+        #define RAY_FLAGS_ALPHA (RAY_FLAG_CULL_OPAQUE /*| RAY_FLAG_CULL_FRONT_FACING_TRIANGLES*/)
+
+        while (hitCount < MAX_ALPHA_HITS)
+        {
+            RayQuery<RAY_FLAGS_ALPHA> query;
+    
+            RayDesc ray;
+            ray.Origin = _origin;
+            ray.Direction = _dir;
+            ray.TMin = tMin;
+            ray.TMax = _max;
+    
+            query.TraceRayInline( _tlas, RAY_FLAG_NONE, 0xff, ray);
+    
+            bool found = false;
+    
+            while (query.Proceed())
+            {
+                if (query.CandidateType() == CANDIDATE_NON_OPAQUE_TRIANGLE)
+                {
+                    float t = query.CandidateTriangleRayT();
+    
+                    if (t < hitOpaqueDist + eps)
+                    {
+                        MaterialSample mat = getRaytracingCandidateMaterial(query, _flags, _mode);
+
+                        if (isFaceVisible(mat.cullMode, query.CandidateTriangleFrontFace()))
+                        {
+                            if (mat.surfaceType == SurfaceType::AlphaBlend && mat.albedo.a > 0)
+                            {
+                                alphaHits[hitCount].dist  = t;
+                                alphaHits[hitCount].color = mat.albedo.rgb;
+                                alphaHits[hitCount].alpha = mat.albedo.a;
+    
+                                hitCount++;
+    
+                                tMin = t + eps;
+                                found = true;
+                                break; 
+                            }
+                        }
+                    }
+                }
+            }
+
+            candidateCount++;
+    
+            if (!found)
+                break;
+        }
+    
+        // insertion sort
+        for (uint i = 1; i < hitCount ;++i)
+        {
+            AlphaHit key = alphaHits[i];
+            uint j = i;
+    
+            while (j > 0 && alphaHits[j - 1].dist < key.dist)
+            {
+                alphaHits[j] = alphaHits[j - 1];
+                j--;
+            }
+    
+            alphaHits[j] = key;
+        }
+    
+        // alpha blending back-to-front
+        for(uint i = 0; i < hitCount; ++i)
+        {
+            float3 srcColor = alphaHits[i].color;
+            float srcAlpha = alphaHits[i].alpha;
+    
+            color.rgb = srcColor.rgb * srcAlpha + color.rgb * (1.0f - srcAlpha);
+        }
+    }
+    
+    return color;
+}
+
+//--------------------------------------------------------------------------------------
+// Raytraced specular ray
+//--------------------------------------------------------------------------------------
+float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 _Lr, float roughness, ViewConstants viewConstants)
+{
+    float4 rtSpecular = (float4)0.0f;
+    
+    if (roughness < 0.02)
+    {
+        float nearDist = viewConstants.getCameraNearFar().x;
+        float farDist = viewConstants.getCameraNearFar().y;
+        
+        bool opaque = true;
+        bool alpha = true;
+        
+        rtSpecular = getRaytracedColor(_tlas, _worldPos, _Lr, nearDist, farDist, opaque, alpha);
     }
     
     return rtSpecular;
@@ -161,6 +324,15 @@ float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _world
 LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float3 _pbr, float3 _emissive)
 {
     LightingResult output = (LightingResult)0;
+    
+    // test compute geometric normal from pos
+    //float3 dpdx = ddx(_worldPos);
+    //float3 dpdy = ddy(_worldPos);
+    //float3 normal = normalize(cross(dpdx, dpdy));
+    //
+    //output.envDiffuse = -normal;
+    ////output.envDiffuse = _worldNormal;
+    //return output;
     
     output.emissive = _emissive;
     
@@ -217,7 +389,7 @@ LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, flo
 	// environment specular 
 	
 	#if _RAYTRACING
-	float4 rtSpecular = getRaytracedSpecular(getTLAS(_viewConstants.getTLASHandle()), _worldPos, Lr, roughness);
+	float4 rtSpecular = getRaytracedSpecular(getTLAS(_viewConstants.getTLASHandle()), _worldPos, Lr, roughness, _viewConstants);
 	#endif
 	
 	uint specularReflectionCubemapHandle = _viewConstants.getSpecularReflectionCubemap();
@@ -269,7 +441,7 @@ LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, flo
 				
 				#ifdef _RAYTRACING
 				
-				shadow = getRaytracedShadow(tlas, _worldPos, _worldNormal, bias, lightDir, far);						
+				shadow = getRaytracedShadow(tlas, _eyePos, _worldPos, _worldNormal, bias, lightDir, far);						
 				
 				#else // _RAYTRACING
 

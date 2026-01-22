@@ -9,6 +9,7 @@
 #include "system/outlinemask.hlsli"
 #include "system/debugdisplay.hlsli"
 #include "raytracing/raytracing.hlsli"
+#include "system/lighting.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -255,114 +256,8 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     bool drawOpaque = true;
     bool drawAlpha = true;
     
-    // 1. Opaque + alphatest
-    if (drawOpaque)
-    {                    
-        RayQuery<RAY_FLAG_NONE> query;
+    color = getRaytracedColor(getTLAS(viewConstants.getTLASHandle()), origin, dir, nearDist, farDist, drawOpaque, drawAlpha, flags, mode);
 
-        RayDesc ray;
-        ray.Origin = origin;
-        ray.Direction = dir;
-        ray.TMin = nearDist;
-        ray.TMax = farDist;
-        
-        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
-        
-        while (query.Proceed())
-        {
-            switch (query.CandidateType())
-            {
-                case CANDIDATE_NON_OPAQUE_TRIANGLE:
-			    {
-                    MaterialSample mat = getRaytracingCandidateMaterial(query, flags, mode);
-
-                    if (mat.surfaceType != SurfaceType::AlphaBlend && mat.albedo.a > 0)
-                    {
-                        query.CommitNonOpaqueTriangleHit();
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-            
-        switch (query.CommittedStatus())
-        {
-            case COMMITTED_TRIANGLE_HIT:
-		    {
-			    // Triangle hit
-                hitOpaque = true;
-                hitOpaqueDist = query.CommittedRayT();
-            
-                MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
-                color = mat.albedo;
-            }
-            break;
-        
-		    // We do not need this case because we initialize the values by default to be as if the ray missed
-            case COMMITTED_NOTHING:
-		    {
-                color.rgb = float3(1, 0, 1);
-            }
-            break;
-        }
-    }
-    
-    // 2. Alphablend
-    if (drawAlpha)
-    {
-        RayQuery<RAY_FLAG_NONE> query;
-
-        RayDesc ray;
-        ray.Origin = origin;
-        ray.Direction = dir;
-        ray.TMin = nearDist;
-        ray.TMax = hitOpaqueDist;
-        
-        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE /*RAY_FLAG_CULL_FRONT_FACING_TRIANGLES*/, 0xff, ray);
-        
-        while (query.Proceed())
-        {
-            switch (query.CandidateType())
-            {
-                case CANDIDATE_NON_OPAQUE_TRIANGLE:
-			    {
-                    if (query.CandidateTriangleRayT() < hitOpaqueDist)
-                    {
-                        MaterialSample mat = getRaytracingCandidateMaterial(query, flags, mode);
-
-                        if (mat.surfaceType == SurfaceType::AlphaBlend && mat.albedo.a > 0)
-                        {
-                            float3 srcColor = mat.albedo.rgb;
-                            float srcAlpha = mat.albedo.a * 0.5;
-                            
-                            float3 dstColor = color.rgb;
-                            
-                            color.rgb = srcColor * srcAlpha + dstColor * (1-srcAlpha);
-                        }
-                    }
-                }
-                break;
-            }
-        }
-            
-        //switch (query.CommittedStatus())
-        //{
-        //    case COMMITTED_TRIANGLE_HIT:
-		//    {       
-        //        MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
-        //         //mat.albedo;
-        //    }
-        //    break;
-        //
-        //    case COMMITTED_NOTHING:
-		//    {
-        //
-        //    }
-        //    break;
-        //}
-    }
-    
     return color;
 }
 #endif // _RAYTRACING
@@ -411,14 +306,14 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         color = DebugRayTracing(color, uv, screenSize, viewConstants);
         #endif
 
-        // outline
+        // Editor outline
         {
             #if 0
 
             float visible = 0.0f;
             float hidden = 0.0f;
 
-            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getOutlineMask());
+            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getEditorOutlineMask());
             
             outlineEdge(outline, coords.xy + int2( 0, -1), visible, hidden);
             outlineEdge(outline, coords.xy + int2(-1,  0), visible, hidden);
@@ -514,8 +409,14 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             case DisplayMode::Lighting_EnvironmentSpecularBRDF:
             color.rgb = getTexture2D(viewConstants.getSpecularBRDF()).SampleLevel(nearestClamp, uv, 0).rgb;
             break;
+            
+            case DisplayMode::PostProcess_GameOutlineMask:
+            {
+                color.rgb = float3(1,0,1); // TODO
+            }
+            break;
 
-            case DisplayMode::PostProcess_OutlineMask:
+            case DisplayMode::PostProcess_EditorOutlineMask:
             {
                 uint sample = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords,0)).a;
                 uint id = sample & (uint)~0x80000000;

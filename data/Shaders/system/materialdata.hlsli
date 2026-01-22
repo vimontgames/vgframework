@@ -61,6 +61,7 @@ struct GPUMaterialData
         setTiling(float2(1.0, 1.0));
         setOffset(float2(0.0, 0.0));
         setEmissiveColor(float4(0,0,0,0));
+        setCullMode(CullMode::Back);
     }   
     #endif 
 
@@ -81,12 +82,15 @@ struct GPUMaterialData
     
     void                setEmissiveTextureHandle    (uint _value)               { textures.y = packUint16high(textures.y, _value); }
     uint                getEmissiveTextureHandle    ()                          { return unpackUint16high(textures.y); }
-          
-    void                setInstanceColorMask        (InstanceColorMask _value)  { textures.w = packUint(textures.w, (uint)_value, 0xF, 16); }    // Use bits 16..19 
-    InstanceColorMask   getInstanceColorMask        ()                          { return (InstanceColorMask)unpackUint(textures.w, 0xF, 16); }       
+    
+    void                setCullMode                 (CullMode _value)           { textures.w = packUint(textures.w, (uint)_value, 0x3, 10); }    // Use bits 10..11 
+    CullMode            getCullMode                 ()                          { return (CullMode)unpackUint(textures.w, 0x3, 10); }       
     
     void                setVertexColorMask          (VertexColorMask _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 12); }    // Use bits 12..15 
     VertexColorMask     getVertexColorMask          ()                          { return (VertexColorMask)unpackUint(textures.w, 0xF, 12); }       
+    
+    void                setInstanceColorMask        (InstanceColorMask _value)  { textures.w = packUint(textures.w, (uint)_value, 0xF, 16); }    // Use bits 16..19 
+    InstanceColorMask   getInstanceColorMask        ()                          { return (InstanceColorMask)unpackUint(textures.w, 0xF, 16); }   
   
     void                setAlphaSource              (AlphaSource _value)        { textures.w = packUint(textures.w, (uint)_value, 0xF, 20); }    // Use bits 20..23 
     AlphaSource         getAlphaSource              ()                          { return (AlphaSource)unpackUint(textures.w, 0xF, 20); }            
@@ -127,7 +131,7 @@ struct GPUMaterialData
     void                setEmissiveIntensity        (float _value)              { misc.z = _value; }
     float               getEmissiveIntensity        ()                          { return misc.z; }
 
-    #ifndef __cplusplus
+    #ifndef __cplusplus    
     //--------------------------------------------------------------------------------------
     float4 getVertexColorOut(float4 _vertexColor, DisplayFlags _flags, DisplayMode _mode)
     {

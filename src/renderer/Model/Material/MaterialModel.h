@@ -11,14 +11,13 @@ struct GPUMaterialData;
 
 enum class SurfaceType : vg::core::u8;
 enum class AlphaSource : vg::core::u8;
+enum class CullMode : vg::core::u8;
 
 namespace vg::gfx
 {
     class CommandList;
     class Texture;
     class Buffer;
-
-    enum class CullMode : core::u8;
 }
 
 namespace vg::renderer

@@ -112,6 +112,7 @@ namespace vg::renderer
     {
         // Common
         _data->setSurfaceType(m_surfaceType);
+        _data->setCullMode(m_cullMode);
    
         // Alpha
         _data->setAlphaSource(m_alphaSource);
@@ -251,21 +252,34 @@ namespace vg::renderer
         }
 
         CullMode cullMode;
-        switch (m_cullMode)
-        {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_cullMode);
-                break;
-            case CullMode::None:
-                cullMode = CullMode::None;
-                break;
-            case CullMode::Back:
-                cullMode = _renderContext.m_reverseCullMode ? CullMode::Front : CullMode::Back;
-                break;
-            case CullMode::Front:
-                cullMode = _renderContext.m_reverseCullMode ? CullMode::Back : CullMode::Front;
-                break;
 
+        // During raytracing, cullmode has no effect on opaques because front/back faces cannot be manually tested.
+        // We do not use the RAY_FLAG_CULL_FRONT_FACING_TRIANGLES flag during raytrace because:
+        // 1) - Can be worse for performance on AMD (https://gpuopen.com/learn/improving-rt-perf-with-rra/)
+        // 2) - When we do alphatest it's during the same 'query.Proceed()' loop and we want to be able to filter back/front faces
+        
+        //if (m_surfaceType == SurfaceType::Opaque)
+        //{
+        //    cullMode = CullMode::None;
+        //}
+        //else
+        {
+            switch (m_cullMode)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_cullMode);
+                    break;
+                case CullMode::None:
+                    cullMode = CullMode::None;
+                    break;
+                case CullMode::Back:
+                    cullMode = _renderContext.m_reverseCullMode ? CullMode::Front : CullMode::Back;
+                    break;
+                case CullMode::Front:
+                    cullMode = _renderContext.m_reverseCullMode ? CullMode::Back : CullMode::Front;
+                    break;
+
+            }
         }
         rs = RasterizerState(rs.getFillMode(), cullMode);
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _RAYTRACING__HLSL_
+#define _RAYTRACING__HLSL_
 
 #include "system/instancedata.hlsli"
 #include "system/vertex.hlsli"
@@ -67,8 +68,9 @@ Vertex getRaytracingInterpolatedVertex(GPUInstanceData instanceData, GPUBatchDat
 //--------------------------------------------------------------------------------------
 struct MaterialSample
 {
-    uint matID;
     SurfaceType surfaceType;
+    CullMode cullMode;
+    uint matID;    
     float2 uv0;
     float4 albedo;
 };
@@ -97,7 +99,10 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     
     mat.matID = geometryIndex;
     mat.surfaceType = materialData.getSurfaceType();
+    mat.cullMode = materialData.getCullMode();
     mat.uv0 = uv0;
+    
+    //float3 worldNormal = vert.getNrm(); // TODO: matrix should be part of the instance data?
     
     mat.albedo = materialData.getAlbedo(uv0, instanceData.getInstanceColor(_flags), vertexColor, _flags, _mode, true);   
 
@@ -189,25 +194,21 @@ bool IsRaytracingDebugDisplayMode(DisplayMode mode)
 //--------------------------------------------------------------------------------------
 // Raytraced shadow calculation (0.0f = completely shadowed, 1.0f = no shadow)
 //--------------------------------------------------------------------------------------
-float3 getRaytracedShadow(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 _worldNormal, float _bias, float3 _lightDir, float _lightFar)
+float3 getRaytracedShadow(RaytracingAccelerationStructure _tlas, float3 _camPos, float3 _worldPos, float3 _worldNormal, float _bias, float3 _lightDir, float _lightFar)
 {    
     float3 shadow = (float3)1;	
+    
+    float hitDistance = length(_worldPos - _camPos);
+    float kDistanceScale = 0.001f;
+    float kMinBias = 0.00001f;
+    float distanceBias = max(kMinBias, hitDistance * kDistanceScale);
     			
-    #if 1
-    // Use world normal for bias
+    // TODO: Use world-space geometric normal instead of world-space normal map for bias direction?
 	RayDesc ray;
-	ray.Origin    = _worldPos + _worldNormal.xyz *  _bias * 10.0f; // TODO: use geometric normal
+    ray.Origin    = _worldPos + distanceBias * _worldNormal.xyz;
 	ray.Direction = _lightDir;
 	ray.TMin      = 0; // OK because we bias origin
 	ray.TMax      = _lightFar;
-	#else
-	// Fixed bias		
-	RayDesc ray;
-	ray.Origin    = _worldPos;
-	ray.Direction = _lightDir;
-	ray.TMin      = 0.005;
-	ray.TMax      = _lightFar;
-	#endif
 				
 	RayQuery<RAY_FLAG_NONE> query;
 	query.TraceRayInline(_tlas, RAY_FLAG_NONE, 0xff, ray);
@@ -250,3 +251,5 @@ float3 getRaytracedShadow(RaytracingAccelerationStructure _tlas, float3 _worldPo
     
     return shadow;
 }
+
+#endif // _RAYTRACING__HLSL_

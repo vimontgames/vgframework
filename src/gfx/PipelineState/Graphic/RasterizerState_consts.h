@@ -7,12 +7,6 @@ namespace vg::gfx
         Wireframe
     );
 
-    vg_enum_class(vg::gfx, CullMode, core::u8,
-        None = 0,
-        Back,
-        Front
-    );
-
     vg_enum_class(vg::gfx, Orientation, core::u8,
         ClockWise = 0,
         CounterClockWise

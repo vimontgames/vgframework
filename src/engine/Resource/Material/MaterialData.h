@@ -3,13 +3,6 @@
 #include "core/Object/Object.h"
 #include "renderer/Model/Material/Material_Consts.h"
 
-namespace vg::gfx
-{
-    enum class SurfaceType : core::u8;
-    enum class AlphaSource : core::u8;
-    enum class CullMode : core::u8;
-}
-
 namespace vg::renderer
 {
     class IMaterialModel;

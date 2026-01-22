@@ -74,15 +74,6 @@ namespace vg::renderer
     void EditorPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         DebugDraw::get()->update(static_cast<const View*>(_renderPassContext.getView()), _cmdList);
-
-        //auto OutlineMaskTex = getRenderTarget(_renderPassContext.getFrameGraphID("OutlineMask"));
-        //auto outlineMask = OutlineMaskTex->getTextureHandle();
-
-        //EditorPassConstants * constants = (EditorPassConstants *)_cmdList->map(s_editorPassConstantsBuffer, sizeof(EditorPassConstants)).data;
-        //{
-        //    constants->setOutlineMask(outlineMask);
-        //}
-        //_cmdList->unmap(s_editorPassConstantsBuffer);
     }
 
     //--------------------------------------------------------------------------------------

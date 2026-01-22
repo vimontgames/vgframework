@@ -27,6 +27,7 @@ vg_enum_class_global(DisplayMode, u32,
     Geometry_VertexTangent,   
     Geometry_VertexBinormal,  
     Geometry_MaterialID,    
+    Geometry_FrontFace,
    
     Forward_SurfaceType,  
     Forward_WorldPosition,   
@@ -67,7 +68,8 @@ vg_enum_class_global(DisplayMode, u32,
     PostProcess_DepthOfField,
     PostProcess_FXAAEdges,
     PostProcess_WorldPos,
-    PostProcess_OutlineMask,
+    PostProcess_GameOutlineMask,
+    PostProcess_EditorOutlineMask,
     PostProcess_PixelChecker
 );
 

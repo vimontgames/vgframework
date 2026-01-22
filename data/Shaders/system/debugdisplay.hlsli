@@ -73,7 +73,7 @@ float3 getSurfaceTypeColor(SurfaceType _surfaceType)
     return float3(0, 0, 0);
 }
 
-float4 forwardDebugDisplay(float4 _color, GPUInstanceData _instanceData, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal, float3 _pbr)
+float4 forwardDebugDisplay(float4 _color, GPUInstanceData _instanceData, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal, float3 _pbr, bool _isFrontFace)
 {
     switch (_mode)
     {
@@ -83,6 +83,13 @@ float4 forwardDebugDisplay(float4 _color, GPUInstanceData _instanceData, Display
     
         case DisplayMode::Geometry_MaterialID:
             return SRGBAToLinear(float4(getMatIDColor(_matID), 1.0f));
+        
+        case DisplayMode::Geometry_FrontFace:
+        {
+            _color.rgb = _isFrontFace? float3(0,1,0) : float3(1,0,0);
+            return _color;
+        }
+        break;
             
         case DisplayMode::Geometry_VertexTangent:
             return SRGBAToLinear(float4(normalize(_tan) * 0.5f + 0.5f, 1.0f));

@@ -77,6 +77,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Geometry_VertexColor:
 	    case DisplayMode::Geometry_UV0:
         case DisplayMode::Geometry_UV1:
+        case DisplayMode::Geometry_FrontFace:
         case DisplayMode::Material_Albedo:
         case DisplayMode::Material_AmbientOcclusion:
         case DisplayMode::Material_Roughness:

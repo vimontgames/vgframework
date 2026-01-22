@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RasterizerState_consts.h"
+#include "Shaders/system/device_consts.hlsli"
 
 namespace vg::gfx
 {
