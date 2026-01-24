@@ -80,4 +80,22 @@ namespace vg::renderer
     {
         return m_instanceVertexBufferOffset;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool GraphicInstance::isStencilEnabled() const
+    {
+        return m_stencilEnable;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::u8 GraphicInstance::getStencilRef() const
+    {
+        return m_stencilRef;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const gfx::StencilState GraphicInstance::getStencilState() const
+    {
+        return m_stencilState;
+    }
 }

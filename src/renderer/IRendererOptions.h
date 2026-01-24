@@ -50,5 +50,7 @@ namespace vg::renderer
 
         virtual void                    EnableUI3D                              (bool _enable) = 0;
         virtual bool                    IsUI3DEnabled                           () const = 0;
+
+        virtual const core::string &    GetStencilBitName                       (core::uint _index) const = 0;
     };
 }

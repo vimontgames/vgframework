@@ -4,6 +4,7 @@
 #include "engine/IMeshComponent.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "engine/Component/Renderer/MaterialResourceList.h"
+#include "engine/Component/Renderer/RenderStates.h"
 
 namespace vg::renderer
 {
@@ -22,6 +23,8 @@ namespace vg::engine
 
                                             MeshComponent           (const core::string & _name, IObject * _parent);
                                             ~MeshComponent          ();
+
+        bool                                RegisterUID             () final override;
 
         void                                Update                  (const Context & _context) override;
 
@@ -55,6 +58,7 @@ namespace vg::engine
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
         core::BitMask                       m_batchMask;
+        StencilState                        m_stencil;
     };
 }
 

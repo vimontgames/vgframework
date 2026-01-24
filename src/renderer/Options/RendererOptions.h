@@ -101,11 +101,13 @@ namespace vg::renderer
         gfx::VSync              GetVSync                                () const final override;
         bool                    SetVSync                                (gfx::VSync _vsync) final override;
 
-       void                     EnableUI2D                              (bool _enable) final override;
-       bool                     IsUI2DEnabled                           () const final override;
+        void                    EnableUI2D                              (bool _enable) final override;
+        bool                    IsUI2DEnabled                           () const final override;
 
-       void                     EnableUI3D                              (bool _enable) final override;
-       bool                     IsUI3DEnabled                           () const final override;
+        void                    EnableUI3D                              (bool _enable) final override;
+        bool                    IsUI3DEnabled                           () const final override;
+
+        const core::string &    GetStencilBitName                       (core::uint _index) const final override;
 
         void                    OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
@@ -243,6 +245,8 @@ namespace vg::renderer
         core::IProperty *       m_vsyncProp                             = nullptr;
         core::IProperty *       m_msaaProp[core::enumCount<Quality>()]  = {};
         core::IProperty *       m_aaPostProcessProp                     = nullptr;
+
+        vg::core::string        m_stencilBitNames[core::enumCount<gfx::StencilBit>()];
     };
 }
 

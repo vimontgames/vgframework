@@ -71,6 +71,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void GraphicInstance::SetStencil(bool _enable, core::u8 _ref, const gfx::StencilState & _state)
+    {
+        m_stencilEnable = _enable;
+        m_stencilRef = _ref;
+        m_stencilState = _state;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GraphicInstance::SetMaterialCount(core::uint _count)
     {
         return setMaterialCount(_count);

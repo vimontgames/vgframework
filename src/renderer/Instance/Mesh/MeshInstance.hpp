@@ -475,6 +475,14 @@ namespace vg::renderer
             auto pickingID = GetPickingID();
             root3D.setPickingID(pickingID);
 
+            // stencil override
+            const bool stencilOverride = isStencilEnabled() && (ShaderPass::Forward == _renderContext.m_shaderPass || ShaderPass::Deferred == _renderContext.m_shaderPass);
+            if (stencilOverride)
+            {
+                _cmdList->setStencilState(true, 0xFF, 0xFF, getStencilState(), getStencilState()); // Use default RW mask and same front & back stencil
+                _cmdList->setStencilRefValue(getStencilRef());
+            }
+
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
             const BitMask & batchMask = getBatchMask();
 
@@ -517,6 +525,13 @@ namespace vg::renderer
                     _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);
                 }
+            }
+
+            // restore stencil
+            if (stencilOverride)
+            {
+                _cmdList->setStencilState(false);
+                _cmdList->setStencilRefValue(0);
             }
         }
     }

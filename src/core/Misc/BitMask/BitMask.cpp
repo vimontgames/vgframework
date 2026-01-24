@@ -12,7 +12,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     BitMask::BitMask(uint _bitCount, bool _default)
     {
-        setBitCount(_bitCount);
+        setBitCount(_bitCount, _default);
     }
 
     //--------------------------------------------------------------------------------------

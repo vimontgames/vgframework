@@ -10,6 +10,7 @@ namespace vg::core
 namespace vg::gfx
 {
     class CommandList;
+    struct StencilState;
 }
 
 namespace vg::renderer
@@ -44,5 +45,7 @@ namespace vg::renderer
 
         virtual GraphicInstanceType GetGraphicIntanceType   () const = 0;
         virtual bool                IsSkinned               () const = 0;
+
+        virtual void                SetStencil              (bool _enable, core::u8 _ref, const gfx::StencilState & _state) = 0;
     };
 }

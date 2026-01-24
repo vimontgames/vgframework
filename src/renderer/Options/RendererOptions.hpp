@@ -318,7 +318,9 @@ namespace vg::renderer
             setPropertyDescription(RendererOptions, m_particles, "Show particles");
 
             registerProperty(RendererOptions, m_debugFrustum, "Frustum");
-            setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");            
+            setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");   
+
+            registerPropertyEnumArray(RendererOptions, string, gfx::StencilBit, m_stencilBitNames, "Stencil Bits");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -856,5 +858,12 @@ namespace vg::renderer
     bool RendererOptions::IsUI3DEnabled() const
     {
         return m_enableUI3D;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string & RendererOptions::GetStencilBitName(core::uint _index) const
+    {
+        VG_ASSERT(_index < countof(m_stencilBitNames));
+        return m_stencilBitNames[_index];
     }
 }

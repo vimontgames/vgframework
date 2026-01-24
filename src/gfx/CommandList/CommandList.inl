@@ -37,6 +37,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::setStencilState(bool _stencilEnable, core::u8 _stencilReadMask, core::u8 _stencilWriteMask, gfx::StencilState _stencilFront, gfx::StencilState _stencilBack)
+    {
+        super::setStencilState(_stencilEnable, _stencilReadMask, _stencilWriteMask, _stencilFront, _stencilBack);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::setStencilRefValue(core::u8 _stencilRef)
     {
         super::setStencilRefValue(_stencilRef);

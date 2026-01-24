@@ -186,6 +186,7 @@ namespace vg::core
         rangeCallback(_other.rangeCallback),
         isHiddenCallback(_other.isHiddenCallback),
         isReadOnlyCallback(_other.isReadOnlyCallback),
+        namesCallback(_other.namesCallback),
         enums(_other.enums)
     {
         

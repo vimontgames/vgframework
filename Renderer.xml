@@ -76,5 +76,15 @@
         <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
         <Property type="Bool" name="m_particles" value="true"/>
         <Property type="Bool" name="m_debugFrustum" value="false"/>
+        <Property type="String" name="m_stencilBitNames">
+            <Value name="StencilBit_0" value="Bit 0"/>
+            <Value name="StencilBit_1" value="Bit 1"/>
+            <Value name="StencilBit_2" value="Bit 2"/>
+            <Value name="StencilBit_3" value="Bit 3"/>
+            <Value name="StencilBit_4" value="Bit 4"/>
+            <Value name="StencilBit_5" value="Bit 5"/>
+            <Value name="StencilBit_6" value="Bit 6"/>
+            <Value name="StencilBit_7" value="Bit 7"/>
+        </Property>
     </Object>
 </Root>

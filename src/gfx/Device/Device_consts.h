@@ -56,6 +56,8 @@ namespace vg::gfx
         Exclusive
     );
 
+    vg_generic_enum_bitfield_8(vg::gfx, StencilBit);
+
     struct DeviceParams
     {
         core::WinHandle			window = core::invalidWindowHandle;

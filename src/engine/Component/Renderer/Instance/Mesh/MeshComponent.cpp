@@ -55,6 +55,10 @@ namespace vg::engine
         
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         setPropertyNamesCallback(MeshComponent, m_batchMask, getBatchNames);
+
+        registerPropertyGroupBegin(MeshComponent, "Stencil");
+        registerProperty(MeshComponent, m_stencil, "Stencil");
+        registerPropertyGroupEnd(MeshComponent);
          
         return true;
     }
@@ -63,7 +67,8 @@ namespace vg::engine
     MeshComponent::MeshComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
         m_meshResource(_name, this),
-        m_meshMaterials(_name, this)
+        m_meshMaterials(_name, this),
+        m_stencil(_name, this)
     {
         m_meshInstance = (IMeshInstance *)CreateFactoryObject(MeshInstance, _name, this);
 
@@ -100,6 +105,13 @@ namespace vg::engine
             // This should *NOT* be done every frame but only when the property changes
             m_meshInstance->setObjectFlags(ObjectFlags::NoCulling, asBool(ComponentFlags::NoCulling & getComponentFlags()));
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshComponent::RegisterUID()
+    {
+        m_stencil.RegisterUID();
+        return super::RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -220,6 +232,11 @@ namespace vg::engine
                 }
             }
         }
+        else if (!strcmp(_prop.GetName(), "m_stencil"))
+        {
+            if (nullptr != m_meshInstance)
+                m_meshInstance->SetStencil(m_stencil.isEnabled(), m_stencil.getGfxStencilRef(), m_stencil.getGfxStencilState());
+        }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
@@ -235,8 +252,8 @@ namespace vg::engine
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
             m_batchMask.setBitCount(meshModel->GetBatchCount(), true);
-            //m_batchMask.setNames(meshModel->GetBatchNames());
             m_meshInstance->SetBatchMask(m_batchMask);
+            m_meshInstance->SetStencil(m_stencil.isEnabled(), m_stencil.getGfxStencilRef(), m_stencil.getGfxStencilState());
 
             if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
             {

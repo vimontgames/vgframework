@@ -2,6 +2,7 @@
 
 #include "renderer/IGraphicInstance.h"
 #include "core/Misc/BitMask/BitMask.h"
+#include "gfx/PipelineState/Graphic/DepthStencilState.h"
 
 enum class VertexFormat : vg::core::u8;
 enum class SurfaceTypeFlags : vg::core::u8;
@@ -58,6 +59,7 @@ namespace vg::renderer
         void                                            ClearPickingID                  () override;
         void                                            SetPickingID                    (PickingID _id) override;
         PickingID                                       GetPickingID                    () const override;
+        void                                            SetStencil                      (bool _enable, core::u8 _ref, const gfx::StencilState & _state) override;
 
         // New virtual functions added to GraphicInstance
         virtual bool                                    Cull                            (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
@@ -103,6 +105,10 @@ namespace vg::renderer
         VG_INLINE void                                  setSurfaceTypeFlags             (SurfaceTypeFlags _flag, bool _enabled);
         VG_INLINE SurfaceTypeFlags                      computeSurfaceTypeFlags         () const;
 
+        VG_INLINE bool                                  isStencilEnabled                () const;
+        VG_INLINE core::u8                              getStencilRef                   () const;
+        VG_INLINE const gfx::StencilState               getStencilState                 () const;
+
     private:
          core::atomic<core::u32>                        m_atomicFlags;
         SurfaceTypeFlags                                m_surfaceTypes                  = (SurfaceTypeFlags)0x0;
@@ -118,6 +124,10 @@ namespace vg::renderer
         #if GPUDATAOFFSET_FRAME_COUNTER
         core::u64                                       m_gpuInstanceDataFrameIndex     = (core::u64)(-1L); // Used to check the frame GPUInstanceData offset has been set
         #endif
+
+        bool                                            m_stencilEnable = false;
+        core::u8                                        m_stencilRef = 0x0;
+        gfx::StencilState                               m_stencilState;
     };
 }
 
