@@ -847,7 +847,7 @@ namespace vg::engine
             }
             else
             {
-                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\" instance %s", propListUID, m_prefabResource.GetResourcePath().c_str(), _gameObject->GetFullName().c_str());
+                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\" instance \"%s\"", propListUID, m_prefabResource.GetResourcePath().c_str(), _gameObject->GetFullName().c_str());
             }
         }
 
