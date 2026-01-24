@@ -1331,7 +1331,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" value="1093025436"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="-8.7422777e-08" Iz="0" Iw="0" Jx="8.7422777e-08" Jy="-1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="18" Ty="0" Tz="0" Tw="1"/>
@@ -1341,7 +1341,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Cones"/>
                                 <Property type="Uint32" name="m_uid" value="1793450953"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1462,6 +1462,26 @@
                                             <Object class="PrefabResource">
                                                 <Property type="String" name="m_name" value="Cone_10"/>
                                                 <Property type="Uint32" name="m_uid" value="3085785500"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Cone.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Cone_11"/>
+                                        <Property type="Uint32" name="m_uid" value="4068896957"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="43.051689" Ty="-31.102571" Tz="0.18241121" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                        <Property type="Resource" name="m_prefabResource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" value="Cone_11"/>
+                                                <Property type="Uint32" name="m_uid" value="3316826526"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Cone.prefab"/>
                                             </Object>
@@ -16605,6 +16625,19 @@
                                                             </Object>
                                                         </Property>
                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                        <Property type="Object" name="m_stencil">
+                                                            <Object class="StencilState">
+                                                                <Property type="String" name="m_name" value="LinesDecal"/>
+                                                                <Property type="Uint32" name="m_uid" value="4146178680"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                            </Object>
+                                                        </Property>
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -21333,7 +21366,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -21936,7 +21969,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-69.5" Ty="-10" Tz="0.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="0.95882219" Tz="0.22581166" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -21956,7 +21989,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="-10" Tz="0.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-71.5" Ty="0.95882219" Tz="0.22581166" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -21976,7 +22009,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-70.5" Ty="-10" Tz="1.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-71.5" Ty="0.95882219" Tz="1.2258114" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -22557,7 +22590,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Blue Compact"/>
                                         <Property type="Uint32" name="m_uid" value="3823590145"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.001086086" Iy="-0.9999994" Iz="0" Iw="0" Jx="0.9999994" Jy="-0.001086086" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-15" Ty="1" Tz="0.1871559" Tw="1"/>
@@ -22660,6 +22693,35 @@
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="Float4" name="m_value" x="0.16470589" y="0.16470589" z="0.16470589" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="Compact"/>
+                                                <Property type="Uint32" name="m_uid" value="2147285494"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1795593057"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyBool">
+                                                        <Property type="String" name="m_name" value="m_enable"/>
+                                                        <Property type="Uint32" name="m_uid" value="2185176604"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Bool" name="m_value" value="true"/>
+                                                    </Object>
+                                                    <Object class="DynamicPropertyBitMask">
+                                                        <Property type="String" name="m_name" value="m_ref"/>
+                                                        <Property type="Uint32" name="m_uid" value="3393836819"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="BitMask" name="m_value" BitCount="8" Value="0x0000000000000001"/>
+                                                    </Object>
+                                                    <Object class="DynamicPropertyU16">
+                                                        <Property type="String" name="m_name" value="m_depthFailOp"/>
+                                                        <Property type="Uint32" name="m_uid" value="170500561"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Uint16" name="m_value" value="2"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -23721,6 +23783,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="440333912"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -23888,6 +23963,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="3137809536"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24043,6 +24131,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1136000306"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24198,6 +24299,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="838171210"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24353,6 +24467,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1916281401"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24508,6 +24635,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1964446296"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24663,6 +24803,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="3813181802"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24818,6 +24971,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="2528363209"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -24973,6 +25139,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1731605398"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25140,6 +25319,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="656641910"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25295,6 +25487,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="592046319"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25450,6 +25655,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="2165409264"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25605,6 +25823,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1082096577"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25760,6 +25991,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="3200411832"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -25915,6 +26159,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1442832924"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -26070,6 +26327,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="1929903276"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -26225,6 +26495,19 @@
                                                                             </Object>
                                                                         </Property>
                                                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                                        <Property type="Object" name="m_stencil">
+                                                                            <Object class="StencilState">
+                                                                                <Property type="String" name="m_name" value="Barrier"/>
+                                                                                <Property type="Uint32" name="m_uid" value="2764681485"/>
+                                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                                                            </Object>
+                                                                        </Property>
                                                                     </Object>
                                                                 </Property>
                                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -27557,6 +27840,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Sphere"/>
+                                                <Property type="Uint32" name="m_uid" value="1439392578"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>

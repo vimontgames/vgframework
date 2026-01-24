@@ -8,7 +8,7 @@
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="2572754288"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -18,7 +18,7 @@
                         <Property type="String" name="m_name" value="RootTile"/>
                         <Property type="Uint32" name="m_uid" value="465528780"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28,15 +28,67 @@
                                 <Property type="String" name="m_name" value="Roof"/>
                                 <Property type="Uint32" name="m_uid" value="1574205569"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="0.72941178" y="0.56862748" z="0.32941177" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-5.9604645e-08" Iz="0.00034517067" Iw="0" Jx="1.1920952e-07" Jy="0.99999642" Jz="-2.8325969e-10" Jw="0" Kx="-0.00034516942" Ky="3.3473738e-10" Kz="0.99999636" Kw="0" Tx="-1.0003419" Ty="-7.1525654e-05" Tz="0.99965382" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="885638843"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Mesh"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="MeshShapeDesc">
+                                                <Property type="String" name="m_name" value="MeshShapeDesc #79"/>
+                                                <Property type="Uint32" name="m_uid" value="1566347407"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                                <Property type="ResourcePtr" name="m_meshResource">
+                                                    <Object class="MeshResource">
+                                                        <Property type="String" name="m_name" value="MeshResource #79"/>
+                                                        <Property type="Uint32" name="m_uid" value="1829330635"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Meshes/House/roof_slope.fbx"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsBodyComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3300089751"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="Bool" name="m_useCollisionMask" value="false"/>
+                                        <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
+                                        <Property type="ObjectPtr" name="m_bodyDesc">
+                                            <Object class="PhysicsBodyDesc">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #1345"/>
+                                                <Property type="Uint32" name="m_uid" value="3366640015"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_trigger" value="false"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
+                                                <Property type="EnumU16" name="m_layer" value="NonMoving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Static"/>
+                                                <Property type="Bool" name="m_staticMerge" value="true"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                                <Property type="Bool" name="m_overrideMass" value="false"/>
+                                                <Property type="Float" name="m_mass" value="0"/>
+                                                <Property type="Bool" name="m_overrideCenterOfMassOffset" value="false"/>
+                                                <Property type="Float3" name="m_centerOfMassOffset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_friction" value="0.5"/>
+                                                <Property type="Float" name="m_restitution" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
                                     <Object class="MeshComponent">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3436032337"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
@@ -63,6 +115,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Roof"/>
+                                                <Property type="Uint32" name="m_uid" value="297175528"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -71,7 +136,7 @@
                                 <Property type="String" name="m_name" value="Tile"/>
                                 <Property type="Uint32" name="m_uid" value="141372655"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-0.87036151" Iy="3.0081896e-08" Iz="0.30089024" Iw="0" Jx="-1.629616e-07" Jy="-0.7525" Jz="1.2467913e-07" Jw="0" Kx="-0.0867588" Ky="-3.7252903e-09" Kz="0.957757" Kw="0" Tx="0.98572892" Ty="0.73336273" Tz="-0.63618577" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -106,6 +171,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Tile"/>
+                                                <Property type="Uint32" name="m_uid" value="1327293827"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -114,7 +192,7 @@
                                 <Property type="String" name="m_name" value="Tile_01"/>
                                 <Property type="Uint32" name="m_uid" value="727856163"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-0.87036151" Iy="3.0081896e-08" Iz="0.30089024" Iw="0" Jx="-1.629616e-07" Jy="-0.7525" Jz="1.2467913e-07" Jw="0" Kx="-0.0867588" Ky="-3.7252903e-09" Kz="0.957757" Kw="0" Tx="0.98572892" Ty="-0.769005" Tz="-0.63618577" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -149,6 +227,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Tile_01"/>
+                                                <Property type="Uint32" name="m_uid" value="2092079760"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -157,7 +248,7 @@
                                 <Property type="String" name="m_name" value="Tile_02"/>
                                 <Property type="Uint32" name="m_uid" value="2674434969"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-0.87036151" Iy="3.0081896e-08" Iz="0.30089024" Iw="0" Jx="-1.629616e-07" Jy="-0.7525" Jz="1.2467913e-07" Jw="0" Kx="-0.0867588" Ky="-3.7252903e-09" Kz="0.957757" Kw="0" Tx="-0.74992698" Ty="0.73336273" Tz="-0.048080906" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -192,6 +283,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Tile_02"/>
+                                                <Property type="Uint32" name="m_uid" value="1285911016"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -200,7 +304,7 @@
                                 <Property type="String" name="m_name" value="Tile_03"/>
                                 <Property type="Uint32" name="m_uid" value="704902042"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-0.87036151" Iy="3.0081896e-08" Iz="0.30089024" Iw="0" Jx="-1.629616e-07" Jy="-0.7525" Jz="1.2467913e-07" Jw="0" Kx="-0.0867588" Ky="-3.7252903e-09" Kz="0.957757" Kw="0" Tx="-0.74992698" Ty="-0.769005" Tz="-0.048080906" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -235,6 +339,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Tile_03"/>
+                                                <Property type="Uint32" name="m_uid" value="1997778229"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
