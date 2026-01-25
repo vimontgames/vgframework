@@ -21,21 +21,22 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(ICharacter, core::Object)
 
-        virtual void            Activate        (const core::float4x4 & _world) = 0;
-        virtual void            Deactivate      (const core::float4x4 & _world) = 0;
+        virtual void                    Activate        (const core::float4x4 & _world) = 0;
+        virtual void                    Deactivate      (const core::float4x4 & _world) = 0;
 
-        virtual void            FixedUpdate     () = 0;
-        virtual void            Update          () = 0;
+        virtual void                    FixedUpdate     () = 0;
+        virtual void                    Update          () = 0;
 
-        virtual core::float3    GetVelocity     () const = 0;
-        virtual void            SetVelocity     (const core::float3 & _velocity) = 0;
+        virtual core::float3            GetVelocity     () const = 0;
+        virtual void                    SetVelocity     (const core::float3 & _velocity) = 0;
 
-        virtual void            SetPosition     (const core::float3 & _position) = 0;
-        virtual void            SetRotation     (const core::quaternion & _rotation) = 0;
+        virtual void                    SetPosition     (const core::float3 & _position) = 0;
+        virtual void                    SetRotation     (const core::quaternion & _rotation) = 0;
 
-        virtual core::float4x4  GetMatrix       () const = 0;
+        virtual core::float4x4          GetMatrix       () const = 0;
 
-        virtual GroundState     GetGroundState  () const = 0;
-        virtual bool            CanTeleportTo       (const core::float3 & _position) = 0;
+        virtual GroundState             GetGroundState  () const = 0;
+        virtual const core::IObject *   GetGroundObject () const = 0;
+        virtual bool                    CanTeleportTo   (const core::float3 & _position) = 0;
     };
 }

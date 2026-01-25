@@ -180,6 +180,7 @@ namespace vg::physics
     GroundState RigidCharacter::GetGroundState() const
     {
         JPH::CharacterBase::EGroundState state = m_character->GetGroundState();
+
         switch (state)
         {
             default:
@@ -197,6 +198,12 @@ namespace vg::physics
             case JPH::CharacterBase::EGroundState::InAir:
                 return GroundState::InAir;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::IObject * RigidCharacter::GetGroundObject() const
+    {
+        return (const core::IObject *)m_character->GetGroundUserData();
     }
 
     //--------------------------------------------------------------------------------------

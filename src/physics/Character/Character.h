@@ -29,13 +29,6 @@ namespace vg::physics
         Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Character();
 
-        void                    Activate        (const core::float4x4 & _world) override = 0;
-        void                    Deactivate      (const core::float4x4 & _world) override = 0;
-
-        core::float4x4          GetMatrix       () const override = 0;
-
-        GroundState             GetGroundState  () const override = 0;
-
     protected:
         const PhysicsWorld *    getPhysicsWorld () const { return m_physicsWorld;}
         const CharacterDesc *   getCharacterDesc() const { return m_characterDesc; }
@@ -68,6 +61,7 @@ namespace vg::physics
 
         core::float4x4          GetMatrix       () const final override;
         GroundState             GetGroundState  () const final override;
+        const core::IObject *   GetGroundObject () const final override;
         bool                    CanTeleportTo   (const core::float3 & _position) final override;
 
     private:

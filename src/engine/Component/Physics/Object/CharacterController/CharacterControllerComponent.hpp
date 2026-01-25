@@ -43,6 +43,9 @@ namespace vg::engine
             createCharacter();
 
         EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+
+        const auto & options = Engine::get()->GetOptions();
+        m_weapongTag = options->GetGameObjectTag("Weapon");
     }
 
     //--------------------------------------------------------------------------------------
@@ -237,7 +240,13 @@ namespace vg::engine
                 float4x4 matrix = m_character->GetMatrix();
                 _context.m_gameObject->setGlobalMatrix(matrix);
 
-                m_groundState = m_character->GetGroundState();
+                auto groundState = m_character->GetGroundState();
+                const IComponent * groundComponent = dynamic_cast<const IComponent*>(m_character->GetGroundObject());
+
+                if (nullptr != groundComponent && asBool(m_weapongTag & groundComponent->GetGameObject()->GetTags()) && groundState == physics::GroundState::Grounded)
+                    m_groundState = physics::GroundState::InAir;
+                else
+                    m_groundState = groundState;
             }
         }  
     } 

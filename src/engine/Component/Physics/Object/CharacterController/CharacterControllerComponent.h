@@ -53,6 +53,7 @@ namespace vg::engine
         physics::ICharacter *       m_character     = nullptr;
 
         // debug
-        physics::GroundState        m_groundState  = (physics::GroundState)-1;
+        physics::GroundState        m_groundState   = (physics::GroundState)-1;
+        vg::core::Tag               m_weapongTag    = (vg::core::Tag)0x0;
     };
 }

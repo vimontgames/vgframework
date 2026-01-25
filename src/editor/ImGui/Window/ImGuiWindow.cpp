@@ -711,6 +711,8 @@ namespace vg::editor
         bool edited = false, changed = false;
         string preview;
 
+        const auto names = _prop->GetPropertyNames(_propContext.m_originalObject); // Always use the original object to get names because override use another object type than original
+
         bool first = true, found = false, allBitsSet = _prop->GetEnumCount() > 0;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
@@ -718,7 +720,7 @@ namespace vg::editor
 
             if (enumVal & bit)
             {
-                string name = _prop->GetEnumName(e);
+                string name = e < names.size() ? names[e] : _prop->GetEnumName(e);
                 std::replace(name.begin(), name.end(), '_', ' ');
 
                 if (name[0] != 0)
@@ -752,7 +754,7 @@ namespace vg::editor
                 const auto bit = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
 
                 bool value = (bit & enumVal) ? true : false;
-                string name = _prop->GetEnumName(e);
+                string name = e < names.size() ? names[e] : _prop->GetEnumName(e);
 
                 if (!name.empty())
                 {

@@ -31,6 +31,7 @@ namespace vg::engine
 
         registerOptionalPropertyEnumBitfield(PhysicsObjectComponent, m_useCollisionMask, physics::CategoryFlag, m_collisionMask, "Collision Mask");
         setPropertyDescription(PhysicsObjectComponent, m_collisionMask, "Enable/Disable collisions with specifig object categories");
+        setPropertyNamesCallback(PhysicsObjectComponent, m_collisionMask, getPhysicsCategoryNames);
 
         return true;
     }
