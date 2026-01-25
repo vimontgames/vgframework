@@ -6,6 +6,8 @@
 #include "displaymodes.hlsli"
 #include "outlinemask.hlsli"
 
+#define LOAD_OUTLINE_COLORS 1
+
 struct ViewConstants
 {
     #ifdef __cplusplus
@@ -50,44 +52,45 @@ struct ViewConstants
     #else 
     void Load(ByteAddressBuffer _buffer, uint _offset = 0)
     {       
-        m_screenSizeAndMousePos   = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
-        m_debugDisplay            = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
-        m_camera                  = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_rayTracing              = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
+        m_screenSizeAndMousePos   = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);   
+        m_debugDisplay            = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);   
+        m_camera                  = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  
+        m_rayTracing              = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);   // 64
                                                                   
-        m_view[0]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_view[1]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_view[2]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_view[3]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_view[0]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  
+        m_view[1]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  
+        m_view[2]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  
+        m_view[3]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 128
                                                                     
         m_proj[0]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_proj[1]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_proj[2]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_proj[3]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_proj[3]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 192
 
         m_viewInv[0]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_viewInv[1]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_viewInv[2]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_viewInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_viewInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 256
                                                                  
         m_projInv[0]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_projInv[1]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_projInv[2]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_projInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_projInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 320
 
         m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_pbr                     = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_textures                = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
-
-        m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 384
         
-        // TODO: use 'LoadOutlineColors' method instead to save VGPRs
+        // Better use 'LoadOutlineColors' method to save VGPRs
+        #if !LOAD_OUTLINE_COLORS
         for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
         {
             m_outlineCategory[i].zPassOutlineColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
             m_outlineCategory[i].zFailOutlineColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
             m_outlineCategory[i].zFailFillColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         }
+        #endif
     }
     #endif
 
@@ -191,9 +194,15 @@ struct ViewConstants
     void            setDOFScale             (float _dofScale)                   { m_lens.w = _dofScale; }
     float           getDOFScale             ()                                  { return m_lens.w; }
       
+    #ifndef __cplusplus
     float4          getZPassOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zPassOutlineColor; }
     float4          getZFailOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zFailOutlineColor; }
     float4          getZFailFillColor       (uint _index)                       { return m_outlineCategory[_index].zFailFillColor; }
+    
+    float4          loadZPassOutlineColor   (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 0 * sizeof(float4)); }
+    float4          loadZFailOutlineColor   (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 1 * sizeof(float4)); }
+    float4          loadZFailFillColor      (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 2 * sizeof(float4)); }
+    #endif
     
     void setOutlineColors(uint _index, float4 _zPassOutline, float4 _zFailOutline, float4 _zFailFill) 
     { 

@@ -317,6 +317,10 @@ namespace vg::renderer
 
                 postProcess.setOutlineMask(outlineMask);
             }
+            else
+            {
+                postProcess.setOutlineMask(0);
+            }
 
             _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
 

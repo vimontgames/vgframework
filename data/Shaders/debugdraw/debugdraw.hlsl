@@ -130,8 +130,10 @@ PS_Output_Outline PS_DebugDrawOutline(VS_Output_Outline _input)
     if (!linearDepthTest(screenPos.xy, _input.vpos))
         flags |= (uint)OutlineMaskFlags::DepthFail;
 
+    uint cat = 1;
+    
     output.value.x = id;
-    output.value.y = flags;
+    output.value.y = flags | cat;
     
     return output;
 }

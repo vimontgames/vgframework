@@ -375,47 +375,6 @@ PS_GBufferOutput PS_Deferred(VS_Output _input, bool _isFrontFace : SV_IsFrontFac
     #endif
 }
 
-#if 0
-#if! _ZONLY
-//--------------------------------------------------------------------------------------
-VS_Output VS_Outline(uint _vertexID : VertexID)
-{
-    VS_Output output = VS_Forward(_vertexID);
-    output.col = 1;
-    //viewPos.z += WIREFRAME_DEPTHBIAS;
-    return output;
-}
-
-PS_Output_Outline PS_Outline(VS_Output _input)
-{
-    PS_Output ps_out = PS_Forward(_input);
-    
-    if (ps_out.color0.a <= 0)
-        clip(-1);
-    //clip(ps_out.color0.a - 1.0/255.0);
-    
-    PS_Output_Outline output = (PS_Output_Outline)0;
-    
-    ViewConstants viewConstants;
-    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-    
-    uint2 screenSize = viewConstants.getScreenSize();
-    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
-    
-    output.id = rootConstants3D.getPickingID();
-    
-    float4x4 invProj = viewConstants.getProjInv();
-    float4 vpos = mul(_input.pos, invProj);
-    
-    if (!linearDepthTest(screenPos.xy, vpos))
-        output.id |= (uint)OutlineMaskFlags::DepthFail;
-    
-    return output;
-}
-#endif
-
-#else
-
 VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
 {
     VS_Output_Outline output;
@@ -455,14 +414,27 @@ PS_Output_Outline PS_Outline(VS_Output_Outline _input)
     GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
 
     uint flags = 0x0;
-    if (!linearDepthTest(screenPos.xy, _input.vpos))
-        flags |= (uint)OutlineMaskFlags::DepthFail;
-
+    float fade;
+    
+    // TODO: expose in Outline category options?
+    // For now, we just hardcode them and force no dist attenuation for editor outline types
     uint cat = instanceData.getOutlineCategory();
+    
+    float fadeBias = 2.0f;
+    float fadeDist = 1.0f;
+    
+    if (cat < OUTLINE_MASK_RESERVED_CATEGORIES)
+    {
+        fadeBias = 0.0f;
+        fadeDist = 0.001f;
+    }
+    
+    if (!linearDepthTestEx(screenPos.xy, _input.vpos, fadeBias, fadeDist, fade))
+        flags |= (uint)OutlineMaskFlags::DepthFail;
     
     output.value.x = id;
     output.value.y = flags | cat;
+    output.value.y |= (uint)(saturate(fade) * 255.0f) << 8;
     
     return output;
 }
-#endif

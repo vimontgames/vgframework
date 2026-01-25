@@ -15,8 +15,7 @@
 vg_enum_class_global(OutlineMaskFlags, u16,
     Default         = 0x0000,
     CategoryMask    = 0x000F,
-    Selected        = 0x4000,
-    DepthFail       = 0x8000
+    DepthFail       = 0x0080
 );
 
 struct OutlineCategoryConstants
@@ -35,7 +34,7 @@ struct VS_Output_Outline
 
 struct PS_Output_Outline
 {
-    uint2 value : Color0;  // .x = 32 bits UID // .y = flags
+    uint2 value : Color0;  // .x = UID // .y = flags
 };
 #endif
 

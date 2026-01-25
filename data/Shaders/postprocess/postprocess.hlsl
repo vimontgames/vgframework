@@ -295,12 +295,9 @@ void outlineEdgeColor(
     uint2 s20, uint2 s21, uint2 s22,
     inout float visible,
     inout float hidden,
-    inout uint outlineID,
-    inout uint depthFail)
+    inout uint outlineID)
 {
     uint centerID = s11.x;
-    //if (centerID == 0)
-    //    return;
 
     uint2 neighbors[8] =
     {
@@ -309,11 +306,6 @@ void outlineEdgeColor(
         s20,s21,s22
     };
     
-    //if (s11.y & (uint)OutlineMaskFlags::DepthFail)
-    //    visible += 1;
-    //
-    //outlineID = 0;
-
     [unroll]
     for (uint i = 0; i < 8; ++i)
     {
@@ -321,20 +313,22 @@ void outlineEdgeColor(
         {
             uint flags = neighbors[i].y;
             uint id    = flags & (uint)OutlineMaskFlags::CategoryMask;
+            float dist = (flags >> 8) / 255.0f;
             
-            outlineID = id;
+            [flatten]
+            if (outlineID == 0)
+                outlineID = id;
             
-            //if ( (neighbors[i].y & (uint)OutlineMaskFlags::DepthFail) || neighbors[i].x == 0)
-            //    hidden += 1.0;
-            //else
-            //    visible += 1.0;
+            // TODO: expose 'fade bias' and 'fade dist' in Outline parameters?
+            // For now, we just hardcode them and force no dist attenuation for editor outline types
+            //[flatten]
+            //if (outlineID == 1 || outlineID == 2)
+            //    dist = 1;
             
-             if (0 != (neighbors[i].y & (uint)OutlineMaskFlags::DepthFail))
-                hidden += 1.0f;
+            if (0 != (neighbors[i].y & (uint)OutlineMaskFlags::DepthFail))
+                hidden += dist;
             else
                 visible += 1.0f;
-    
-            //return;
         }
     }
 }
@@ -353,8 +347,9 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
     if (all(dispatchThreadID.xy < screenSize))
     {        
+        ByteAddressBuffer viewConstantsBuffer = getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS);
         ViewConstants viewConstants;
-        viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+        viewConstants.Load(viewConstantsBuffer);
 
         int3 address = int3(dispatchThreadID.xy, 0);
 
@@ -385,6 +380,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         #endif
 
         // Outline
+        if (0 != postProcessConstants.getOutlineMask())
         {
             Texture2D<uint2> outlineTex = getTexture2D_UInt2(postProcessConstants.getOutlineMask());
             uint2 s[5][5];
@@ -397,35 +393,57 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             
             float visible = 0.0f;
             float hidden  = 0.0f;
-            uint  outlineID = 0xFFFFFFFF;
-            uint  depthFail = 0;
+            uint outlineID = 0;
             
-            outlineEdgeColor(s[0][1], s[0][2], s[0][3],
-                             s[1][1], s[1][2], s[1][3],
-                             s[2][1], s[2][2], s[2][3],
-                             visible, hidden, outlineID, depthFail);
-            
-            outlineEdgeColor(s[1][0], s[1][1], s[1][2],
-                             s[2][0], s[2][1], s[2][2],
-                             s[3][0], s[3][1], s[3][2],
-                             visible, hidden, outlineID, depthFail);
-
+            // Center
             outlineEdgeColor(s[1][1], s[1][2], s[1][3],
                              s[2][1], s[2][2], s[2][3],
                              s[3][1], s[3][2], s[3][3],
-                             visible, hidden, outlineID, depthFail);
+                             visible, hidden, outlineID);
+            
+            // Top-left
+            outlineEdgeColor(s[0][1], s[0][2], s[0][3],
+                             s[1][1], s[1][2], s[1][3],
+                             s[2][1], s[2][2], s[2][3],
+                             visible, hidden, outlineID);
+            
+            // Top-right
+            outlineEdgeColor(s[1][0], s[1][1], s[1][2],
+                             s[2][0], s[2][1], s[2][2],
+                             s[3][0], s[3][1], s[3][2],
+                             visible, hidden, outlineID);
 
+            // Bottom-left
             outlineEdgeColor(s[1][2], s[1][3], s[1][4],
                              s[2][2], s[2][3], s[2][4],
                              s[3][2], s[3][3], s[3][4],
-                             visible, hidden, outlineID, depthFail);
+                             visible, hidden, outlineID);
             
+            // Bottom-right
             outlineEdgeColor(s[2][1], s[2][2], s[2][3],
                              s[3][1], s[3][2], s[3][3],
                              s[4][1], s[4][2], s[4][3],
-                             visible, hidden, outlineID, depthFail);
+                             visible, hidden, outlineID);
             
             uint centerID = s[2][2].y & 0xF;
+            
+            #if LOAD_OUTLINE_COLORS
+            float4 zPassOutlineColor = viewConstants.loadZPassOutlineColor(viewConstantsBuffer, outlineID);
+            float4 zFailOutlineColor = viewConstants.loadZFailOutlineColor(viewConstantsBuffer, outlineID);
+            float4 zFailFillColor = viewConstants.loadZFailFillColor(viewConstantsBuffer, centerID);
+            #else
+            float4 zPassOutlineColor = viewConstants.getZPassOutlineColor(outlineID);
+            float4 zFailOutlineColor = viewConstants.getZFailOutlineColor(outlineID);
+            float4 zFailFillColor = viewConstants.getZFailFillColor(centerID);
+            #endif
+            
+            #ifndef _TOOLMODE
+            if (outlineID < OUTLINE_MASK_RESERVED_CATEGORIES)
+            {
+                zPassOutlineColor.a = 0;
+                zFailOutlineColor.a = 0;
+            }
+            #endif
             
             if (0 != centerID)
             {
@@ -433,18 +451,15 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
                 
                 if (hide)
                 {
-                    float4 zFailColor = viewConstants.getZFailFillColor(centerID);
-                    color.rgb = lerp(color.rgb, zFailColor.rgb, zFailColor.a);
+                    float dist = (s[2][2].y >> 8) / 255.0f;
+                    color.rgb = lerp(color.rgb, zFailFillColor.rgb, zFailFillColor.a * dist);
                 }
             }
-            
-            float4 zPassColor = viewConstants.getZPassOutlineColor(outlineID);
-            float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
-            
+                        
             visible = saturate(visible / 4.0f);
             hidden = min(saturate(hidden / 4.0f), 1 - visible);
             
-            float4 outlineColor = zFailColor.rgba * hidden + zPassColor.rgba * visible;
+            float4 outlineColor = zFailOutlineColor.rgba * hidden + zPassOutlineColor.rgba * visible;
             
             color.rgb = lerp(color.rgb, outlineColor.rgb, outlineColor.a);
         }
@@ -498,7 +513,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             color.rgb = getTexture2D(viewConstants.getSpecularBRDF()).SampleLevel(nearestClamp, uv, 0).rgb;
             break;
             
-            case DisplayMode::Outline_OutlineMaskID:
+            case DisplayMode::Outline_OutlineID:
             {
                 uint2 sample = getTexture2D_UInt2(postProcessConstants.getOutlineMask()).Load(int3(coords,0));
                 uint id = sample.x & (uint)~0x80000000;
@@ -508,16 +523,32 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             }
             break;
             
-            case DisplayMode::Outline_OutlineMaskFlags:
+            case DisplayMode::Outline_OutlineFlags:
             {
                 uint2 sample = getTexture2D_UInt2(postProcessConstants.getOutlineMask()).Load(int3(coords,0));
                 
                 uint outlineID = sample.y & 0xF;
                 
+                #if LOAD_OUTLINE_COLORS
+                color.rgb = viewConstants.loadZPassOutlineColor(viewConstantsBuffer, outlineID).rgb;
+                #else
                 color.rgb = viewConstants.getZPassOutlineColor(outlineID).rgb;
+                #endif
                 
                 if (sample.y & (uint)OutlineMaskFlags::DepthFail)
                     color.rgb *= 0.5f;
+            }
+            break;
+            
+            case DisplayMode::Outline_OutlineDistance:
+            {
+                uint2 sample = getTexture2D_UInt2(postProcessConstants.getOutlineMask()).Load(int3(coords,0));
+                uint outlineID = sample.y & 0xF;
+                if (outlineID != 0)
+                {
+                    float dist = (sample.y >> 8) / 255.0f;
+                    color.rgb = (1-dist);
+                }
             }
             break;
             

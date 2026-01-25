@@ -62,8 +62,9 @@ vg_enum_class_global(DisplayMode, u32,
     RayTracing_Material_Albedo, 
     RayTracing_Lighting_DirectDiffuse,
 
-    Outline_OutlineMaskID,
-    Outline_OutlineMaskFlags,
+    Outline_OutlineID,
+    Outline_OutlineDistance,
+    Outline_OutlineFlags,
 
     PostProcess_Depth,
     PostProcess_Stencil,
