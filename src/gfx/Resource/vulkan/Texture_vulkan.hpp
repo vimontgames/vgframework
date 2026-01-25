@@ -30,6 +30,9 @@ namespace vg::gfx::vulkan
             case PixelFormat::R10G10B10A2_unorm:
                 return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
 
+            case PixelFormat::R16G16_uint:
+                return VK_FORMAT_R16G16_UINT;
+
             case PixelFormat::R16G16B16A16_float:
                 return VK_FORMAT_R16G16B16A16_SFLOAT;
 

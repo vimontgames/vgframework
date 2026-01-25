@@ -100,6 +100,9 @@ namespace vg::gfx
                 case PixelFormat::R11G11B10_float:
                     return sizeof(u8) * 4;
 
+                case PixelFormat::R16G16_uint:
+                    return sizeof(u16) * 2;
+
                 case PixelFormat::R16G16B16A16_unorm:
                     return sizeof(u16) * 4;
 
