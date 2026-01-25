@@ -222,7 +222,7 @@ namespace vg::renderer
         #else
         const auto options = RendererOptions::get();
         const auto target = getViewID().target;
-        return  ViewTarget::Editor == target || (ViewTarget::Game == target && options->isToolModeEnabled());
+        return ViewTarget::Editor == target || (ViewTarget::Game == target && options->isToolModeEnabled());
         #endif
     }
 
@@ -602,6 +602,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsRender() const
     {
+        const auto renderer = Renderer::get();
+        if (renderer->IsGameMode())
+        {
+            const auto target = getViewID().target;
+            if (ViewTarget::Editor == target)
+                return false;
+        }
+
         return IsVisible() && testFlag(ViewFlags::Render);// && nullptr != GetCameraSettings();
     }     
 
@@ -680,6 +688,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsOutlinePassNeeded() const
     {
+        const auto * camSettings = GetCameraSettings();
+        if (nullptr != camSettings)
+        {
+            if (camSettings->IsOutlinesEnabled())
+                return true;
+        }
+
         const auto options = RendererOptions::get();
         return isToolmode();
     }

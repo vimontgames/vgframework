@@ -26,7 +26,7 @@
                             <Object class="EnemyBehaviour">
                                 <Property type="String" name="m_name" value="EnemyBehaviour #0"/>
                                 <Property type="Uint32" name="m_uid" value="1062217233"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Int32" name="m_life" value="1"/>
                                 <Property type="Float" name="m_hp" value="100"/>
@@ -42,7 +42,7 @@
                                 <Property type="Uint32" name="m_uid" value="2225564048"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="EnumU8" name="m_category" value="Category_0"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
                                 <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
                                 <Property type="EnumU8" name="m_characterType" value="Rigid"/>
@@ -177,7 +177,7 @@
                             <Object class="SoundComponent">
                                 <Property type="String" name="m_name" value="arg"/>
                                 <Property type="Uint32" name="m_uid" value="4057464457"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -219,8 +219,9 @@
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" value="MeshComponent #37"/>
                                 <Property type="Uint32" name="m_uid" value="4120299909"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_outlineCategory" value="User_4"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
@@ -246,6 +247,19 @@
                                     </Object>
                                 </Property>
                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                <Property type="Object" name="m_stencil">
+                                    <Object class="StencilState">
+                                        <Property type="String" name="m_name" value="GJ"/>
+                                        <Property type="Uint32" name="m_uid" value="3903016155"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="Bool" name="m_enable" value="false"/>
+                                        <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                        <Property type="EnumU16" name="m_func" value="Always"/>
+                                        <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                        <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                        <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                    </Object>
+                                </Property>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children">
@@ -283,7 +297,7 @@
                                         <Property type="Uint32" name="m_uid" value="2226555861"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="EnumU8" name="m_category" value="Category_0"/>
                                         <Property type="Bool" name="m_useCollisionMask" value="false"/>
                                         <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
                                         <Property type="ObjectPtr" name="m_bodyDesc">
@@ -367,7 +381,7 @@
                                         <Property type="Uint32" name="m_uid" value="3526070733"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="EnumU8" name="m_category" value="Category_0"/>
                                         <Property type="Bool" name="m_useCollisionMask" value="false"/>
                                         <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
                                         <Property type="ObjectPtr" name="m_bodyDesc">

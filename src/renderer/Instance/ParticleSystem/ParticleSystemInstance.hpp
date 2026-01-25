@@ -140,8 +140,8 @@ namespace vg::renderer
                 // Particle systems in this view (used to fill GPU data)
                 _cullingResult->m_output->add(GraphicInstanceListType::Particle, this);
 
-                // Selection outline
-                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+                // Outline
+                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()) || (OutlineCategory)0 != getOutlineCategory())
                     _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
                 return true;
@@ -384,8 +384,18 @@ namespace vg::renderer
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
+        OutlineCategory outline = getOutlineCategory();
+        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+        {
+            if (asBool(ObjectRuntimeFlags::Prefab & getObjectRuntimeFlags()))
+                outline = OutlineCategory::SelectedPrefab;
+            else
+                outline = OutlineCategory::SelectedObject;
+        }
+
         instanceData->setMaterialCount(batchCount);
         instanceData->setVertexFormat(VertexFormat::ParticleQuad);
+        instanceData->setOutlineCategory((uint)outline);
         instanceData->setGPUInstanceType(GPUInstanceType::ParticleSystem);
         instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());

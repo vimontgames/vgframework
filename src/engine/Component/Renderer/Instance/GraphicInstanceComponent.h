@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Component/Component.h"
+#include "renderer/Renderer_consts.h"
 
 namespace vg::renderer
 {
@@ -14,9 +15,14 @@ namespace vg::engine
     class GraphicInstanceComponent : public core::Component
     {
     public:
-        VG_CLASS_DECL_ABSTRACT(GraphicInstanceComponent, core::Component);
+        VG_CLASS_DECL(GraphicInstanceComponent, core::Component);
+
+        GraphicInstanceComponent(const core::string & _name, core::IObject * _parent);
+        ~GraphicInstanceComponent();
 
     protected:
+        void                                    OnLoad                      () override;
+
         void                                    OnEnable                    () override;
         void                                    OnDisable                   () override;
 
@@ -38,5 +44,6 @@ namespace vg::engine
 
     protected:
         bool                                    m_registered = false;
+        renderer::OutlineCategory               m_outlineCategory = (renderer::OutlineCategory)0;
     };
 }

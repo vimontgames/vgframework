@@ -84,29 +84,28 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void PhysicsOptions::updateDynamicEnum(const core::IProperty & _prop)
     {
-
-        IFactory * factory = Kernel::getFactory();
-
-        const auto classDescs = factory->GetClassDescriptors();
-
-        for (auto * desc : classDescs)
-        {
-            const auto propCount = desc->GetPropertyCount();
-            for (uint i = 0; i < propCount; ++i)
-            {
-                IProperty * prop = const_cast<IProperty*>(desc->GetPropertyByIndex(i)); // TODO: non-const version?
-
-                if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
-                {
-                    if ((PropertyType::EnumU8 == prop->GetType() && !strcmp(VG_STRINGIFY(Category), prop->GetEnumTypeName()))
-                        || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp(VG_STRINGIFY(CategoryFlag), prop->GetEnumTypeName())))
-                    {
-                        for (uint i = 0; i < countof(m_physicsCategories); ++i)
-                            prop->SetEnumName(i, m_physicsCategories[i]);
-                    }
-                }
-            }
-        }
+        //IFactory * factory = Kernel::getFactory();
+        //
+        //const auto classDescs = factory->GetClassDescriptors();
+        //
+        //for (auto * desc : classDescs)
+        //{
+        //    const auto propCount = desc->GetPropertyCount();
+        //    for (uint i = 0; i < propCount; ++i)
+        //    {
+        //        IProperty * prop = const_cast<IProperty*>(desc->GetPropertyByIndex(i)); // TODO: non-const version?
+        //
+        //        if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
+        //        {
+        //            if ((PropertyType::EnumU8 == prop->GetType() && !strcmp(VG_STRINGIFY(Category), prop->GetEnumTypeName()))
+        //                || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp(VG_STRINGIFY(CategoryFlag), prop->GetEnumTypeName())))
+        //            {
+        //                for (uint i = 0; i < countof(m_physicsCategories); ++i)
+        //                    prop->SetEnumName(i, m_physicsCategories[i]);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -147,7 +146,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    core::vector<core::string> PhysicsOptions::GetPhysicsCategoryNames() const
+    const core::vector<core::string> PhysicsOptions::GetPhysicsCategoryNames() const
     {
         vector<string> names(enumCount<physics::Category>());
         for (uint i = 0; i < names.size(); ++i)

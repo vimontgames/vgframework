@@ -619,6 +619,7 @@ namespace vg::editor
         const auto displayName = _prop->GetDisplayName();
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
+        const auto names = _prop->GetPropertyNames(_propContext.m_originalObject); // Always use the original object to get names because override use another object type than original
 
         const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_propContext.m_originalObject);
         if (readonly)
@@ -632,7 +633,7 @@ namespace vg::editor
         enumPairs.resize(_prop->GetEnumCount());
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            enumPairs[e].name = _prop->GetEnumName(e);
+            enumPairs[e].name = e < names.size() ? names[e] : _prop->GetEnumName(e);
 
             if (enumPairs[e].name._Starts_with(enumTypeName + "_"))
                 enumPairs[e].name = enumPairs[e].name.substr(enumTypeName.length()+1);
@@ -642,17 +643,17 @@ namespace vg::editor
 
         if (asBool(PropertyFlags::AlphabeticalOrder & flags)) 
         {
-            sort(enumPairs.begin(), enumPairs.end(), [](EnumPair<T> & a, EnumPair<T> & b)
-            {
-                // Always put "None" at the beginning of the list
-                if (b.name == "None")
-                    return false;
-                else if (a.name == "None")
-                    return true;
-                else
-                return (a.name < b.name);
-            }
-            );
+            //sort(enumPairs.begin(), enumPairs.end(), [](EnumPair<T> & a, EnumPair<T> & b)
+            //{
+            //    // Always put "None" at the beginning of the list
+            //    if (b.name == "None")
+            //        return false;
+            //    else if (a.name == "None")
+            //        return true;
+            //    else
+            //    return (a.name < b.name);
+            //}
+            //);
         }
 
         string preview = "<Invalid>";
@@ -660,7 +661,7 @@ namespace vg::editor
         {
             if (enumVal == enumPairs[e].value)
             {
-                preview = getEnumDisplayName<T>(_prop, e);
+                preview = e < names.size() ? names[e] : getEnumDisplayName<T>(_prop, e);
 
                 auto it = preview.find_last_of("_");
                 if (string::npos != it && it != preview.length())
@@ -679,7 +680,7 @@ namespace vg::editor
         {
             for (uint e = 0; e < enumPairs.size(); ++e)
             {
-                const string enumName = enumPairs[e].name;
+                const string enumName = e < names.size() ? names[e] : enumPairs[e].name;
                 changed |= editEnum_Recur<T>(_object, _prop, _propContext, enumPairs, enumName, e, pEnum);
             }
             ImGui::EndCombo();

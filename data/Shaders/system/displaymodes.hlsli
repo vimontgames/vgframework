@@ -62,15 +62,16 @@ vg_enum_class_global(DisplayMode, u32,
     RayTracing_Material_Albedo, 
     RayTracing_Lighting_DirectDiffuse,
 
+    Outline_OutlineMaskID,
+    Outline_OutlineMaskFlags,
+
     PostProcess_Depth,
     PostProcess_Stencil,
     PostProcess_LinearDepth,
     PostProcess_DepthOfField,
     PostProcess_FXAAEdges,
     PostProcess_WorldPos,
-    PostProcess_GameOutlineMask,
-    PostProcess_EditorOutlineMask,
-    PostProcess_PixelChecker
+    PostProcess_PixelChecker 
 );
 
 vg_enum_global(DisplayFlags, u32,

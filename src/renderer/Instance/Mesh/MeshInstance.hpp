@@ -108,7 +108,7 @@ namespace vg::renderer
                 if (isSkinned())
                     _cullingResult->m_sharedOutput->addSkinMesh(this);
 
-                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()) || (OutlineCategory)0 != getOutlineCategory())
                     _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
                 return true;
@@ -306,8 +306,18 @@ namespace vg::renderer
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
+        OutlineCategory outline = getOutlineCategory();
+        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+        {
+            if (asBool(ObjectRuntimeFlags::Prefab & getObjectRuntimeFlags()))
+                outline = OutlineCategory::SelectedPrefab;
+            else
+                outline = OutlineCategory::SelectedObject;            
+        }
+
         instanceData->setMaterialCount(materialCount);
         instanceData->setVertexFormat(vertexFormat);
+        instanceData->setOutlineCategory((uint)outline);
         instanceData->setGPUInstanceType(GPUInstanceType::Mesh);
         instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());

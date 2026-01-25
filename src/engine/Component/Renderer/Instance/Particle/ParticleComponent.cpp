@@ -111,6 +111,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ParticleComponent::OnLoad()
     {
+        super::OnLoad();
+
         const auto & emitters = m_particleEmitters.getObjects();
         m_particleSystemInstance->SetEmitterCount((uint)emitters.size());
         for (uint i = 0; i < emitters.size(); ++i)

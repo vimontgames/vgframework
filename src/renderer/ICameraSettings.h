@@ -27,6 +27,7 @@ namespace vg::renderer
         virtual float               GetNear                 () const = 0;
         virtual float               GetFar                  () const = 0;
 
+        virtual bool                IsOutlinesEnabled       () const = 0;
         virtual bool                IsDepthOfFieldEnabled   () const = 0;
         virtual bool                IsMotionBlurEnabled     () const = 0;
         virtual core::float4        GetFadeColor            () const = 0;

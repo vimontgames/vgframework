@@ -160,6 +160,23 @@ namespace vg::renderer
                 constants->setDOFScale(dofScale);
             }
 
+            if (view->IsOutlinePassNeeded())
+            {
+                const auto & outlines = options->getOutlineOptions();
+                for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
+                {
+                    if (i < outlines.size())
+                    {
+                        const auto & categoryOptions = outlines[i];
+                        constants->setOutlineColors(i, categoryOptions.getZPassOutlineColor(),categoryOptions.getZFailOutlineColor());
+                    }
+                    else
+                    {
+                        constants->setOutlineColors(i, (float4)0.0f, (float4)0.0f);
+                    }
+                }
+            }
+
             //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");
         }

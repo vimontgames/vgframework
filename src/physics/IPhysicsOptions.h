@@ -9,13 +9,13 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IPhysicsOptions, core::Options);
 
-        virtual bool                        IsAnyBodyVisible            () const = 0;
-        virtual bool                        IsBodyVisible               (ShapeType _shape, MotionType _motionType) const = 0;
-        virtual bool                        IsConstraintVisible         (ConstraintType _constraint) const = 0;
+        virtual bool                                IsAnyBodyVisible            () const = 0;
+        virtual bool                                IsBodyVisible               (ShapeType _shape, MotionType _motionType) const = 0;
+        virtual bool                                IsConstraintVisible         (ConstraintType _constraint) const = 0;
 
-        virtual bool                        IsMergeStaticBodiesEnabled  () const = 0;
+        virtual bool                                IsMergeStaticBodiesEnabled  () const = 0;
 
-        virtual physics::Category           GetPhysicsCategory          (const core::string & _name) const = 0;
-        virtual core::vector<core::string>  GetPhysicsCategoryNames     () const = 0;
+        virtual physics::Category                   GetPhysicsCategory          (const core::string & _name) const = 0;
+        virtual const core::vector<core::string>    GetPhysicsCategoryNames     () const = 0;
     };
 }

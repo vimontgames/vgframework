@@ -3,10 +3,29 @@
 
 #include "types.hlsli"
 
+#define OUTLINE_MASK_RESERVED_CATEGORIES 3
+#define OUTLINE_MASK_CATEGORIES_MAX 16
+
+// Bits 0-3 are used for Category
+// The following values are reserved:
+// - 0 (None)
+// - 1 (Selected Object) 
+// - 2 (Selected Prefab) 
+
 vg_enum_class_global(OutlineMaskFlags, u16,
-    DepthFail = 0x8000
+    Default         = 0x0000,
+    CategoryMask    = 0x000F,
+    Selected        = 0x4000,
+    DepthFail       = 0x8000
 );
 
+struct OutlineCategoryConstants
+{
+    float4 zPassColor;
+    float4 zFailColor;
+};
+
+#ifndef __cplusplus
 struct VS_Output_Outline
 {
     float4 pos  : Position;
@@ -15,7 +34,8 @@ struct VS_Output_Outline
 
 struct PS_Output_Outline
 {
-    uint4 id : Color0;
+    uint2 value : Color0;  // .x = 32 bits UID // .y = flags
 };
+#endif
 
 #endif // _OUTLINEMASK__HLSLI_

@@ -60,6 +60,7 @@ namespace vg::renderer
         void                                            SetPickingID                    (PickingID _id) override;
         PickingID                                       GetPickingID                    () const override;
         void                                            SetStencil                      (bool _enable, core::u8 _ref, const gfx::StencilState & _state) override;
+        void                                            SetOutlineCategory              (OutlineCategory _category) override;
 
         // New virtual functions added to GraphicInstance
         virtual bool                                    Cull                            (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
@@ -108,6 +109,7 @@ namespace vg::renderer
         VG_INLINE bool                                  isStencilEnabled                () const;
         VG_INLINE core::u8                              getStencilRef                   () const;
         VG_INLINE const gfx::StencilState               getStencilState                 () const;
+        VG_INLINE OutlineCategory                       getOutlineCategory              () const;
 
     private:
          core::atomic<core::u32>                        m_atomicFlags;
@@ -120,14 +122,14 @@ namespace vg::renderer
         core::uint                                      m_instanceIndexBufferOffset     = -1;
         gfx::Buffer *                                   m_instanceVertexBuffer          = nullptr;
         core::uint                                      m_instanceVertexBufferOffset    = -1;
+        bool                                            m_stencilEnable                 = false;
+        core::u8                                        m_stencilRef                    = 0x00;
+        gfx::StencilState                               m_stencilState;
+        OutlineCategory                                 m_outlineCategory               = (OutlineCategory)0;
 
         #if GPUDATAOFFSET_FRAME_COUNTER
         core::u64                                       m_gpuInstanceDataFrameIndex     = (core::u64)(-1L); // Used to check the frame GPUInstanceData offset has been set
         #endif
-
-        bool                                            m_stencilEnable = false;
-        core::u8                                        m_stencilRef = 0x0;
-        gfx::StencilState                               m_stencilState;
     };
 }
 

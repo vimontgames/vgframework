@@ -4,6 +4,7 @@
 #include "types.hlsli"
 #include "packing.hlsli"
 #include "displaymodes.hlsli"
+#include "outlinemask.hlsli"
 
 struct ViewConstants
 {
@@ -38,6 +39,12 @@ struct ViewConstants
         m_environmentColor      = (float4)0.0f;
         m_pbr                   = (float4)0.0f;
         m_textures              = (uint4)0;
+    
+        for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
+        {
+            m_outlineCategory[i].zPassColor = (float4)0.0f;
+            m_outlineCategory[i].zFailColor = (float4)0.0f;
+        }
     }
     #else 
     void Load(ByteAddressBuffer _buffer, uint _offset = 0)
@@ -72,21 +79,28 @@ struct ViewConstants
         m_textures                = _buffer.Load<uint4>(_offset);  _offset += sizeof(uint4);
 
         m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        
+        for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
+        {
+            m_outlineCategory[i].zPassColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+            m_outlineCategory[i].zFailColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        }
     }
     #endif
 
-    uint4           m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
-    uint4           m_debugDisplay;             // 0xFFFFFFFF 0x00000000 0x0000FFFF 0x00000000
-    float4          m_camera;                   // { near, far, fov, ar }
-    uint4           m_rayTracing;               // 0x0000FFFF 0x00000000 0x00000000 0x00000000
-    float4x4        m_view;
-    float4x4        m_proj;
-    float4x4        m_viewInv;
-    float4x4        m_projInv;
-    float4          m_environmentColor;
-    float4          m_pbr;
-    uint4           m_textures;                 // .x: EnvMap (low) + specularBRDF (high) | .y: IrradianceEnvmap (low) + SpecularReflectionMap (hight)
-    float4          m_lens;                     // .x: focal length, .y:aperture, .z:focus distance
+    uint4                       m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
+    uint4                       m_debugDisplay;             // 0xFFFFFFFF 0x00000000 0x0000FFFF 0x00000000
+    float4                      m_camera;                   // { near, far, fov, ar }
+    uint4                       m_rayTracing;               // 0x0000FFFF 0x00000000 0x00000000 0x00000000
+    float4x4                    m_view;
+    float4x4                    m_proj;
+    float4x4                    m_viewInv;
+    float4x4                    m_projInv;
+    float4                      m_environmentColor;
+    float4                      m_pbr;
+    uint4                       m_textures;                 // .x: EnvMap (low) + specularBRDF (high) | .y: IrradianceEnvmap (low) + SpecularReflectionMap (hight)
+    float4                      m_lens;                     // .x: focal length, .y:aperture, .z:focus distance
+    OutlineCategoryConstants    m_outlineCategory[OUTLINE_MASK_CATEGORIES_MAX];
     
     // Screen and mouse constants
     void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
@@ -173,6 +187,10 @@ struct ViewConstants
 
     void            setDOFScale             (float _dofScale)                   { m_lens.w = _dofScale; }
     float           getDOFScale             ()                                  { return m_lens.w; }
+    
+    void            setOutlineColors        (uint _index, float4 _zPass, float4 _zFail) { m_outlineCategory[_index].zPassColor = _zPass; m_outlineCategory[_index].zFailColor = _zFail;}     
+    float4          getZPassOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zPassColor; }
+    float4          getZFailOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zFailColor; }
 };
 
 #endif // _VIEW__HLSLI_

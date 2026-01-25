@@ -13,6 +13,7 @@
 #include "gfx/Device/DeviceCaps.h"
 #include "renderer/Renderer.h"
 #include "renderer/RayTracing/RayTracingManager.h"
+#include "OutlineOptions.h"
 
 using namespace vg::core;
 
@@ -324,6 +325,8 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
+        registerPropertyObject(RendererOptions, m_outlineCategories, "Categories");
+
         return true;
     }
 
@@ -361,6 +364,24 @@ namespace vg::renderer
             m_depthOfField[Quality::Low] = DepthOfFieldMode::None;
 
             m_customQualityLevel = autodetectQualityLevel();
+
+            // Create default category (TODO: make read-only so they cannot be edited/removed, and hide from user interface?)
+            auto & categories = m_outlineCategories.getObjects();
+            VG_ASSERT(categories.size() == 0);
+            m_outlineCategories.Add("None");
+            OutlineOptions & none = categories[0];
+            none.setZPassOutlineColor(core::float4(0, 0, 0, 0));
+            none.setZFailOutlineColor(core::float4(0, 0, 0, 0));
+
+            m_outlineCategories.Add("Object");
+            OutlineOptions & selectedObject = categories[1];
+            selectedObject.setZPassOutlineColor(core::float4(0.0f, 1.0f, 0.0f, 0.75f));
+            selectedObject.setZFailOutlineColor(core::float4(0.0f, 1.0f, 0.0f, 0.25f));
+
+            m_outlineCategories.Add("Prefab");
+            OutlineOptions & selectedPrefab = categories[2];
+            selectedPrefab.setZPassOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.75f));
+            selectedPrefab.setZFailOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.25f));
         }
     }
 
@@ -446,6 +467,13 @@ namespace vg::renderer
                 RayTracingManager::get()->onDisableRayTracing();
             }
         }
+
+        auto & outlineDst = m_outlineCategories.getObjects();
+        const auto & outlineSrc = _other.m_outlineCategories.getObjects();
+        
+        outlineDst.resize(outlineSrc.size());
+        for (uint i = 0; i < outlineSrc.size();++i)
+            outlineDst[i] = outlineSrc[i];
     }
 
     //--------------------------------------------------------------------------------------
@@ -861,9 +889,23 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const core::string & RendererOptions::GetStencilBitName(core::uint _index) const
+    const core::string & RendererOptions::GetStencilBitName(gfx::StencilBit _stencilBit) const
     {
-        VG_ASSERT(_index < countof(m_stencilBitNames));
-        return m_stencilBitNames[_index];
+        VG_ASSERT(asInteger(_stencilBit) < countof(m_stencilBitNames));
+        return m_stencilBitNames[asInteger(_stencilBit)];
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint RendererOptions::GetRendererOutlineCategoryCount() const
+    {
+        return (uint)m_outlineCategories.getObjects().size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const string & RendererOptions::GetRendererOutlineCategoryName(OutlineCategory _category) const
+    {
+        const auto & categories = m_outlineCategories.getObjects();
+        VG_ASSERT(asInteger(_category) < categories.size());
+        return categories[asInteger(_category)].GetName();
     }
 }

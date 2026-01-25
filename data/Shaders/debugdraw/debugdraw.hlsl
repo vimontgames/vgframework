@@ -125,10 +125,13 @@ PS_Output_Outline PS_DebugDrawOutline(VS_Output_Outline _input)
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
 
     PS_Output_Outline output = (PS_Output_Outline)0;
-    output.id = debugDrawRootConstants3D.getPickingID();
-
+    uint id = debugDrawRootConstants3D.getPickingID();
+    uint flags = 0x0;
     if (!linearDepthTest(screenPos.xy, _input.vpos))
-        output.id |= (uint)OutlineMaskFlags::DepthFail;
+        flags |= (uint)OutlineMaskFlags::DepthFail;
 
+    output.value.x = id;
+    output.value.y = flags;
+    
     return output;
 }

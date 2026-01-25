@@ -73,10 +73,11 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(CameraSettings, "Post-processing");
         {
+            registerProperty(CameraSettings, m_outlines, "Outlines");
             registerProperty(CameraSettings, m_depthOfField, "Depth-of-field");
             registerPropertyEx(CameraSettings, m_motionBlur, "Motion blur", PropertyFlags::ReadOnly);
 
-            registerOptionalPropertyEx(CameraSettings, m_fade, m_fadeColor, "Fade", PropertyFlags::Color);
+            registerOptionalPropertyEx(CameraSettings, m_fade, m_fadeColor, "Fade", PropertyFlags::Color);            
         }
         registerPropertyGroupEnd(CameraComponent);
 
@@ -156,6 +157,12 @@ namespace vg::renderer
     float CameraSettings::GetFar() const
     {
         return m_far;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CameraSettings::IsOutlinesEnabled() const
+    {
+        return m_outlines;
     }
 
     //--------------------------------------------------------------------------------------

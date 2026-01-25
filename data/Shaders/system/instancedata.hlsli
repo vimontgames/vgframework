@@ -14,12 +14,12 @@ vg_enum_class_global(GPUInstanceType, u8,
     Light,
     Camera
 );
+#define GPUInstanceFlags_TypeMask 0x0F
 
 vg_enum_class_global(GPUInstanceFlags, u8,
-    Static   = 0x01
+    Static   = 0x1
 );
-
-#define GPUInstanceFlags_TypeMask 0x0F
+#define GPUInstanceFlags_Mask 0x0F
 
 //--------------------------------------------------------------------------------------
 // 1xGPUInstanceData, N*GPUBatchData : In instance stream, 1 'GPUInstanceData' is followed by N 'GPUBatchData' for every batch (1 batch <=> 1 material)
@@ -50,10 +50,10 @@ struct GPUBatchData
 //--------------------------------------------------------------------------------------
 struct GPUInstanceData
 {
-    // m_header[0]: MaterialCount | VertexFormat<<8 | unused<<16 | GPUInstanceFlags (8 bits x 4)
-    // m_header[1]: InstanceColor                                                   (32 bits)
-    // m_header[2]: (IndexSize + IB) | VB                                           (16 bits x 2)
-    // m_header[3]: VBOffset                                                        (32 bits)
+    // m_header[0]: MaterialCount | VertexFormat | Category | (GPUInstanceType:4 | GPUInstanceFlags:4)  (8 bits x 4)
+    // m_header[1]: InstanceColor                                                                       (32 bits)
+    // m_header[2]: (IndexSize + IB) | VB                                                               (16 bits x 2)
+    // m_header[3]: VBOffset                                                                            (32 bits)
     uint m_header[4];   
 
     void                setMaterialCount        (uint _count)                                       { m_header[0] = packR8(m_header[0], _count); }
@@ -62,11 +62,14 @@ struct GPUInstanceData
     void                setVertexFormat         (VertexFormat _vertexFormat)                        { m_header[0] = packG8(m_header[0], (uint)_vertexFormat); }
     VertexFormat        getVertexFormat         ()                                                  { return (VertexFormat)unpackG8(m_header[0]); }
     
-    void                setGPUInstanceType      (GPUInstanceType _value)                            { m_header[0] = packB8(m_header[0], (uint)_value); } 
-    GPUInstanceType     getGPUInstanceType      ()                                                  { return (GPUInstanceType) unpackB8(m_header[0]); }
+    void                setOutlineCategory      (uint _category)                                    { m_header[0] = packB8(m_header[0], _category); }
+    uint                getOutlineCategory      ()                                                  { return unpackB8(m_header[0]); }
+    
+    void                setGPUInstanceType      (GPUInstanceType _value)                            { m_header[0] = packUint(m_header[0], (uint)_value, 0xF, 24); } // 24..27 
+    GPUInstanceType     getGPUInstanceType      ()                                                  { return (GPUInstanceType) unpackUint(m_header[0], 0xF, 24); }
 
-    void                setGPUInstanceFlags     (GPUInstanceFlags _value)                           { m_header[0] = packA8(m_header[0], (uint)_value); } 
-    GPUInstanceFlags    getGPUInstanceFlags     ()                                                  { return (GPUInstanceFlags) unpackA8(m_header[0]); }
+    void                setGPUInstanceFlags     (GPUInstanceFlags _value)                           { m_header[0] = packUint(m_header[0], (uint)_value, 0xF, 28); } // 28..31 
+    GPUInstanceFlags    getGPUInstanceFlags     ()                                                  { return (GPUInstanceFlags) unpackUint(m_header[0], 0xF, 28); }
      
     void                setInstanceColor        (float4 _color)                                     { m_header[1] = packRGBA8(_color); }
     float4              getInstanceColor        (DisplayFlags _flags)                               { return (IsToolMode() && 0 == (DisplayFlags::InstanceColor & _flags)) ? (float4)1.0f : unpackRGBA8(m_header[1]); }

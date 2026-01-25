@@ -7,6 +7,7 @@
 #include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "Shaders/system/displaymodes.hlsli"
 #include "renderer/PBR/PBR_Consts.h"
+#include "OutlineOptions.h"
 
 namespace vg::core
 {
@@ -67,120 +68,124 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(RendererOptions, IRendererOptions);
                                 
-							    RendererOptions			                (const core::string & _name, core::IObject * _parent, bool _safeCopy = false);
-                                ~RendererOptions                        ();
+							                RendererOptions			                (const core::string & _name, core::IObject * _parent, bool _safeCopy = false);
+                                            ~RendererOptions                        ();
 
-        static RendererOptions * get                                    () { return s_rendererOptionsSafeCopy; }
+        static RendererOptions *            get                                    () { return s_rendererOptionsSafeCopy; }
 
-        void                    sync                                    (const RendererOptions & _other);
+        void                                sync                                    (const RendererOptions & _other);
 
         // Virtual functions exposed outside renderer should return the 'engine' value                            
-        const core::float4 &    GetDefaultClearColor                    () const final override { return m_defaultEnvironmentColor; }
-        gfx::ITexture *         GetDefaultCubemap                       () const final override;
-        float                   GetDefaultIrradianceIntensity           () const final override { return m_defaultIrradianceIntensity; }
-        float                   GetDefaultSpecularReflectionIntensity   () const final override { return m_defaultSpecularReflectionIntensity; }
-        gfx::ITexture *         GetBakedSpecularBRDF                    () const final override;
-        bool                    IsToolModeEnabled                       () const final override { return m_toolMode; };
-        bool                    IsRayTracingEnabled                     () const final override { return m_rayTracing; };
+        const core::float4 &                GetDefaultClearColor                    () const final override { return m_defaultEnvironmentColor; }
+        gfx::ITexture *                     GetDefaultCubemap                       () const final override;
+        float                               GetDefaultIrradianceIntensity           () const final override { return m_defaultIrradianceIntensity; }
+        float                               GetDefaultSpecularReflectionIntensity   () const final override { return m_defaultSpecularReflectionIntensity; }
+        gfx::ITexture *                     GetBakedSpecularBRDF                    () const final override;
+        bool                                IsToolModeEnabled                       () const final override { return m_toolMode; };
+        bool                                IsRayTracingEnabled                     () const final override { return m_rayTracing; };
 
-        bool                    IsShadowEnabled                         () const final override;
-        core::uint2             GetShadowDefaultResolution              () const final override;
+        bool                                IsShadowEnabled                         () const final override;
+        core::uint2                         GetShadowDefaultResolution              () const final override;
 
-        gfx::MSAA               GetMSAA                                 () const final override;
-        bool                    SetMSAA                                 (gfx::MSAA _msaa) final override;
+        gfx::MSAA                           GetMSAA                                 () const final override;
+        bool                                SetMSAA                                 (gfx::MSAA _msaa) final override;
         
-        gfx::HDR                GetHDR                                  () const final override;
-        bool                    SetHDR                                  (gfx::HDR _hdr) final override;
+        gfx::HDR                            GetHDR                                  () const final override;
+        bool                                SetHDR                                  (gfx::HDR _hdr) final override;
 
-        gfx::AAPostProcess      GetAAPostProcess                        () const final override;
-        bool                    SetAAPostProcess                        (gfx::AAPostProcess _aa) final override;
+        gfx::AAPostProcess                  GetAAPostProcess                        () const final override;
+        bool                                SetAAPostProcess                        (gfx::AAPostProcess _aa) final override;
 
-        DepthOfFieldMode        GetDepthOfFieldMode                     () const final override;
-        bool                    SetDepthOfFieldMode                     (DepthOfFieldMode _depthOfField) final override;
+        DepthOfFieldMode                    GetDepthOfFieldMode                     () const final override;
+        bool                                SetDepthOfFieldMode                     (DepthOfFieldMode _depthOfField) final override;
 
-        gfx::VSync              GetVSync                                () const final override;
-        bool                    SetVSync                                (gfx::VSync _vsync) final override;
+        gfx::VSync                          GetVSync                                () const final override;
+        bool                                SetVSync                                (gfx::VSync _vsync) final override;
 
-        void                    EnableUI2D                              (bool _enable) final override;
-        bool                    IsUI2DEnabled                           () const final override;
+        void                                EnableUI2D                              (bool _enable) final override;
+        bool                                IsUI2DEnabled                           () const final override;
 
-        void                    EnableUI3D                              (bool _enable) final override;
-        bool                    IsUI3DEnabled                           () const final override;
+        void                                EnableUI3D                              (bool _enable) final override;
+        bool                                IsUI3DEnabled                           () const final override;
 
-        const core::string &    GetStencilBitName                       (core::uint _index) const final override;
+        const core::string &                GetStencilBitName                       (gfx::StencilBit _stencilBit) const final override;
+        core::uint                          GetRendererOutlineCategoryCount         () const final override;
+        const core::string &                GetRendererOutlineCategoryName          (OutlineCategory _category) const final override;
 
-        void                    OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                                OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         // Non-virtual functions for internal renderer use 
-        bool				    isToolModeEnabled                       () const { return m_toolMode; }
+        bool				                isToolModeEnabled                       () const { return m_toolMode; }
 
-        core::uint2             getGridSize                             () const { return m_gridSize; }
-        float                   getGridScale                            () const { return m_gridScale; }
-        const core::float4 &    getGridColor                            () const { return m_gridColor;}
-        core::uint              getGridSubdivCount                      () const { return m_gridSubdivCount; }
-        const core::float4 &    getGridSubdivColor                      () const { return m_gridSubdivColor; }
+        core::uint2                         getGridSize                             () const { return m_gridSize; }
+        float                               getGridScale                            () const { return m_gridScale; }
+        const core::float4 &                getGridColor                            () const { return m_gridColor;}
+        core::uint                          getGridSubdivCount                      () const { return m_gridSubdivCount; }
+        const core::float4 &                getGridSubdivColor                      () const { return m_gridSubdivColor; }
 
-        LightingMode            getLightingMode                         () const { return m_lightingMode; }
-        PBRFlags                getPBRFlags                             () const { return m_pbrFlags; }
+        LightingMode                        getLightingMode                         () const { return m_lightingMode; }
+        PBRFlags                            getPBRFlags                             () const { return m_pbrFlags; }
 
-        DisplayMode             getDisplayMode                          () const { return m_debugDisplayMode; }
-        DisplayFlags            getDisplayFlags                         () const { return m_displayFlags; }
+        DisplayMode                         getDisplayMode                          () const { return m_debugDisplayMode; }
+        DisplayFlags                        getDisplayFlags                         () const { return m_displayFlags; }
 
-        bool				    isAnyAABBEnabled                        () const { return (AABBFlags)0x0 != m_aabb; }
-        bool				    isMeshAABBEnabled                       () const { return core::asBool(AABBFlags::Mesh & m_aabb); }
-        bool				    isParticleSystemAABBEnabled             () const { return core::asBool(AABBFlags::ParticleSystem & m_aabb); }
-        bool				    isLightAABBEnabled                      () const { return core::asBool(AABBFlags::Light & m_aabb); }
+        bool				                isAnyAABBEnabled                        () const { return (AABBFlags)0x0 != m_aabb; }
+        bool				                isMeshAABBEnabled                       () const { return core::asBool(AABBFlags::Mesh & m_aabb); }
+        bool				                isParticleSystemAABBEnabled             () const { return core::asBool(AABBFlags::ParticleSystem & m_aabb); }
+        bool				                isLightAABBEnabled                      () const { return core::asBool(AABBFlags::Light & m_aabb); }
 
-        bool				    isAnyWireframeEnabled                   () const { return (WireframeFlags)0x0 != m_wireframe; }
-        bool				    isMeshWireframeEnabled                  () const { return core::asBool(WireframeFlags::Mesh & m_wireframe); }
-        bool				    isParticleSystemWireframeEnabled        () const { return core::asBool(WireframeFlags::ParticleSystem & m_wireframe); }
+        bool				                isAnyWireframeEnabled                   () const { return (WireframeFlags)0x0 != m_wireframe; }
+        bool				                isMeshWireframeEnabled                  () const { return core::asBool(WireframeFlags::Mesh & m_wireframe); }
+        bool				                isParticleSystemWireframeEnabled        () const { return core::asBool(WireframeFlags::ParticleSystem & m_wireframe); }
 
-        bool				    isDebugUIEnabled                        () const { return m_debugUI; }
-        bool 			        isParticlesEnabled                      () const { return m_particles; }
-        bool                    isDebugCameraFrustumEnabled             () const { return m_debugFrustum; }
-        bool                    isSplitCullingJobsEnabled               () const { return m_splitCullingViewJobs; }
+        bool				                isDebugUIEnabled                        () const { return m_debugUI; }
+        bool 			                    isParticlesEnabled                      () const { return m_particles; }
+        bool                                isDebugCameraFrustumEnabled             () const { return m_debugFrustum; }
+        bool                                isSplitCullingJobsEnabled               () const { return m_splitCullingViewJobs; }
 
-        bool                    isZPrepassEnabled                       () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
-        bool				    isOpaqueEnabled			                () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
-        bool				    isTransparencyEnabled                   () const { return core::asBool(RenderPassFlags::Transparency & m_renderPassFlags); }
+        bool                                isZPrepassEnabled                       () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
+        bool				                isOpaqueEnabled			                () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
+        bool				                isTransparencyEnabled                   () const { return core::asBool(RenderPassFlags::Transparency & m_renderPassFlags); }
 
-        bool                    isPostProcessEnabled                    () const { return m_postProcess; }
-        bool                    isRayTracingEnabled                     () const { return m_rayTracing; }
-        TLASMode                getRayTracingTLASMode                   () const { return m_rayTracingTLASMode; }
-        bool                    anyRayTracingDebugDisplay               () const;
+        bool                                isPostProcessEnabled                    () const { return m_postProcess; }
+        bool                                isRayTracingEnabled                     () const { return m_rayTracing; }
+        TLASMode                            getRayTracingTLASMode                   () const { return m_rayTracingTLASMode; }
+        bool                                anyRayTracingDebugDisplay               () const;
 
-        bool                    isDisplayMatIDEnabled                   () const { return DisplayMode::Geometry_MaterialID    == m_debugDisplayMode;}
-        bool				    isDisplayNormalEnabled	                () const { return DisplayMode::Geometry_VertexNormal == m_debugDisplayMode; }
-		bool				    isDisplayUV0Enabled		                () const { return DisplayMode::Geometry_UV0      == m_debugDisplayMode; }
+        bool                                isDisplayMatIDEnabled                   () const { return DisplayMode::Geometry_MaterialID    == m_debugDisplayMode;}
+        bool				                isDisplayNormalEnabled	                () const { return DisplayMode::Geometry_VertexNormal == m_debugDisplayMode; }
+		bool				                isDisplayUV0Enabled		                () const { return DisplayMode::Geometry_UV0      == m_debugDisplayMode; }
 
-        bool                    isAlbedoMapsEnabled                     () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
-        bool                    isNormalMapsEnabled                     () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
+        bool                                isAlbedoMapsEnabled                     () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
+        bool                                isNormalMapsEnabled                     () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
         
-        void                    setDefaultClearColor                    (const core::float4 & _backgroundColor);
-        core::float4		    getDefaultClearColor                    () const { return m_defaultEnvironmentColor; }
+        void                                setDefaultClearColor                    (const core::float4 & _backgroundColor);
+        core::float4		                getDefaultClearColor                    () const { return m_defaultEnvironmentColor; }
 
-        void                    Update                                  () final override;
+        void                                Update                                  () final override;
 
-        void                    createResources                         ();
-        void                    releaseResources                        ();
+        void                                createResources                         ();
+        void                                releaseResources                        ();
 
-        Quality                 getCurrentQualityLevel                  () const;
+        const core::vector<OutlineOptions>& getOutlineOptions                       () const { return m_outlineCategories.getObjects(); }
 
-        VG_INLINE bool          isRenderJobsEnabled                     () const;
-        VG_INLINE bool          isRenderJobsSeparateKicksEnabled        () const;
-        VG_INLINE bool          isForcedRenderJobsCount                 () const;
-        core::uint              getRenderJobCount                       () const;
-        VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy             () const;
-        VG_INLINE core::uint    getMaxRenderTotalBufferSize             () const;
-        VG_INLINE core::uint    getMaxRenderMinBufferSize               () const;
+        Quality                             getCurrentQualityLevel                  () const;
+
+        VG_INLINE bool                      isRenderJobsEnabled                     () const;
+        VG_INLINE bool                      isRenderJobsSeparateKicksEnabled        () const;
+        VG_INLINE bool                      isForcedRenderJobsCount                 () const;
+        core::uint                          getRenderJobCount                       () const;
+        VG_INLINE gfx::RenderJobsPolicy     getRenderJobsPolicy                     () const;
+        VG_INLINE core::uint                getMaxRenderTotalBufferSize             () const;
+        VG_INLINE core::uint                getMaxRenderMinBufferSize               () const;
 
     protected:
-        Quality                 autodetectQualityLevel                  ();
+        Quality                             autodetectQualityLevel                  ();
 
-        void                    applyVSync                              (const core::IProperty * _prop);
-        void                    applyHDR                                (const core::IProperty * _prop);
-        void                    applyMSAA                               (const core::IProperty * _prop);
-        void                    applyQualityLevel                       (const core::IProperty * _prop);
+        void                                applyVSync                              (const core::IProperty * _prop);
+        void                                applyHDR                                (const core::IProperty * _prop);
+        void                                applyMSAA                               (const core::IProperty * _prop);
+        void                                applyQualityLevel                       (const core::IProperty * _prop);
 
     private:
 
@@ -245,8 +250,8 @@ namespace vg::renderer
         core::IProperty *       m_vsyncProp                             = nullptr;
         core::IProperty *       m_msaaProp[core::enumCount<Quality>()]  = {};
         core::IProperty *       m_aaPostProcessProp                     = nullptr;
-
         vg::core::string        m_stencilBitNames[core::enumCount<gfx::StencilBit>()];
+        OutlineOptionsList      m_outlineCategories;
     };
 }
 

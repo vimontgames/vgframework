@@ -21,7 +21,7 @@ namespace vg::physics
         bool                        IsMergeStaticBodiesEnabled      () const final override;
 
         Category                    GetPhysicsCategory              (const core::string & _name) const final override;
-        core::vector<core::string>  GetPhysicsCategoryNames         () const final override;
+        const core::vector<core::string>  GetPhysicsCategoryNames         () const final override;
 
         bool                        isDebugRendererEnabled          () const { return m_debugRendererEnable; }
         bool                        isDebugRendererShape            () const { return m_debugRendererDrawShape; }

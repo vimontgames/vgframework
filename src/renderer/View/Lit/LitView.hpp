@@ -147,6 +147,7 @@ namespace vg::renderer
             _frameGraph.addUserPass(_renderPassContext, m_editorPass, "Editor");
         
         // Render outline mask buffer
+        // Rem if we want to move this before transparent pass (and composite over opaque) beware that TransparentPassConstants are used for linear Z Test
         if (outline)
             _frameGraph.addUserPass(_renderPassContext, m_outlineMaskPass, "OutlineMask");
 

@@ -301,10 +301,23 @@ namespace vg::core
 #define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                      } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
 //--------------------------------------------------------------------------------------
-// Misc
+// Object vector
 //--------------------------------------------------------------------------------------
 #define registerResizeVectorFunc(className, resizeVectorFunc)                                               _desc.RegisterResizeVectorFunc(#className, resizeVectorFunc);
 
+#define declareResizeVectorDefaultFunc(T)                                                                   void * Resize##T##Vector(IObject * _parent, uint _offset, uint _count)  \
+                                                                                                            {                                                                       \
+                                                                                                              auto vec = (core::vector<T> *)(uint_ptr(_parent) + _offset);          \
+                                                                                                              vec->clear();                                                         \
+                                                                                                              vec->resize(_count);                                                  \
+                                                                                                              return vec->data();                                                   \
+                                                                                                            }
+
+#define registerResizeVectorDefaultFunc(T)                                                                  registerResizeVectorFunc(T, Resize##T##Vector);
+
+//--------------------------------------------------------------------------------------
+// Misc
+//--------------------------------------------------------------------------------------
 #define registerPropertySeparator(className, label)                                                         _desc.RegisterPropertyLayout(#className, vg::core::PropertyLayoutElement::Separator, label, nullptr, vg::core::PropertyFlags::None);
 
 #define registerPropertyGroupBegin(className, label)                                                        _desc.RegisterPropertyLayout(#className, vg::core::PropertyLayoutElement::GroupBegin, label, nullptr, vg::core::PropertyFlags::None);

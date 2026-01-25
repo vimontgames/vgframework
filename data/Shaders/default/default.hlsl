@@ -449,11 +449,20 @@ PS_Output_Outline PS_Outline(VS_Output_Outline _input)
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
 
     PS_Output_Outline output = (PS_Output_Outline)0;
-    output.id = rootConstants3D.getPickingID();
+    uint id = rootConstants3D.getPickingID();
+    
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
 
+    uint flags = 0x0;
     if (!linearDepthTest(screenPos.xy, _input.vpos))
-        output.id |= (uint)OutlineMaskFlags::DepthFail;
+        flags |= (uint)OutlineMaskFlags::DepthFail;
 
+    uint cat = instanceData.getOutlineCategory();
+    
+    output.value.x = id;
+    output.value.y = flags | cat;
+    
     return output;
 }
 #endif

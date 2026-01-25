@@ -86,5 +86,56 @@
             <Value name="StencilBit_6" value="Bit 6"/>
             <Value name="StencilBit_7" value="Bit 7"/>
         </Property>
+        <Property type="Object" name="m_outlineCategories">
+            <Object class="OutlineOptionsList">
+                <Property type="String" name="m_name" value=""/>
+                <Property type="Uint32" name="m_uid" value="426274646"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="ObjectVector" name="m_objects">
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="None"/>
+                        <Property type="Uint32" name="m_uid" value="3175937012"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="0" y="0" z="0" w="0"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="0" y="0" z="0" w="0"/>
+                    </Object>
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Object"/>
+                        <Property type="Uint32" name="m_uid" value="3525530430"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="0" y="1" z="0" w="0.75"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="0" y="1" z="0" w="0.25"/>
+                    </Object>
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Prefab"/>
+                        <Property type="Uint32" name="m_uid" value="1880106525"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="1" y="1" z="0" w="0.75"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="1" y="1" z="0" w="0.25"/>
+                    </Object>
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Neutral"/>
+                        <Property type="Uint32" name="m_uid" value="832647807"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="1" y="1" z="1" w="0"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="1" y="1" z="1" w="0.50196081"/>
+                    </Object>
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Enemy"/>
+                        <Property type="Uint32" name="m_uid" value="1103592136"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="1" y="0" z="0" w="0"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="1" y="0" z="0" w="0.50196081"/>
+                    </Object>
+                    <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Player"/>
+                        <Property type="Uint32" name="m_uid" value="1621808157"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="0" y="1" z="1" w="0"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="0" y="1" z="1" w="0.50196081"/>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
     </Object>
 </Root>

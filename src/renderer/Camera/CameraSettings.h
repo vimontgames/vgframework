@@ -23,6 +23,7 @@ namespace vg::renderer
         float               GetNear                 () const final override;
         float               GetFar                  () const final override;
 
+        bool                IsOutlinesEnabled       () const final override;
         bool                IsDepthOfFieldEnabled   () const final override;
         bool                IsMotionBlurEnabled     () const final override;
         core::float4        GetFadeColor            () const final override;
@@ -35,9 +36,11 @@ namespace vg::renderer
         float               m_focusDistance = 3.0f;
         GateFitMode         m_gateFitMode   = GateFitMode::Vertical;
         float               m_aperture      = 4.0f;
+        bool                m_outlines      = false;
         bool                m_depthOfField  = false;
         bool                m_motionBlur    = false;
         bool                m_fade          = false;
         core::float4        m_fadeColor     = core::float4(0,0,0,1);
+
     };
 }

@@ -79,6 +79,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void GraphicInstance::SetOutlineCategory(OutlineCategory _category)
+    {
+        m_outlineCategory = _category;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GraphicInstance::SetMaterialCount(core::uint _count)
     {
         return setMaterialCount(_count);

@@ -35,7 +35,7 @@ namespace vg::renderer
         FrameGraphTextureResourceDesc outlineMaskResourceDesc = *depthStencilResourceDesc;
                                       outlineMaskResourceDesc.type = TextureType::Texture2D;
                                       outlineMaskResourceDesc.msaa = MSAA::None;
-                                      outlineMaskResourceDesc.format = PixelFormat::R16G16B16A16_uint;  // up to 4 outline masks, alpha channel used for editor selection outline
+                                      outlineMaskResourceDesc.format = PixelFormat::R32G32_uint;
                                       outlineMaskResourceDesc.clearColor = (float4)0.0f;
 
         const auto outlineMaskID = _renderPassContext.getFrameGraphID("OutlineMask");

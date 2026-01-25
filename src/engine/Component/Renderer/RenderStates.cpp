@@ -26,9 +26,9 @@ namespace vg::engine
     {
         IRendererOptions * rendererOptions = Engine::get()->getRendererOptions();
 
-        core::vector<core::string> names(8);
-        for (uint i = 0; i < 8; ++i)
-            names[i] = rendererOptions->GetStencilBitName(i);
+        core::vector<core::string> names(enumCount<gfx::StencilBit>());
+        for (uint i = 0; i < names.size(); ++i)
+            names[i] = rendererOptions->GetStencilBitName((gfx::StencilBit)i);
         
         return names;
     }

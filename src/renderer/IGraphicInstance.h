@@ -18,6 +18,7 @@ namespace vg::renderer
     class IMaterialModel;
     class RenderContext;
     using PickingID = core::uint;
+    enum class OutlineCategory : core::u8;
 
     vg_enum_class(vg::renderer, GraphicInstanceType, core::u8,
         Mesh = 0,
@@ -47,5 +48,6 @@ namespace vg::renderer
         virtual bool                IsSkinned               () const = 0;
 
         virtual void                SetStencil              (bool _enable, core::u8 _ref, const gfx::StencilState & _state) = 0;
+        virtual void                SetOutlineCategory      (OutlineCategory _category) = 0;
     };
 }

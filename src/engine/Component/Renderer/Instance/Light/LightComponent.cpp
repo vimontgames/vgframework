@@ -138,7 +138,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void LightComponent::OnLoad()
     {
-        createLight();
+        super::OnLoad();
+
+        createLight();    
 
         if (m_light)
             m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));

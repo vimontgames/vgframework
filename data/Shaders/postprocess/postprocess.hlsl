@@ -136,13 +136,24 @@ void CS_DepthOfField(int2 dispatchThreadID : SV_DispatchThreadID)
     }
 }
 
-void outlineEdgeSample(uint4 _center, uint4 _sample, inout bool _visibleOutline, inout bool _hiddenOutline)
+void outlineEdgeSample(uint2 _center, uint2 _sample, inout bool _visibleOutline, inout bool _hiddenOutline)
 {
-    if ((_sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (_center.a & ~(uint)OutlineMaskFlags::DepthFail))
+    //if ((_sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (_center.a & ~(uint)OutlineMaskFlags::DepthFail))
+    //{
+    //    if (0 != _sample.a)
+    //    {
+    //        if (_sample.a & (uint)OutlineMaskFlags::DepthFail)
+    //            _hiddenOutline = true;
+    //        else
+    //            _visibleOutline = true;
+    //    }
+    //}
+    
+    if (0 != _sample.x)
     {
-        if (0 != _sample.a)
+        if (_center.x != _sample.x)
         {
-            if (_sample.a & (uint)OutlineMaskFlags::DepthFail)
+            if (_sample.y & (uint) OutlineMaskFlags::DepthFail)
                 _hiddenOutline = true;
             else
                 _visibleOutline = true;
@@ -150,9 +161,9 @@ void outlineEdgeSample(uint4 _center, uint4 _sample, inout bool _visibleOutline,
     }
 }
 
-void outlineEdge(uint4 s00, uint4 s01, uint4 s02,
-                 uint4 s10, uint4 s11, uint4 s12,
-                 uint4 s20, uint4 s21, uint4 s22, inout float _visible, inout float _hidden)
+void outlineEdge(uint2 s00, uint2 s01, uint2 s02,
+                 uint2 s10, uint2 s11, uint2 s12,
+                 uint2 s20, uint2 s21, uint2 s22, inout float _visible, inout float _hidden)
 {
     bool visibleOutline = false, hiddenOutline = false;
 
@@ -174,27 +185,42 @@ void outlineEdge(uint4 s00, uint4 s01, uint4 s02,
         _hidden += 1.0;
 }
 
-void outlineEdge(Texture2D<uint4> _tex, int2 _coords, inout float _visible, inout float _hidden)
+float4 getOutlineColorSample(uint2 _center, uint2 _sample)
 {
-    bool visibleOutline = false, hiddenOutline = false;
-
-    uint4 center = _tex.Load(int3(_coords.xy, 0));
-
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1,-1), 0)), visibleOutline, hiddenOutline);
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1, 0), 0)), visibleOutline, hiddenOutline);
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1,+1), 0)), visibleOutline, hiddenOutline);
-
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2( 0,-1), 0)), visibleOutline, hiddenOutline);
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(0,+1), 0)), visibleOutline, hiddenOutline);
-
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1,-1), 0)), visibleOutline, hiddenOutline);
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1, 0), 0)), visibleOutline, hiddenOutline);
-    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1,+1), 0)), visibleOutline, hiddenOutline);
+    float4 outline = (float4)0;
     
-    if (visibleOutline)
-        _visible += 1.0;
-    else if (hiddenOutline)
-        _hidden += 1.0;
+    if (0 != _sample.x)
+    {
+        if (_center.x != _sample.x)
+        {
+            if (_sample.y & (uint) OutlineMaskFlags::DepthFail)
+                outline = float4(1,0,0,1);
+            else
+                outline = float4(0,1,0,0.5);
+        }
+    }
+    
+    return outline;
+}
+
+float4 getOutlineColor( uint2 s00, uint2 s01, uint2 s02,
+                        uint2 s10, uint2 s11, uint2 s12,
+                        uint2 s20, uint2 s21, uint2 s22)
+{
+    float4 outline = (float4)0;
+    
+    outline += getOutlineColorSample(s11, s00) / 8.0f;
+    outline += getOutlineColorSample(s11, s01) / 8.0f;
+    outline += getOutlineColorSample(s11, s02) / 8.0f;
+
+    outline += getOutlineColorSample(s11, s10) / 8.0f;
+    outline += getOutlineColorSample(s11, s12) / 8.0f;
+                                              
+    outline += getOutlineColorSample(s11, s20) / 8.0f;
+    outline += getOutlineColorSample(s11, s21) / 8.0f;
+    outline += getOutlineColorSample(s11, s22) / 8.0f;
+        
+    return outline;
 }
 
 #if _TOOLMODE
@@ -263,6 +289,56 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 #endif // _RAYTRACING
 #endif // _TOOLMODE
 
+void outlineEdgeColor(
+    uint2 s00, uint2 s01, uint2 s02,
+    uint2 s10, uint2 s11, uint2 s12,
+    uint2 s20, uint2 s21, uint2 s22,
+    inout float visible,
+    inout float hidden,
+    inout uint outlineID,
+    inout uint depthFail)
+{
+    uint centerID = s11.x;
+    //if (centerID == 0)
+    //    return;
+
+    uint2 neighbors[8] =
+    {
+        s00,s01,s02,
+        s10,    s12,
+        s20,s21,s22
+    };
+    
+    //if (s11.y & (uint)OutlineMaskFlags::DepthFail)
+    //    visible += 1;
+    //
+    //outlineID = 0;
+
+    [unroll]
+    for (uint i = 0; i < 8; ++i)
+    {
+        if (neighbors[i].x != centerID && neighbors[i].x != 0)
+        {
+            uint flags = neighbors[i].y;
+            uint id    = flags & (uint)OutlineMaskFlags::CategoryMask;
+            
+            outlineID = id;
+            
+            //if ( (neighbors[i].y & (uint)OutlineMaskFlags::DepthFail) || neighbors[i].x == 0)
+            //    hidden += 1.0;
+            //else
+            //    visible += 1.0;
+            
+             if (0 != (neighbors[i].y & (uint)OutlineMaskFlags::DepthFail))
+                hidden += 1.0f;
+            else
+                visible += 1.0f;
+    
+            //return;
+        }
+    }
+}
+
 #if SAMPLE_COUNT > 1
 groupshared float4 localData[POSTPROCESS_THREADGROUP_SIZE_X*POSTPROCESS_THREADGROUP_SIZE_Y];
 #endif
@@ -305,63 +381,78 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         #if _RAYTRACING
         color = DebugRayTracing(color, uv, screenSize, viewConstants);
         #endif
+        
+        #endif
 
-        // Editor outline
+        // Outline
         {
-            #if 0
+            Texture2D<uint2> outlineTex = getTexture2D_UInt2(postProcessConstants.getOutlineMask());
+            uint2 s[5][5];
 
-            float visible = 0.0f;
-            float hidden = 0.0f;
-
-            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getEditorOutlineMask());
-            
-            outlineEdge(outline, coords.xy + int2( 0, -1), visible, hidden);
-            outlineEdge(outline, coords.xy + int2(-1,  0), visible, hidden);
-            outlineEdge(outline, coords.xy + int2( 0,  0), visible, hidden);
-            outlineEdge(outline, coords.xy + int2(+1,  0), visible, hidden);
-            outlineEdge(outline, coords.xy + int2(+1, +1), visible, hidden);
-
-            color.rgb = lerp(color.rgb, float3(0,1,0), saturate(max(visible, hidden * 0.15) / 4.0));
-
-            #else
-
-            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getOutlineMask());
-            float4 s[5][5];
-
-            s[0][0] = outline.Load(int3(coords.x - 2, coords.y - 2,0)); s[0][1] = outline.Load(int3(coords.x - 1, coords.y - 2,0)); s[0][2] = outline.Load(int3(coords.x, coords.y - 2,0)); s[0][3] = outline.Load(int3(coords.x + 1, coords.y - 2,0)); s[0][4] = outline.Load(int3(coords.x + 2, coords.y - 2,0));
-            s[1][0] = outline.Load(int3(coords.x - 2, coords.y - 1,0)); s[1][1] = outline.Load(int3(coords.x - 1, coords.y - 1,0)); s[1][2] = outline.Load(int3(coords.x, coords.y - 1,0)); s[1][3] = outline.Load(int3(coords.x + 1, coords.y - 1,0)); s[1][4] = outline.Load(int3(coords.x + 2, coords.y - 1,0));
-            s[2][0] = outline.Load(int3(coords.x - 2, coords.y - 0,0)); s[2][1] = outline.Load(int3(coords.x - 1, coords.y    ,0)); s[2][2] = outline.Load(int3(coords.x, coords.y    ,0)); s[2][3] = outline.Load(int3(coords.x + 1, coords.y    ,0)); s[2][4] = outline.Load(int3(coords.x + 2, coords.y    ,0));
-            s[3][0] = outline.Load(int3(coords.x - 2, coords.y + 1,0)); s[3][1] = outline.Load(int3(coords.x - 1, coords.y + 1,0)); s[3][2] = outline.Load(int3(coords.x, coords.y + 1,0)); s[3][3] = outline.Load(int3(coords.x + 1, coords.y + 1,0)); s[3][4] = outline.Load(int3(coords.x + 2, coords.y + 1,0));
-            s[4][0] = outline.Load(int3(coords.x - 2, coords.y + 2,0)); s[4][1] = outline.Load(int3(coords.x - 1, coords.y + 2,0)); s[4][2] = outline.Load(int3(coords.x, coords.y + 2,0)); s[4][3] = outline.Load(int3(coords.x + 1, coords.y + 2,0)); s[4][4] = outline.Load(int3(coords.x + 2, coords.y + 2,0));
+            s[0][0] = outlineTex.Load(int3(coords.x - 2, coords.y - 2,0)); s[0][1] = outlineTex.Load(int3(coords.x - 1, coords.y - 2,0)); s[0][2] = outlineTex.Load(int3(coords.x, coords.y - 2,0)); s[0][3] = outlineTex.Load(int3(coords.x + 1, coords.y - 2,0)); s[0][4] = outlineTex.Load(int3(coords.x + 2, coords.y - 2,0));
+            s[1][0] = outlineTex.Load(int3(coords.x - 2, coords.y - 1,0)); s[1][1] = outlineTex.Load(int3(coords.x - 1, coords.y - 1,0)); s[1][2] = outlineTex.Load(int3(coords.x, coords.y - 1,0)); s[1][3] = outlineTex.Load(int3(coords.x + 1, coords.y - 1,0)); s[1][4] = outlineTex.Load(int3(coords.x + 2, coords.y - 1,0));
+            s[2][0] = outlineTex.Load(int3(coords.x - 2, coords.y - 0,0)); s[2][1] = outlineTex.Load(int3(coords.x - 1, coords.y    ,0)); s[2][2] = outlineTex.Load(int3(coords.x, coords.y    ,0)); s[2][3] = outlineTex.Load(int3(coords.x + 1, coords.y    ,0)); s[2][4] = outlineTex.Load(int3(coords.x + 2, coords.y    ,0));
+            s[3][0] = outlineTex.Load(int3(coords.x - 2, coords.y + 1,0)); s[3][1] = outlineTex.Load(int3(coords.x - 1, coords.y + 1,0)); s[3][2] = outlineTex.Load(int3(coords.x, coords.y + 1,0)); s[3][3] = outlineTex.Load(int3(coords.x + 1, coords.y + 1,0)); s[3][4] = outlineTex.Load(int3(coords.x + 2, coords.y + 1,0));
+            s[4][0] = outlineTex.Load(int3(coords.x - 2, coords.y + 2,0)); s[4][1] = outlineTex.Load(int3(coords.x - 1, coords.y + 2,0)); s[4][2] = outlineTex.Load(int3(coords.x, coords.y + 2,0)); s[4][3] = outlineTex.Load(int3(coords.x + 1, coords.y + 2,0)); s[4][4] = outlineTex.Load(int3(coords.x + 2, coords.y + 2,0));
             
             float visible = 0.0f;
-            float hidden = 0.0f;
+            float hidden  = 0.0f;
+            uint  outlineID = 0xFFFFFFFF;
+            uint  depthFail = 0;
+            
+            outlineEdgeColor(s[0][1], s[0][2], s[0][3],
+                             s[1][1], s[1][2], s[1][3],
+                             s[2][1], s[2][2], s[2][3],
+                             visible, hidden, outlineID, depthFail);
+            
+            outlineEdgeColor(s[1][0], s[1][1], s[1][2],
+                             s[2][0], s[2][1], s[2][2],
+                             s[3][0], s[3][1], s[3][2],
+                             visible, hidden, outlineID, depthFail);
+
+            outlineEdgeColor(s[1][1], s[1][2], s[1][3],
+                             s[2][1], s[2][2], s[2][3],
+                             s[3][1], s[3][2], s[3][3],
+                             visible, hidden, outlineID, depthFail);
+
+            outlineEdgeColor(s[1][2], s[1][3], s[1][4],
+                             s[2][2], s[2][3], s[2][4],
+                             s[3][2], s[3][3], s[3][4],
+                             visible, hidden, outlineID, depthFail);
+            
+            outlineEdgeColor(s[2][1], s[2][2], s[2][3],
+                             s[3][1], s[3][2], s[3][3],
+                             s[4][1], s[4][2], s[4][3],
+                             visible, hidden, outlineID, depthFail);
+            
+            //outlineID = s[2][2].y & 0xF;
+            
+            if (0)
+            {
+                bool hide = (0 != (s[2][2].y & (uint)OutlineMaskFlags::DepthFail));
                 
-            outlineEdge(s[0][1], s[0][2], s[0][3],
-                        s[1][1], s[1][2], s[1][3],
-                        s[2][1], s[2][2], s[2][3], visible, hidden);
-
-            outlineEdge(s[1][0], s[1][1], s[1][2],
-                        s[2][0], s[2][1], s[2][2],
-                        s[3][0], s[3][1], s[3][2], visible, hidden);
-
-            outlineEdge(s[1][1], s[1][2], s[1][3],
-                        s[2][1], s[2][2], s[2][3],
-                        s[3][1], s[3][2], s[3][3], visible, hidden);
-
-            outlineEdge(s[1][2], s[1][3], s[1][4],
-                        s[2][2], s[2][3], s[2][4],
-                        s[3][2], s[3][3], s[3][4], visible, hidden);
-
-            outlineEdge(s[2][1], s[2][2], s[2][3],
-                        s[3][1], s[3][2], s[3][3],
-                        s[4][1], s[4][2], s[4][3], visible, hidden);
-
-            color.rgb = lerp(color.rgb, float3(0,1,0), saturate(max(visible, hidden * 0.15) / 4.0));
-
-            #endif            
+                if (outlineID != 0 && hide)
+                {
+                    float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
+                    color.rgb = lerp(color.rgb, zFailColor.rgb, zFailColor.a);
+                }
+            }
+            else
+            {
+            
+                float4 zPassColor = viewConstants.getZPassOutlineColor(outlineID);
+                float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
+            
+                visible = saturate(visible / 4.0f);
+                hidden = min(saturate(hidden / 4.0f), 1 - visible);
+            
+                float4 outlineColor = zFailColor.rgba * hidden + zPassColor.rgba * visible;
+            
+                color.rgb = lerp(color.rgb, outlineColor.rgb, outlineColor.a);
+            }
         }
 
+        #if _TOOLMODE
         switch(viewConstants.getDisplayMode())
         {
             default:
@@ -410,19 +501,26 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             color.rgb = getTexture2D(viewConstants.getSpecularBRDF()).SampleLevel(nearestClamp, uv, 0).rgb;
             break;
             
-            case DisplayMode::PostProcess_GameOutlineMask:
+            case DisplayMode::Outline_OutlineMaskID:
             {
-                color.rgb = float3(1,0,1); // TODO
-            }
-            break;
-
-            case DisplayMode::PostProcess_EditorOutlineMask:
-            {
-                uint sample = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords,0)).a;
-                uint id = sample & (uint)~0x80000000;
-                float alpha = (sample & 0x80000000) ? 0.5 : 1.0;
+                uint2 sample = getTexture2D_UInt2(postProcessConstants.getOutlineMask()).Load(int3(coords,0));
+                uint id = sample.x & (uint)~0x80000000;
+                float alpha = (sample.x & 0x80000000) ? 0.5 : 1.0;
                 color.rgb = (0 != id.x) ? frac(float3(id.x * 31.0, id.x * 17.0, id.x * 59.0) / 255.0) : float3(0,0,0);
                 color.rgb *= alpha;
+            }
+            break;
+            
+            case DisplayMode::Outline_OutlineMaskFlags:
+            {
+                uint2 sample = getTexture2D_UInt2(postProcessConstants.getOutlineMask()).Load(int3(coords,0));
+                
+                uint outlineID = sample.y & 0xF;
+                
+                color.rgb = viewConstants.getZPassOutlineColor(outlineID).rgb;
+                
+                if (sample.y & (uint)OutlineMaskFlags::DepthFail)
+                    color.rgb *= 0.5f;
             }
             break;
             

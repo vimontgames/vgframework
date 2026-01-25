@@ -98,4 +98,10 @@ namespace vg::renderer
     {
         return m_stencilState;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE OutlineCategory GraphicInstance::getOutlineCategory() const
+    {
+        return m_outlineCategory;
+    }
 }
