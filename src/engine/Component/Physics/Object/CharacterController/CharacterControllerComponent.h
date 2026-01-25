@@ -46,14 +46,13 @@ namespace vg::engine
 
     private:
         // settings
-        physics::CharacterType      m_characterType = physics::CharacterType::Rigid;
-        physics::IShapeDesc *       m_shapeDesc     = nullptr;
-        physics::IShape *           m_shape         = nullptr;
-        physics::ICharacterDesc *   m_characterDesc = nullptr;
-        physics::ICharacter *       m_character     = nullptr;
-
-        // debug
-        physics::GroundState        m_groundState   = (physics::GroundState)-1;
-        vg::core::Tag               m_weapongTag    = (vg::core::Tag)0x0;
+        physics::CharacterType      m_characterType          = physics::CharacterType::Rigid;
+        physics::IShapeDesc *       m_shapeDesc              = nullptr;
+        physics::IShape *           m_shape                  = nullptr;
+        physics::ICharacterDesc *   m_characterDesc          = nullptr;
+        physics::ICharacter *       m_character              = nullptr;
+                                                             
+        physics::GroundState        m_groundState            = (physics::GroundState)-1;
+        vg::core::Tag               m_groundStateExcludeTags = (vg::core::Tag)0x0;
     };
 }

@@ -42,7 +42,7 @@
                             <Object class="CharacterControllerComponent">
                                 <Property type="String" name="m_name" value="CharacterControllerComponent #0"/>
                                 <Property type="Uint32" name="m_uid" value="3981057160"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Category_0"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -72,6 +72,7 @@
                                         <Property type="Float" name="m_height" value="1.275"/>
                                     </Object>
                                 </Property>
+                                <Property type="EnumFlagsU64" name="m_groundStateExcludeTags" value="Weapon"/>
                             </Object>
                             <Object class="AnimationComponent">
                                 <Property type="String" name="m_name" value="AnimationComponent #0"/>
@@ -245,7 +246,7 @@
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" value="MeshComponent #25"/>
                                 <Property type="Uint32" name="m_uid" value="63634391"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_outlineCategory" value="User_5"/>
                                 <Property type="Resource" name="m_meshResource">

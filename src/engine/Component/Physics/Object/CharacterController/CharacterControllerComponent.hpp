@@ -21,7 +21,11 @@ namespace vg::engine
         registerPropertyEnumEx(CharacterControllerComponent, physics::CharacterType, m_characterType, "Type", PropertyFlags::ReadOnly);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", PropertyFlags::Flatten);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", PropertyFlags::Flatten);
+
+        
         registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", PropertyFlags::Transient);
+        registerPropertyEnumBitfield(CharacterControllerComponent, Tag, m_groundStateExcludeTags, "Exclude Tags");
+        setPropertyDescription(CharacterControllerComponent, m_groundStateExcludeTags, "Objetcs with these tags will be ignored to 'Grounded' state transition");
 
         return true;
     }
@@ -43,9 +47,6 @@ namespace vg::engine
             createCharacter();
 
         EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
-
-        const auto & options = Engine::get()->GetOptions();
-        m_weapongTag = options->GetGameObjectTag("Weapon");
     }
 
     //--------------------------------------------------------------------------------------
@@ -243,7 +244,7 @@ namespace vg::engine
                 auto groundState = m_character->GetGroundState();
                 const IComponent * groundComponent = dynamic_cast<const IComponent*>(m_character->GetGroundObject());
 
-                if (nullptr != groundComponent && asBool(m_weapongTag & groundComponent->GetGameObject()->GetTags()) && groundState == physics::GroundState::Grounded)
+                if (nullptr != groundComponent && asBool(m_groundStateExcludeTags & groundComponent->GetGameObject()->GetTags()) && groundState == physics::GroundState::Grounded)
                     m_groundState = physics::GroundState::InAir;
                 else
                     m_groundState = groundState;
