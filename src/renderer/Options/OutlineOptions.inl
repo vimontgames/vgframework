@@ -23,4 +23,16 @@ namespace vg::renderer
     {
         return m_zFailOutlineColor;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void OutlineOptions::setZFailFillColor(const core::float4 & _color)
+    {
+        m_zFailFillColor = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::float4 & OutlineOptions::getZFailFillColor() const
+    {
+        return m_zFailFillColor;
+    }
 }

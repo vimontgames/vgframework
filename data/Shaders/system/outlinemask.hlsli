@@ -21,8 +21,9 @@ vg_enum_class_global(OutlineMaskFlags, u16,
 
 struct OutlineCategoryConstants
 {
-    float4 zPassColor;
-    float4 zFailColor;
+    float4 zPassOutlineColor;
+    float4 zFailOutlineColor;
+    float4 zFailFillColor;
 };
 
 #ifndef __cplusplus

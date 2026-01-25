@@ -21,8 +21,9 @@ namespace vg::renderer
 
         setPropertyFlag(OutlineOptions, m_name, PropertyFlags::Hidden, false);
 
-        registerPropertyEx(OutlineOptions, m_zPassOutlineColor, "ZPass", PropertyFlags::Color);
-        registerPropertyEx(OutlineOptions, m_zFailOutlineColor, "ZFail", PropertyFlags::Color);
+        registerPropertyEx(OutlineOptions, m_zPassOutlineColor, "ZPass Outline", PropertyFlags::Color);
+        registerPropertyEx(OutlineOptions, m_zFailOutlineColor, "ZFail Outline", PropertyFlags::Color);
+        registerPropertyEx(OutlineOptions, m_zFailFillColor, "ZFail Fill", PropertyFlags::Color);
 
         registerResizeVectorDefaultFunc(OutlineOptions);
 

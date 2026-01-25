@@ -425,31 +425,28 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
                              s[4][1], s[4][2], s[4][3],
                              visible, hidden, outlineID, depthFail);
             
-            //outlineID = s[2][2].y & 0xF;
+            uint centerID = s[2][2].y & 0xF;
             
-            if (0)
+            if (0 != centerID)
             {
                 bool hide = (0 != (s[2][2].y & (uint)OutlineMaskFlags::DepthFail));
                 
-                if (outlineID != 0 && hide)
+                if (hide)
                 {
-                    float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
+                    float4 zFailColor = viewConstants.getZFailFillColor(centerID);
                     color.rgb = lerp(color.rgb, zFailColor.rgb, zFailColor.a);
                 }
             }
-            else
-            {
             
-                float4 zPassColor = viewConstants.getZPassOutlineColor(outlineID);
-                float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
+            float4 zPassColor = viewConstants.getZPassOutlineColor(outlineID);
+            float4 zFailColor = viewConstants.getZFailOutlineColor(outlineID);
             
-                visible = saturate(visible / 4.0f);
-                hidden = min(saturate(hidden / 4.0f), 1 - visible);
+            visible = saturate(visible / 4.0f);
+            hidden = min(saturate(hidden / 4.0f), 1 - visible);
             
-                float4 outlineColor = zFailColor.rgba * hidden + zPassColor.rgba * visible;
+            float4 outlineColor = zFailColor.rgba * hidden + zPassColor.rgba * visible;
             
-                color.rgb = lerp(color.rgb, outlineColor.rgb, outlineColor.a);
-            }
+            color.rgb = lerp(color.rgb, outlineColor.rgb, outlineColor.a);
         }
 
         #if _TOOLMODE

@@ -42,8 +42,9 @@ struct ViewConstants
     
         for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
         {
-            m_outlineCategory[i].zPassColor = (float4)0.0f;
-            m_outlineCategory[i].zFailColor = (float4)0.0f;
+            m_outlineCategory[i].zPassOutlineColor = (float4)0.0f;
+            m_outlineCategory[i].zFailOutlineColor = (float4)0.0f;
+            m_outlineCategory[i].zFailFillColor = (float4)0.0f;
         }
     }
     #else 
@@ -76,14 +77,16 @@ struct ViewConstants
 
         m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_pbr                     = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-        m_textures                = _buffer.Load<uint4>(_offset);  _offset += sizeof(uint4);
+        m_textures                = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
 
         m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         
+        // TODO: use 'LoadOutlineColors' method instead to save VGPRs
         for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
         {
-            m_outlineCategory[i].zPassColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
-            m_outlineCategory[i].zFailColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+            m_outlineCategory[i].zPassOutlineColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+            m_outlineCategory[i].zFailOutlineColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+            m_outlineCategory[i].zFailFillColor = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         }
     }
     #endif
@@ -187,10 +190,17 @@ struct ViewConstants
 
     void            setDOFScale             (float _dofScale)                   { m_lens.w = _dofScale; }
     float           getDOFScale             ()                                  { return m_lens.w; }
+      
+    float4          getZPassOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zPassOutlineColor; }
+    float4          getZFailOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zFailOutlineColor; }
+    float4          getZFailFillColor       (uint _index)                       { return m_outlineCategory[_index].zFailFillColor; }
     
-    void            setOutlineColors        (uint _index, float4 _zPass, float4 _zFail) { m_outlineCategory[_index].zPassColor = _zPass; m_outlineCategory[_index].zFailColor = _zFail;}     
-    float4          getZPassOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zPassColor; }
-    float4          getZFailOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zFailColor; }
+    void setOutlineColors(uint _index, float4 _zPassOutline, float4 _zFailOutline, float4 _zFailFill) 
+    { 
+        m_outlineCategory[_index].zPassOutlineColor = _zPassOutline; 
+        m_outlineCategory[_index].zFailOutlineColor = _zFailOutline;
+        m_outlineCategory[_index].zFailFillColor = _zFailFill;
+    }   
 };
 
 #endif // _VIEW__HLSLI_

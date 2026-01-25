@@ -20,9 +20,13 @@ namespace vg::renderer
         VG_INLINE void setZFailOutlineColor(const core::float4 & _color);
         VG_INLINE const core::float4 & getZFailOutlineColor() const;
 
+        VG_INLINE void setZFailFillColor(const core::float4 & _color);
+        VG_INLINE const core::float4 & getZFailFillColor() const;
+
     private:
         core::float4 m_zPassOutlineColor = core::float4(1.0f, 1.0f, 1.0f, 0.75f);
-        core::float4 m_zFailOutlineColor = core::float4(1.0f, 1.0f, 1.0f, 0.25f);
+        core::float4 m_zFailOutlineColor = core::float4(1.0f, 1.0f, 1.0f, 0.5f);
+        core::float4 m_zFailFillColor = core::float4(1.0f, 1.0f, 1.0f, 0.0f);
     };
 
     //--------------------------------------------------------------------------------------

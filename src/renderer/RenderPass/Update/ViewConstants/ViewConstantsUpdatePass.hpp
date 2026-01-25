@@ -168,11 +168,11 @@ namespace vg::renderer
                     if (i < outlines.size())
                     {
                         const auto & categoryOptions = outlines[i];
-                        constants->setOutlineColors(i, categoryOptions.getZPassOutlineColor(),categoryOptions.getZFailOutlineColor());
+                        constants->setOutlineColors(i, categoryOptions.getZPassOutlineColor(), categoryOptions.getZFailOutlineColor(), categoryOptions.getZFailFillColor());
                     }
                     else
                     {
-                        constants->setOutlineColors(i, (float4)0.0f, (float4)0.0f);
+                        constants->setOutlineColors(i, (float4)0.0f, (float4)0.0f, (float4)0.0f);
                     }
                 }
             }
