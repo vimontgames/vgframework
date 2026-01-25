@@ -387,7 +387,7 @@ namespace vg::renderer
         OutlineCategory outline = getOutlineCategory();
         if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
         {
-            if (asBool(ObjectRuntimeFlags::Prefab & getObjectRuntimeFlags()))
+            if (asBool(ObjectRuntimeFlags::SelectedPrefab & getObjectRuntimeFlags()))
                 outline = OutlineCategory::SelectedPrefab;
             else
                 outline = OutlineCategory::SelectedObject;

@@ -257,16 +257,16 @@ namespace vg::engine
 
             if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
             {
+                auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                PickingID id = m_meshInstance->GetPickingID();
+                if (!id)
+                {
+                    id = picking->CreatePickingID(this);
+                    m_meshInstance->SetPickingID(id);
+                }
+
                 if (false == m_registered)
                 {
-                    auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                    PickingID id = m_meshInstance->GetPickingID();
-                    if (!id)
-                    {
-                        id = picking->CreatePickingID(this);
-                        m_meshInstance->SetPickingID(id);
-                    }
-
                     registerGraphicInstance();
                     m_meshInstance->SetName(getGameObject()->GetName().c_str());;
                 }

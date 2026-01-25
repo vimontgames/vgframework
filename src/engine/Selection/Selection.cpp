@@ -28,7 +28,7 @@ namespace vg::engine
         if (false == (m_selectionArray.size() == 1 && m_selectionArray[0] == _object))
         {
             clear();
-            add(_object);
+            add(_object, ((IGameObject*)_object)->IsPrefab());
             updateSelectionMatrix();
         }
     }
@@ -45,7 +45,7 @@ namespace vg::engine
         clear();
 
         for (auto i = 0; i < _objects.size(); ++i)
-            add(_objects[i]);
+            add(_objects[i], ((IGameObject*)_objects[i])->IsPrefab());
 
         updateSelectionMatrix();
     }
@@ -71,7 +71,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::Add(core::IObject * _object)
     {
-        if (add(_object))
+        if (add(_object, ((IGameObject *)_object)->IsPrefab()))
         {
             updateSelectionMatrix();
             return true;
@@ -94,11 +94,11 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Selection::add(core::IObject * _object)
+    bool Selection::add(core::IObject * _object, bool _selectedPrefab)
     {
         if (m_selectionSet.end() == m_selectionSet.find(_object))
         {
-            setSelected(_object, true);
+            setSelected(_object, true, _selectedPrefab);
             m_selectionArray.push_back(_object);
             m_selectionSet.insert(_object);
 
@@ -107,7 +107,7 @@ namespace vg::engine
             {
                 auto children = go->getChildren();
                 for (uint j = 0; j < children.size(); ++j)
-                    add(children[j]);
+                    add(children[j], _selectedPrefab);
             }
 
             updateSelectionChangedListeners(SelectionChangeType::Add);
@@ -131,7 +131,7 @@ namespace vg::engine
                 removed |= remove(children[j]);
         }
 
-        setSelected(_object, false);
+        setSelected(_object, false, false);
 
         bool removedFromArray = vector_helper::remove(m_selectionArray, _object);
         bool removedFromHash = m_selectionSet.erase(_object) > 0;
@@ -146,12 +146,17 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Selection::setSelected(core::IObject * _object, bool _selected)
+    void Selection::setSelected(core::IObject * _object, bool _selected, bool _selectedPrefab)
     {
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
         {
-            go->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
+            ObjectRuntimeFlags selectedFlags = ObjectRuntimeFlags::Selected;
+
+            if (_selectedPrefab || !_selected)
+                selectedFlags |= ObjectRuntimeFlags::SelectedPrefab;
+
+            go->setObjectRuntimeFlags(selectedFlags, _selected);
 
             for (auto & comp : go->getComponents())
                 comp->UpdateFlagsFromGameObject();
@@ -169,7 +174,7 @@ namespace vg::engine
     void Selection::clear()
     {
         for (uint i = 0; i < m_selectionArray.size(); ++i)
-            setSelected(m_selectionArray[i], false);
+            setSelected(m_selectionArray[i], false, false);
 
         if (m_selectionArray.size() || m_selectionSet.size())
         {
@@ -335,6 +340,11 @@ namespace vg::engine
                 //    flags |= InstanciateFlags::Prefab;
 
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
+
+                // TODO: identify copies inside a Prefab instance and flag them in Red?
+                // Could also flag Prefab instance child in black or forbid copy?
+                //newGO->setObjectRuntimeFlags(ObjectRuntimeFlags::SelectedPrefab, false);
+
                 if (nullptr == newGO)
                 {
                     VG_ERROR("[Selection] Cannot Instanciate object \"%s\"", go->GetName().c_str());

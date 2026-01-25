@@ -28,9 +28,9 @@ namespace vg::engine
         bool                                            UnregisterSelectionChangedCallback  (core::IObject * _this, OnSelectionChangedCallback _onSelectionChangedCallback) final override;
 
     protected:
-        bool                                            add                                 (core::IObject * _object);
+        bool                                            add                                 (core::IObject * _object, bool _selectedPrefab);
         bool                                            remove                              (core::IObject * _object);
-        void                                            setSelected                         (core::IObject * _object, bool _selected);
+        void                                            setSelected                         (core::IObject * _object, bool _selected, bool _selectedPrefab);
         void                                            clear                               ();
         void                                            updateSelectionMatrix               ();
         bool                                            hasAnySelectedAncestor              (const core::IObject * _object) const;

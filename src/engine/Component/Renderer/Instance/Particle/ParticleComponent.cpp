@@ -74,16 +74,16 @@ namespace vg::engine
     {
         m_particleSystemInstance = (IParticleSystemInstance *)CreateFactoryObject(ParticleSystemInstance, _name, this);
 
+        auto * picking = Engine::get()->GetRenderer()->GetPicking();
+        PickingID id = m_particleSystemInstance->GetPickingID();
+        if (!id)
+        {
+            id = picking->CreatePickingID(this);
+            m_particleSystemInstance->SetPickingID(id);
+        }
+
         if (false == m_registered)
         {
-            auto * picking = Engine::get()->GetRenderer()->GetPicking();
-            PickingID id = m_particleSystemInstance->GetPickingID();
-            if (!id)
-            {
-                id = picking->CreatePickingID(this);
-                m_particleSystemInstance->SetPickingID(id);
-            }
-
             registerGraphicInstance();
             m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
             m_particleSystemInstance->SetWorldSpace(m_worldSpace);

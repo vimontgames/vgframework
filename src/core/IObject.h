@@ -22,7 +22,8 @@ namespace vg::core
         DirtySave       = 0x0002,   // Object has been modified and needs to be saved again or changes will be lost                 
         Unloaded        = 0x0004,   // Object is being unloaded  
         Temporary       = 0x0008,   // Object is temporary and will be deleted on stop
-        Selected        = 0x0010,   // Object is selected                                                                           
+        Selected        = 0x0010,   // Object is selected  
+        SelectedPrefab  = 0x0020,   // Object is selected because its prefab is selected 
         Prefab          = 0x0100,   // Object (e.g., World or GameObject) is a prefab                                               
         Instance        = 0x0200    // Object (e.g., World or GameObject) is an Instance                                               
     );
