@@ -22,8 +22,8 @@ namespace vg::engine
 
         bool                        CanTeleportTo           (const core::float3 & _position) final override;
 
-        void                        FixedUpdate         (const Context & _context) final override;
         void                        Update              (const Context & _context) final override;
+        void                        ToolUpdate          (const Context & _context) final override;
 
         void                        OnLoad              () final override;
 

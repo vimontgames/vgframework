@@ -46,7 +46,7 @@ namespace vg::engine
         if (m_character == nullptr)
             createCharacter();
 
-        EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+        EnableUpdateFlags(UpdateFlags::Update | UpdateFlags::ToolUpdate);
     }
 
     //--------------------------------------------------------------------------------------
@@ -212,16 +212,6 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::FixedUpdate(const Context & _context)
-    {
-        if (Engine::get()->GetPhysics()->GetOptions()->IsBodyVisible(m_shape->GetShapeType(), physics::MotionType::Kinematic))
-        {
-            if (m_shape)
-                m_shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
     physics::GroundState CharacterControllerComponent::GetGroundState() const
     {
         return m_groundState;
@@ -251,6 +241,16 @@ namespace vg::engine
             }
         }  
     } 
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::ToolUpdate(const Context & _context)
+    {
+        if (Engine::get()->GetPhysics()->GetOptions()->IsBodyVisible(m_shape->GetShapeType(), physics::MotionType::Kinematic))
+        {
+            if (m_shape)
+                m_shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
+        }
+    }
 
     //--------------------------------------------------------------------------------------
     core::float3 CharacterControllerComponent::GetVelocity() const
