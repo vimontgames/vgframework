@@ -183,7 +183,11 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                         if (m_fightState != FightState::Hit)
                             translation.xy = dir.xy * m_currentSpeed;
 
-                        m_targetRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
+                        const float Yx = dir.x;
+                        const float Xx = dir.y * (-1.0f);   // Do *NOT* write -dir.y because there's an issue with CLang and hlsl++ if you do so
+                        const float alpha = atan2(Yx, Xx);
+
+                        m_targetRotation = radiansToDegrees(alpha);
                     }
 
                     if (any(abs(translation.xy) > 0.0f))
