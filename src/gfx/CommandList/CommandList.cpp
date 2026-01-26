@@ -262,11 +262,8 @@ namespace vg::gfx
         void CommandList::setStencilState(bool _stencilEnable, core::u8 _stencilReadMask, core::u8 _stencilWriteMask, StencilState _stencilFront, StencilState _stencilBack)
         {
             gfx::DepthStencilState ds = m_graphicStateCache.m_graphicPipelineKey.m_depthStencilState;
-            ds.m_stencilEnable = _stencilEnable;
-            ds.m_stencilReadMask = _stencilReadMask;
-            ds.m_stencilWriteMask = _stencilWriteMask;
-            ds.m_stencilFront = _stencilFront;
-            ds.m_stencilBack = _stencilBack;
+
+            ds.setStencilState(_stencilEnable, _stencilReadMask, _stencilWriteMask, _stencilFront, _stencilBack);
 
             setDepthStencilState(ds);
         }

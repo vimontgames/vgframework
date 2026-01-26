@@ -61,6 +61,28 @@ namespace vg::gfx
                 
             }
 
+            VG_INLINE void setStencilState(bool _stencilEnable = false, core::u8 _stencilReadMask = 0xFF, core::u8 _stencilWriteMask = 0xFF,
+                StencilState _stencilFront = { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep },
+                StencilState _stencilBack = { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep })
+            {
+                if (_stencilEnable)
+                {
+                    m_stencilEnable = true;
+                    m_stencilReadMask = _stencilReadMask;
+                    m_stencilWriteMask = _stencilWriteMask;
+                    m_stencilFront = _stencilFront;
+                    m_stencilBack = _stencilBack;
+                }
+                else
+                {
+                    m_stencilEnable = false;
+                    m_stencilReadMask = 0x00;
+                    m_stencilWriteMask = 0x00;
+                    m_stencilFront = { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep };
+                    m_stencilBack = { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep };
+                }
+            }
+
         protected:
             union
             {
@@ -115,22 +137,7 @@ namespace vg::gfx
                 m_depthFunc = ComparisonFunc::Always;
             }
 
-            if (_stencilEnable)
-            {
-                m_stencilEnable = true;
-                m_stencilReadMask = _stencilReadMask;
-                m_stencilWriteMask = _stencilWriteMask;
-                m_stencilFront = _stencilFront;
-                m_stencilBack = _stencilBack;
-            }
-            else
-            {
-                m_stencilEnable = false;
-                m_stencilReadMask = 0x00;
-                m_stencilWriteMask = 0x00;
-                m_stencilFront = { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep };
-                m_stencilBack =  { ComparisonFunc::Always, StencilOp::Keep, StencilOp::Keep, StencilOp::Keep };
-            }            
+            setStencilState(_stencilEnable, _stencilReadMask, _stencilWriteMask, _stencilFront, _stencilBack);
         }
 
         inline bool operator == (const DepthStencilState & _other) const
