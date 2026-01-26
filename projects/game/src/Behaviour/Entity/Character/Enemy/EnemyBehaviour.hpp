@@ -217,8 +217,6 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     m_currentRotation = smoothdamp(m_currentRotation, m_targetRotation, m_rotationSmoothdamp, 0.02f, _context.m_dt);
 
                     charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
-
-                    //dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
                 }
             }   
             else

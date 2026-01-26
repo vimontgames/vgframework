@@ -3,6 +3,7 @@
 #include "physics/IPhysics.h"
 #include "physics/IPhysicsOptions.h"
 #include "engine/IVehicleComponent.h"
+#include "engine/IMeshComponent.h"
 #include "Behaviour/Entity/Item/Vehicle/VehicleBehaviour.h"
 
 #if !VG_ENABLE_INLINE
@@ -341,30 +342,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             {
                 translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
-
-                //if (!m_isActive)
-                //{
-                //    m_viewIndex = (u8)Game::get()->getActivePlayers().size();
-                //
-                //    enableVisual(true);
-                //    enablePhysics(true);
-                //    
-                //    if (auto * uiGO = m_UI.get<IGameObject>())
-                //    {
-                //        uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
-                //        if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
-                //            uiCanvasComponent->SetViewIndex(m_viewIndex);
-                //    }
-                //
-                //    m_isActive = true;
-                //
-                //    // Update physics body with player flag
-                //    if (auto * physicsBody = playerGO->GetComponentT<ICharacterControllerComponent>())
-                //    {
-                //        auto player1Cat = Game::get()->Engine().GetPhysics()->GetOptions()->GetPhysicsCategory("Player 1");
-                //        physicsBody->SetCategory((vg::physics::Category)((uint)player1Cat + m_viewIndex));
-                //    }
-                //}
             }
 
             if (any(abs(translation.xy) > 0.0f))
@@ -486,6 +463,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             closestWeaponBehaviour->SetOwner(playerGO);
                             m_rightHandItem = closestWeaponBehaviour;
 
+                            if (vg::engine::IMeshComponent * playerMesh = playerGO->GetComponentT< vg::engine::IMeshComponent>())
+                            {
+                                auto category = playerMesh->GetOutlineCategory();
+                                auto meshComponents = closestWeaponGO->GetComponentsT<vg::engine::IMeshComponent>();
+                                for (IMeshComponent * meshComp : meshComponents)
+                                    meshComp->SetOutlineCategory(category);
+                            }
+
                             if (auto * physicsBody = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                                 physicsBody->SetTrigger(true);
                         }
@@ -537,10 +522,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 {
                     if (input.IsJoyButtonPressed(joyID, JoyButton::X) && FightState::Shoot == m_fightState && time >= m_nextShootTime)
                     {
-                        // Keep shooting
-                        //VG_DEBUGPRINT("[PlayerBehaviour] Shoot\n");
-
-                        //VG_WARNING("[Player] Shoot banana");
                         if (nullptr != m_rightHandItem)
                         {
                             WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
@@ -553,6 +534,15 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                     newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled, true);
                                     newProjectileGO->SetObjectRuntimeFlags(ObjectRuntimeFlags::Temporary, true);
                                     projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
+
+                                    // Apply owner color to projectile
+                                    if (vg::engine::IMeshComponent * playerMesh = playerGO->GetComponentT< vg::engine::IMeshComponent>())
+                                    {
+                                        auto category = playerMesh->GetOutlineCategory();
+                                        if (IMeshComponent * meshComp = projectileModelGO->GetComponentInChildrenT<vg::engine::IMeshComponent>())
+                                            meshComp->SetOutlineCategory(category);
+                                    }
+
                                     GameObject * weaponGO = weapon->getGameObject();
                                     float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
                                     float3 projectileDir = normalize(projectileMatrix[1].xyz);
@@ -629,6 +619,10 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     {
                         // drop
                         m_rightHandItem->SetOwner(nullptr);
+
+                        auto meshComponents = m_rightHandItem->GetGameObject()->GetComponentsT<vg::engine::IMeshComponent>();
+                        for (IMeshComponent * meshComp : meshComponents)
+                            meshComp->SetOutlineCategory(vg::renderer::OutlineCategory::None);
 
                         if (auto * physicsBody = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                             physicsBody->SetTrigger(false);
@@ -724,7 +718,19 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
         if (VehicleBehaviour * vehicleBehaviour = _vehicleGameobject->GetComponentT<VehicleBehaviour>())
         {
             if (vehicleBehaviour->GetOwner().empty())
-                vehicleBehaviour->SetOwner(GetGameObject());
+            {
+                auto * playerGO = GetGameObject();
+                vehicleBehaviour->SetOwner(playerGO);
+
+                // Apply owner color to vehicle
+                if (vg::engine::IMeshComponent * playerMesh = playerGO->GetComponentT< vg::engine::IMeshComponent>())
+                {
+                    auto category = playerMesh->GetOutlineCategory();
+                    auto meshComponents = vehicleBehaviour->GetGameObject()->GetComponentsInChildrenT<vg::engine::IMeshComponent>();
+                    for (IMeshComponent * meshComp : meshComponents)
+                        meshComp->SetOutlineCategory(category);
+                }
+            }
         }
 
         return true;
@@ -743,6 +749,8 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
 
         if (1)
         {
+            auto * go = GetGameObject();
+
             if (_teleport)
             {
                 float4x4 exitMat;
@@ -757,29 +765,56 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                     exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?}
                 }
 
-                if (auto * charaController = GetGameObject()->GetComponentT<ICharacterControllerComponent>())
+                if (auto * charaController = go->GetComponentT<ICharacterControllerComponent>())
                 {
                     // enable physics but disable if cannot exit
                     enablePhysics(true);
 
+                    
+
                     // Test if shape can fit in target position using physics
                     if (charaController->CanTeleportTo(exitMat[3].xyz))
                     {
-                        VG_VERIFY(vehicleComp->ExitVehicle(this->GetGameObject()));
+                        VG_VERIFY(vehicleComp->ExitVehicle(go));
                         GetGameObject()->SetGlobalMatrix(exitMat);
                         m_vehicle.clear();
                     }
                     else
                     {
-                        VG_WARNING("[Player] Player \"%s\" could not exit \"%s\"", GetGameObject()->GetName().c_str(), vehicleComp->GetGameObject()->GetName().c_str());
-                        enablePhysics(false);
-                        return false;
+                        // Retry X meters above the vehicle
+                        // TODO: Max iterations? Do it only when car is updside down? Take damage?
+                        const float4x4 globalMat = vehicleGO->GetGlobalMatrix();
+
+                        exitMat = globalMat;
+                        exitMat[3].z += 1;
+
+                        bool success = false;
+                        while (!success)
+                        {
+                            if (charaController->CanTeleportTo(exitMat[3].xyz))
+                            {
+                                VG_VERIFY(vehicleComp->ExitVehicle(go));
+                                GetGameObject()->SetGlobalMatrix(exitMat);
+                                m_vehicle.clear();
+
+                                success = true;
+                            }
+
+                            exitMat[3].z += 1;
+                        }
+
+                        if (!success)
+                        {
+                            VG_WARNING("[Player] Player \"%s\" could not exit \"%s\"", GetGameObject()->GetName().c_str(), vehicleComp->GetGameObject()->GetName().c_str());
+                            enablePhysics(false);
+                            return false;
+                        }
                     }
                 }                
             }
             else
             {
-                VG_VERIFY(vehicleComp->ExitVehicle(this->GetGameObject()));
+                VG_VERIFY(vehicleComp->ExitVehicle(go));
                 m_vehicle.clear();
             }
 
@@ -793,7 +828,14 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                 {
                     IGameObject * playerGO = GetGameObject();
                     if (vehicleBehaviour->GetOwner().getObject() == playerGO)
+                    {
                         vehicleBehaviour->SetOwner(nullptr);
+
+                        // Apply "no owner" color to vehicle
+                        auto meshComponents = vehicleBehaviour->GetGameObject()->GetComponentsInChildrenT<vg::engine::IMeshComponent>();
+                        for (IMeshComponent * meshComp : meshComponents)
+                            meshComp->SetOutlineCategory(vg::renderer::OutlineCategory::None);
+                    }
                 }
             }
 

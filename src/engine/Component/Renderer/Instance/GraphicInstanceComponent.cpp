@@ -64,6 +64,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void GraphicInstanceComponent::SetOutlineCategory(OutlineCategory _category)
+    {
+        m_outlineCategory = _category;
+
+        if (IGraphicInstance * graphicInstance = GetGraphicInstance())
+            graphicInstance->SetOutlineCategory(m_outlineCategory);
+    }
+
+    //--------------------------------------------------------------------------------------
+    renderer::OutlineCategory GraphicInstanceComponent::GetOutlineCategory() const
+    {
+        return m_outlineCategory;
+    }
+
+    //--------------------------------------------------------------------------------------
     void GraphicInstanceComponent::OnEnable()
     {
         registerGraphicInstance();

@@ -20,6 +20,9 @@ namespace vg::engine
         GraphicInstanceComponent(const core::string & _name, core::IObject * _parent);
         ~GraphicInstanceComponent();
 
+        virtual void                            SetOutlineCategory          (renderer::OutlineCategory _category);
+        virtual renderer::OutlineCategory       GetOutlineCategory          () const;
+
     protected:
         void                                    OnLoad                      () override;
 
