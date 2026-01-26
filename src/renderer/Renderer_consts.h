@@ -9,7 +9,7 @@ namespace vg::renderer
         None = 0,
         SelectedObject,
         SelectedPrefab,
-        User_3,
+        SelectedPrefabObject,
         User_4,
         User_5,
         User_6,

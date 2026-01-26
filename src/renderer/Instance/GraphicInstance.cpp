@@ -85,6 +85,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    OutlineCategory GraphicInstance::GetOutlineCategory() const
+    {
+        return m_outlineCategory;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GraphicInstance::SetMaterialCount(core::uint _count)
     {
         return setMaterialCount(_count);
@@ -225,10 +231,13 @@ namespace vg::renderer
     OutlineCategory GraphicInstance::getCurrentOutline() const
     {
         OutlineCategory outline = getOutlineCategory();
-        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+        const auto flags = getObjectRuntimeFlags();
+        if (asBool(ObjectRuntimeFlags::Selected & flags))
         {
-            if (asBool(ObjectRuntimeFlags::SelectedPrefab & getObjectRuntimeFlags()))
+            if (asBool(ObjectRuntimeFlags::SelectedPrefab & flags))
                 outline = OutlineCategory::SelectedPrefab;
+            else if (asBool(ObjectRuntimeFlags::PrefabObject & flags))
+                outline = OutlineCategory::SelectedPrefabObject;
             else
                 outline = OutlineCategory::SelectedObject;
         }

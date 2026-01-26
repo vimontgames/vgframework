@@ -49,5 +49,6 @@ namespace vg::renderer
 
         virtual void                SetStencil              (bool _enable, core::u8 _ref, const gfx::StencilState & _state) = 0;
         virtual void                SetOutlineCategory      (OutlineCategory _category) = 0;
+        virtual OutlineCategory     GetOutlineCategory      () const = 0;
     };
 }

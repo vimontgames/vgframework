@@ -580,6 +580,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void FlagPrefabObjectsRecur(IObject * _obj)
+    {
+        IGameObject * go = VG_SAFE_STATIC_CAST(IGameObject, _obj);
+        go->setObjectRuntimeFlags(ObjectRuntimeFlags::PrefabObject, true);
+        auto & children = go->GetChildren();
+        for (uint i = 0; i < children.size(); ++i)
+            FlagPrefabObjectsRecur(children[i]);
+    }
+
+    //--------------------------------------------------------------------------------------
     IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent, CopyPropertyFlags _copyPropertyFlags)
     {
         VG_PROFILE_CPU("Instanciate");
@@ -592,6 +602,10 @@ namespace vg::core
             return nullptr;
 
         CopyProperties(_object, newObj, _copyPropertyFlags);
+
+        // Tag the new created hierarchy as Prefab instanced object
+        if (asBool(CopyPropertyFlags::Prefab & _copyPropertyFlags))
+            FlagPrefabObjectsRecur(newObj);
 
         return newObj;
     }

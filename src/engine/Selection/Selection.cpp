@@ -153,20 +153,13 @@ namespace vg::engine
         {
             ObjectRuntimeFlags selectedFlags = ObjectRuntimeFlags::Selected;
 
-            if (_selectedPrefab || !_selected)
+            if ((_selectedPrefab && asBool(ObjectRuntimeFlags::PrefabObject & go->getObjectRuntimeFlags())) || !_selected)
                 selectedFlags |= ObjectRuntimeFlags::SelectedPrefab;
 
             go->setObjectRuntimeFlags(selectedFlags, _selected);
 
             for (auto & comp : go->getComponents())
                 comp->UpdateFlagsFromGameObject();
-
-            //auto graphicInstances = go->getGraphicInstances();
-            //for (uint i = 0; i < graphicInstances.size(); ++i)
-            //{
-            //    auto instance = graphicInstances[i];
-            //    instance->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
-            //}
         }
     }
 

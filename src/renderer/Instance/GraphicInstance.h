@@ -61,6 +61,7 @@ namespace vg::renderer
         PickingID                                       GetPickingID                    () const override;
         void                                            SetStencil                      (bool _enable, core::u8 _ref, const gfx::StencilState & _state) override;
         void                                            SetOutlineCategory              (OutlineCategory _category) override;
+        OutlineCategory                                 GetOutlineCategory              () const override;
 
         // New virtual functions added to GraphicInstance
         virtual bool                                    Cull                            (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
