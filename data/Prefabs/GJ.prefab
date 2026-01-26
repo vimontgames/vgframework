@@ -70,6 +70,7 @@
                                         <Property type="Float" name="m_height" value="1.75"/>
                                     </Object>
                                 </Property>
+                                <Property type="EnumFlagsU64" name="m_groundStateExcludeTags" value=""/>
                             </Object>
                             <Object class="AnimationComponent">
                                 <Property type="String" name="m_name" value="AnimationComponent #5"/>
@@ -221,7 +222,7 @@
                                 <Property type="Uint32" name="m_uid" value="4120299909"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="EnumU8" name="m_outlineCategory" value="User_4"/>
+                                <Property type="EnumU8" name="m_outlineCategory" value="User_5"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>

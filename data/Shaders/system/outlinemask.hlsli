@@ -3,7 +3,7 @@
 
 #include "types.hlsli"
 
-#define OUTLINE_MASK_RESERVED_CATEGORIES 3
+#define OUTLINE_MASK_RESERVED_CATEGORIES 4
 #define OUTLINE_MASK_CATEGORIES_MAX 16
 
 // Bits 0-3 are used for Category
@@ -11,6 +11,7 @@
 // - 0 (None)
 // - 1 (Selected Object) 
 // - 2 (Selected Prefab) 
+// - 3 (Prefab Object)
 
 vg_enum_class_global(OutlineMaskFlags, u16,
     Default         = 0x0000,

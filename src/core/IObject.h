@@ -24,6 +24,7 @@ namespace vg::core
         Temporary       = 0x0008,   // Object is temporary and will be deleted on stop
         Selected        = 0x0010,   // Object is selected  
         SelectedPrefab  = 0x0020,   // Object is selected because its prefab is selected 
+        PrefabObject    = 0x0040,   // Object has been created as part of a Prefab
         Prefab          = 0x0100,   // Object (e.g., World or GameObject) is a prefab                                               
         Instance        = 0x0200    // Object (e.g., World or GameObject) is an Instance                                               
     );

@@ -384,14 +384,7 @@ namespace vg::renderer
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
-        OutlineCategory outline = getOutlineCategory();
-        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
-        {
-            if (asBool(ObjectRuntimeFlags::SelectedPrefab & getObjectRuntimeFlags()))
-                outline = OutlineCategory::SelectedPrefab;
-            else
-                outline = OutlineCategory::SelectedObject;
-        }
+        const OutlineCategory outline = getCurrentOutline();
 
         instanceData->setMaterialCount(batchCount);
         instanceData->setVertexFormat(VertexFormat::ParticleQuad);
@@ -399,7 +392,7 @@ namespace vg::renderer
         instanceData->setGPUInstanceType(GPUInstanceType::ParticleSystem);
         instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());
-        instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
+        instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset);
         instanceData->setVertexBuffer(vbHandle, vbOffset);
 
         for (uint b = 0; b < batchCount; ++b)

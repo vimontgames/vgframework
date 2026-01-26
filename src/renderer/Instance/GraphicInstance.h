@@ -111,6 +111,9 @@ namespace vg::renderer
         VG_INLINE const gfx::StencilState               getStencilState                 () const;
         VG_INLINE OutlineCategory                       getOutlineCategory              () const;
 
+    protected:
+        OutlineCategory                                 getCurrentOutline               () const;
+
     private:
          core::atomic<core::u32>                        m_atomicFlags;
         SurfaceTypeFlags                                m_surfaceTypes                  = (SurfaceTypeFlags)0x0;

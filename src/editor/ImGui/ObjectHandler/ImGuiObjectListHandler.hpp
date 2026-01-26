@@ -111,7 +111,7 @@ namespace vg::editor
                             if (itemLabel.empty())
                                 ImGui::PopDisabledStyle();
 
-                            ImGui::BeginDisabled(readOnly);
+                            ImGui::BeginDisabled(readOnly || i < list->GetMinSize());
                             {
                                 if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
                                     removeAt = i;

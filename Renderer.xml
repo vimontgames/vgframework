@@ -117,6 +117,14 @@
                         <Property type="Float4" name="m_zFailFillColor" x="1" y="1" z="0" w="0"/>
                     </Object>
                     <Object class="OutlineOptions">
+                        <Property type="String" name="m_name" value="Prefab Object"/>
+                        <Property type="Uint32" name="m_uid" value="330346771"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="Float4" name="m_zPassOutlineColor" x="1" y="0.50196081" z="0" w="0.74901962"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="1" y="0.50196081" z="0" w="0.25098041"/>
+                        <Property type="Float4" name="m_zFailFillColor" x="1" y="0.50196081" z="0" w="0"/>
+                    </Object>
+                    <Object class="OutlineOptions">
                         <Property type="String" name="m_name" value="Neutral"/>
                         <Property type="Uint32" name="m_uid" value="832647807"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -137,7 +145,7 @@
                         <Property type="Uint32" name="m_uid" value="1621808157"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="Float4" name="m_zPassOutlineColor" x="0" y="0" z="1" w="0"/>
-                        <Property type="Float4" name="m_zFailOutlineColor" x="0" y="0" z="1" w="0.50196081"/>
+                        <Property type="Float4" name="m_zFailOutlineColor" x="0.023529412" y="0" z="1" w="0.50196081"/>
                         <Property type="Float4" name="m_zFailFillColor" x="0" y="0" z="1" w="0.25098041"/>
                     </Object>
                 </Property>

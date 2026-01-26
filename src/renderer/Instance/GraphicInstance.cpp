@@ -220,4 +220,19 @@ namespace vg::renderer
         m_instanceVertexBuffer = _buffer;
         m_instanceVertexBufferOffset = _offset;
     }
+
+    //--------------------------------------------------------------------------------------
+    OutlineCategory GraphicInstance::getCurrentOutline() const
+    {
+        OutlineCategory outline = getOutlineCategory();
+        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
+        {
+            if (asBool(ObjectRuntimeFlags::SelectedPrefab & getObjectRuntimeFlags()))
+                outline = OutlineCategory::SelectedPrefab;
+            else
+                outline = OutlineCategory::SelectedObject;
+        }
+
+        return outline;
+    }
 }

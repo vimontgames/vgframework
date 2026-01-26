@@ -306,14 +306,7 @@ namespace vg::renderer
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
-        OutlineCategory outline = getOutlineCategory();
-        if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
-        {
-            if (asBool(ObjectRuntimeFlags::SelectedPrefab & getObjectRuntimeFlags()))
-                outline = OutlineCategory::SelectedPrefab;
-            else
-                outline = OutlineCategory::SelectedObject;            
-        }
+        const OutlineCategory outline = getCurrentOutline();
 
         instanceData->setMaterialCount(materialCount);
         instanceData->setVertexFormat(vertexFormat);

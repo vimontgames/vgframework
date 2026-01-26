@@ -365,7 +365,7 @@ namespace vg::renderer
 
             m_customQualityLevel = autodetectQualityLevel();
 
-            // Create default category (TODO: make read-only so they cannot be edited/removed, and hide from user interface?)
+            // Create default category 
             auto & categories = m_outlineCategories.getObjects();
             VG_ASSERT(categories.size() == 0);
             m_outlineCategories.Add("None");
@@ -383,8 +383,13 @@ namespace vg::renderer
             selectedPrefab.setZPassOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.75f));
             selectedPrefab.setZFailOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.25f));
 
-            m_outlineCategories.SetMinCount(3);
-            m_outlineCategories.SetMaxCount(16);
+            m_outlineCategories.Add("Prefab Object");
+            OutlineOptions & selectedPrefabObject = categories[3];
+            selectedPrefabObject.setZPassOutlineColor(core::float4(1.0f, 0.5f, 0.0f, 0.75f));
+            selectedPrefabObject.setZFailOutlineColor(core::float4(1.0f, 0.5f, 0.0f, 0.25f));
+
+            m_outlineCategories.SetMinSize(4);
+            m_outlineCategories.SetMaxSize(16);
         }
     }
 

@@ -19,7 +19,9 @@ namespace vg::core
         virtual bool    CanAdd      () const = 0;
         virtual bool    CanRemove   () const = 0;
 
-        virtual void    SetMinCount (size_t _count) = 0;
-        virtual void    SetMaxCount (size_t _count) = 0;
+        virtual void    SetMinSize  (size_t _count) = 0;
+        virtual size_t  GetMinSize  () const = 0;
+        virtual void    SetMaxSize  (size_t _count) = 0;
+        virtual size_t  GetMaxSize  () const = 0;
     };
 }
