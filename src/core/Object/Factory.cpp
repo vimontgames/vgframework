@@ -2049,6 +2049,9 @@ namespace vg::core
                                                         classDescRef = GetClassDescriptor(classNameRef);
                                                         if (nullptr != classDescRef)
                                                         {
+                                                            // Clear resource path as the resource will be reset to avoid leaks
+                                                            _resource->ClearResourcePath();
+
                                                             if (SerializeFromXML(_resource, xmlObjectRef, _xmlFile))
                                                             {
                                                                 _resource->SetParent(_object);
