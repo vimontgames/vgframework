@@ -4,6 +4,7 @@
 #include "renderer/IRendererOptions.h"
 #include "core/GameObject/GameObject.h"
 #include "engine/Engine.h"
+#include "Shaders/system/outlinemask.hlsli"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -20,7 +21,7 @@ namespace vg::engine
         {
             string name;
             
-            if (i < options->GetRendererOutlineCategoryCount()) // TODO hide first OUTLINE_MASK_RESERVED_CATEGORIES categories
+            if (i < options->GetRendererOutlineCategoryCount() && i >= OUTLINE_MASK_RESERVED_CATEGORIES)
                 name = options->GetRendererOutlineCategoryName((OutlineCategory)i);
             else
                 name = "";

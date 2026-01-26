@@ -60,14 +60,14 @@ namespace vg::editor
 
             bool remove = false;
 
-            ImGui::BeginDisabled(readOnly);
+            ImGui::BeginDisabled(readOnly || !list->CanAdd());
             {
                 if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", label), 0))
                 {
                     list->Add(fmt::sprintf("new %s", label));
                     changed = true;
                 }
-                ImGui::BeginDisabled(list->Size() == 0);
+                ImGui::BeginDisabled(readOnly || list->Size() == 0 || !list->CanRemove());
                 if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", label), 1))
                     remove = true;
                 ImGui::EndDisabled();

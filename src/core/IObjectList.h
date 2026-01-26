@@ -15,5 +15,11 @@ namespace vg::core
         virtual bool    MoveDown    (size_t _index) = 0;
         virtual bool    Remove      (size_t _index) = 0;
         virtual size_t  Size        () const = 0;
+
+        virtual bool    CanAdd      () const = 0;
+        virtual bool    CanRemove   () const = 0;
+
+        virtual void    SetMinCount (size_t _count) = 0;
+        virtual void    SetMaxCount (size_t _count) = 0;
     };
 }

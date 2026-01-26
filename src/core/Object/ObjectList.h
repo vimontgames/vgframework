@@ -113,8 +113,34 @@ namespace vg::core
             super::OnDisable();
         }
 
+        //--------------------------------------------------------------------------------------
+        bool CanAdd() const override
+        {
+            return m_objects.size() < m_maxCount;
+        }
+
+        //--------------------------------------------------------------------------------------
+        bool CanRemove() const override
+        {
+            return m_objects.size() > m_minCount;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void SetMinCount(size_t _count) override
+        {
+            m_minCount = _count;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void SetMaxCount(size_t _count) override
+        {
+            m_maxCount = _count;
+        }
+
     protected:
-        core::vector<T> m_objects;
+        vector<T> m_objects;
+        size_t m_minCount = 0;
+        size_t m_maxCount = (size_t)-1;
     };
 
     //--------------------------------------------------------------------------------------

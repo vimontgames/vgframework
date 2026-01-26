@@ -325,7 +325,7 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyObject(RendererOptions, m_outlineCategories, "Categories");
+        registerPropertyObject(RendererOptions, m_outlineCategories, "Outlines");
 
         return true;
     }
@@ -382,6 +382,9 @@ namespace vg::renderer
             OutlineOptions & selectedPrefab = categories[2];
             selectedPrefab.setZPassOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.75f));
             selectedPrefab.setZFailOutlineColor(core::float4(1.0f, 1.0f, 0.0f, 0.25f));
+
+            m_outlineCategories.SetMinCount(3);
+            m_outlineCategories.SetMaxCount(16);
         }
     }
 
@@ -511,7 +514,6 @@ namespace vg::renderer
         m_pbrBakedBRDFTexture = (core::IResource *)factory->CreateObject("TextureResource");
         m_pbrBakedBRDFTexture->SetParent(this);
         m_pbrBakedBRDFTexture->RegisterUID();        
-        //m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png"); // can't default value from because loading will load it again and it will leak
 
         Load(false);
 
