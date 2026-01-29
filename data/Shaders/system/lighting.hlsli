@@ -189,7 +189,7 @@ float4 getRaytracedColor(RaytracingAccelerationStructure _tlas, float3 _origin, 
                 hitOpaqueDist = query.CommittedRayT();
             
                 MaterialSample mat = getRaytracingCommittedMaterial(query, _flags, _mode);
-                color = mat.albedo;
+                color = float4(mat.albedo.rgb,1);
             }
             break;
         
