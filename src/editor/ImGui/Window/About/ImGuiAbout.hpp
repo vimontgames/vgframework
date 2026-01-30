@@ -102,7 +102,7 @@ namespace vg::editor
                 { "JoltPhysics",            "5.0.0",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0" },
                 { "meta_enum_lite",         "2.0 (Custom)",     "https://github.com/vimontgames/meta_enum_lite" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
-                { "px_sched",               "",                 "https://github.com/pplux/px" },
+                { "px_sched",               "f5d3b6e",          "https://github.com/pplux/px" },
                 { "Sharpmake",              "0.75.0 (Custom)",  "https://github.com/vimontgames/Sharpmake" },
                 { "SoLoud",                 "August 2024",      "https://github.com/jarikomppa/soloud" },
                 { "stb_image",              "2.30",             "https://github.com/nothings/stb" },

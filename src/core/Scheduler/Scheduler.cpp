@@ -18,6 +18,7 @@ namespace px_sched
 #define PX_SCHED_IMPLEMENTATION 1
 #pragma push_macro("new")
 #undef new
+//#define PX_SCHED_DOES_CHECKS 1
 #include "px/px_sched.h"
 #pragma pop_macro("new")
 
@@ -84,7 +85,7 @@ namespace vg::core
         if (nullptr != _job)
         {
             px_sched::Job job{ _job };
-            m_schd->run(job, reinterpret_cast<px_sched::Sync *>(_sync));
+            m_schd->run(std::move(job), reinterpret_cast<px_sched::Sync *>(_sync));
         }
     }
 
@@ -92,8 +93,8 @@ namespace vg::core
     JobSync Scheduler::Start(Job * _job)
     {
         px_sched::Sync s;
-        px_sched::Job j{ _job };
-        m_schd->run(j, &s);
+        px_sched::Job job{ _job };
+        m_schd->run(std::move(job), &s);
         return *reinterpret_cast<JobSync *>(&s);
     }
 
@@ -104,7 +105,7 @@ namespace vg::core
         if (nullptr != _job)
         {
             px_sched::Job job{ _job };
-            m_schd->runAfter(*reinterpret_cast<px_sched::Sync *>(_trigger), job, reinterpret_cast<px_sched::Sync *>(_sync));
+            m_schd->runAfter(*reinterpret_cast<px_sched::Sync *>(_trigger), std::move(job), reinterpret_cast<px_sched::Sync *>(_sync));
         }
     }
 
