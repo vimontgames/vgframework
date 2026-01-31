@@ -17,7 +17,7 @@ using namespace vg::core;
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_ABSTRACT_CLASS(ShapeDesc, "Shape Settings");
+    VG_REGISTER_ABSTRACT_CLASS(ShapeDesc);
 
     //--------------------------------------------------------------------------------------
     bool ShapeDesc::registerProperties(IClassDesc & _desc)

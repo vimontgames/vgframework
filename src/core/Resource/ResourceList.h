@@ -98,7 +98,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        void OnEnable()
+        void OnEnable() override
         {
             super::OnEnable();
             for (auto i = 0; i < m_resources.size(); ++i)
@@ -106,7 +106,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        void OnDisable()
+        void OnDisable() override
         {
             for (auto i = 0; i < m_resources.size(); ++i)
                 m_resources[i].OnDisable();

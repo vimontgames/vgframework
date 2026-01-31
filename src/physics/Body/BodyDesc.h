@@ -31,9 +31,9 @@ namespace vg::physics
 
         bool                CanStaticMerge          () const final override;
 
-        bool                isCenterOfMassOverriden () const { return m_overrideCenterOfMassOffset; }
-        core::float3        getCenterOfMassOffset   () const { return m_centerOfMassOffset;}
-        void                setCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) { m_centerOfMassOffset = _centerOfMassOffset; }
+        bool                isCenterOfMassOverriden () const final override { return m_overrideCenterOfMassOffset; }
+        core::float3        getCenterOfMassOffset   () const final override { return m_centerOfMassOffset;}
+        void                setCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) final override { m_centerOfMassOffset = _centerOfMassOffset; }
 
     public:
         bool                m_trigger                   = false;

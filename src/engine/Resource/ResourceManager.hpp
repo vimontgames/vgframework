@@ -366,8 +366,7 @@ namespace vg::engine
             // TODO: lock outside this call? Once device is ready mutex should not be necessary because only loading thread shall access this buffer
             const auto available = renderer->GetAvailableUploadSize();
             const auto total = renderer->GetTotalUploadSize();
-            const auto required = total;
-
+  
             LoadStatus status = loadOneResource(*info);
 
             if (status == LoadStatus::CannotUploadData)
@@ -432,8 +431,6 @@ namespace vg::engine
     {
         VG_ASSERT(_resource->GetParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
-
-        const auto * options = EngineOptions::get();
 
         lock_guard lock(m_addResourceToLoadRecursiveMutex);
 

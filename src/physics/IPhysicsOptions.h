@@ -1,6 +1,6 @@
 #pragma once
 #include "core/Options/Options.h"
-#include "physics/Physics_Consts.h"
+#include "Physics/Physics_Consts.h"
 
 namespace vg::physics
 {
