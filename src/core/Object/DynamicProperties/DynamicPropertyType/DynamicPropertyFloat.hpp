@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyFloat, "DynamicPropertyFloat");
+    VG_REGISTER_CLASS(DynamicPropertyFloat, "DynamicPropertyFloat");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyFloat::registerProperties(IClassDesc & _desc)

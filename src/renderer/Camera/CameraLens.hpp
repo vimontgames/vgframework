@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(CameraLens, "Camera Lens");
+    VG_REGISTER_CLASS(CameraLens, "Camera Lens");
 
     //--------------------------------------------------------------------------------------
     bool CameraLens::registerProperties(IClassDesc & _desc)

@@ -10,7 +10,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(PrefabGameObject, "PrefabGameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
+    VG_REGISTER_CLASS_EX(PrefabGameObject, "PrefabGameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
 
     //--------------------------------------------------------------------------------------
     bool PrefabGameObject::registerProperties(IClassDesc & _desc)
@@ -598,14 +598,12 @@ namespace vg::engine
                     instance->OnLocalMatrixChanged(false, true);
 
                     // Register all active GraphicInstances
-                    auto particleSystems = instance->GetComponentsInChildrenT<ParticleComponent>();
-                    for (auto * graphicInstance : particleSystems)
+                    auto graphicInstances = instance->GetComponentsInChildrenT<GraphicInstanceComponent>();
+                    for (auto * graphicInstance : graphicInstances)
                     {
                         if (graphicInstance->isEnabled() && graphicInstance->GetGameObject()->isEnabledInHierarchy())
                             graphicInstance->registerGraphicInstance();
                     }
-
-                    //auto graphicInstances = instance->GetComponentsInChildrenT<GraphicInstanceComponent>();
 
                     VG_SAFE_RELEASE(instance);
                 }

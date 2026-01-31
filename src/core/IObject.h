@@ -40,13 +40,18 @@ namespace vg::core
 
     using UID = core::u32;
     using ClassCRC = core::u64;
+    class IFactory;
 
 	class IObject
 	{
 	public:
+        static bool                         registerClass           (vg::core::IFactory & _factory);
+        static bool                         registerProperties      (vg::core::IClassDesc & _desc);
         static const char *                 getStaticClassName      () { return "IObject"; }
-        virtual const char *                GetClassName            () const = 0;
-        virtual ClassCRC                    GetClassCRC             () const = 0;
+        static ClassCRC                     getStaticClassCRC       () { return 0x0; }
+
+        virtual const char *                GetClassName            () const { return IObject::getStaticClassName(); }
+        virtual ClassCRC                    GetClassCRC             () const { return IObject::getStaticClassCRC(); }
 
         virtual void                        SetClassDesc            (const IClassDesc * _classDesc) = 0;
         virtual const IClassDesc *          GetClassDesc            () const = 0;

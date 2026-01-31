@@ -13,6 +13,8 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
+    VG_REGISTER_ABSTRACT_CLASS(GraphicInstanceComponent);
+
     //--------------------------------------------------------------------------------------
     core::vector<core::string> getRendererCategoryNames(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
@@ -43,19 +45,6 @@ namespace vg::engine
         setPropertyNamesCallback(GraphicInstanceComponent, m_outlineCategory, getRendererCategoryNames);
 
         return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    GraphicInstanceComponent::GraphicInstanceComponent(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent)
-    {
-
-    }
-
-    //--------------------------------------------------------------------------------------
-    GraphicInstanceComponent::~GraphicInstanceComponent()
-    {
-
     }
 
     //--------------------------------------------------------------------------------------

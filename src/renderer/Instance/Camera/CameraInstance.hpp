@@ -9,7 +9,7 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(CameraInstance, "Camera Instance", core::ClassDescFlags::Instance);
+    VG_REGISTER_CLASS_EX(CameraInstance, "Camera Instance", core::ClassDescFlags::Instance);
 
     //--------------------------------------------------------------------------------------
     CameraInstance::CameraInstance(const core::string & _name, core::IObject * _parent)

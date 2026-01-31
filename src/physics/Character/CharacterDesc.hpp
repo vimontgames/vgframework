@@ -27,7 +27,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(RigidCharacterDesc, "RigidCharacter Settings");
+    VG_REGISTER_CLASS(RigidCharacterDesc, "RigidCharacter Settings");
 
     //--------------------------------------------------------------------------------------
     bool RigidCharacterDesc::registerProperties(IClassDesc & _desc)

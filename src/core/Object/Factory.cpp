@@ -114,7 +114,10 @@ namespace vg::core
 
         ClassDesc classDesc;
         classDesc.crc = classCRC;
-        classDesc.parentCRC = parentClassCRC;
+        if (classDesc.crc == Object::getStaticClassCRC())
+            classDesc.parentCRC = 0x0;
+        else
+            classDesc.parentCRC = parentClassCRC;
         classDesc.name = _className;
         classDesc.parentClassName = _parentClassName;
         classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
@@ -172,7 +175,11 @@ namespace vg::core
 
         ClassDesc classDesc;
         classDesc.crc = classCRC;
-        classDesc.parentCRC = parentClassCRC;
+        if (classDesc.crc == Object::getStaticClassCRC())
+            classDesc.parentCRC = 0x0;
+        else
+            classDesc.parentCRC = parentClassCRC;
+
         classDesc.name = _className;
         classDesc.parentClassName = _parentClassName;
         classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
@@ -613,6 +620,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::IsA(ClassCRC _CRC, ClassCRC _targetCRC) const
     {
+        const ClassCRC baseObjectInterfaceCRC = IObject::getStaticClassCRC();
+        VG_ASSERT(_targetCRC != baseObjectInterfaceCRC);
+
         if (_CRC == _targetCRC)
             return true;
 
@@ -627,7 +637,18 @@ namespace vg::core
                 if (parentCRC == _targetCRC)
                     return true;
 
-                classDesc = GetClassDescriptorFromCRC(parentCRC, false);
+                const auto * childClassDesc = classDesc;
+
+                if (parentCRC != baseObjectInterfaceCRC)
+                {
+                    classDesc = GetClassDescriptorFromCRC(parentCRC, false);
+                    VG_ASSERT(classDesc, "Parent class of class \"%s\" is not registered", childClassDesc->GetClassName());
+                }
+                else
+                {
+                    classDesc = nullptr;
+                }
+
             } while (nullptr != classDesc);
         }
 

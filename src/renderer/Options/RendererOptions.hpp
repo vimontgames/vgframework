@@ -20,7 +20,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
+    VG_REGISTER_CLASS(RendererOptions, "Renderer Options");
 
     #define setPropertyHiddenCallbackQualityEx(className, propertyName, func)                   setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  func##VeryLow);   \
                                                                                                 setPropertyHiddenCallback(className, propertyName[Quality::Low],      func##Low);       \

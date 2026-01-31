@@ -5,9 +5,9 @@ using namespace vg::core;
 
 namespace vg::physics
 {
-    VG_REGISTER_OBJECT_CLASS(VehicleAxleDesc, "Vehicle Axle Settings");
-    VG_REGISTER_ABSTRACT_CLASS(VehicleConstraintDesc, "Vehicle Settings");
-    VG_REGISTER_OBJECT_CLASS(FourWheelsVehicleConstraintDesc, "Vehicle Settings");
+    VG_REGISTER_CLASS(VehicleAxleDesc, "Vehicle Axle Settings");
+    VG_REGISTER_ABSTRACT_CLASS(VehicleConstraintDesc);
+    VG_REGISTER_CLASS(FourWheelsVehicleConstraintDesc, "Vehicle Settings");
 
     //--------------------------------------------------------------------------------------
     // VehicleAxleDesc

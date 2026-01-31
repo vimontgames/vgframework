@@ -3,7 +3,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(FloatCurveDataContainer, "Float curve data container");
+    VG_REGISTER_CLASS(FloatCurveDataContainer, "Float curve data container");
 
     //--------------------------------------------------------------------------------------
     FloatCurveDataContainer::FloatCurveDataContainer(const string & _name, IObject * _parent) :
@@ -39,7 +39,7 @@ namespace vg::core
         return true;
     }
 
-    VG_REGISTER_OBJECT_CLASS(FloatNCurve, "Float curve");
+    VG_REGISTER_CLASS(FloatNCurve, "Float curve");
 
     //--------------------------------------------------------------------------------------
     FloatNCurve::FloatNCurve(const string & _name, IObject * _parent) :

@@ -11,7 +11,7 @@ using namespace vg::core;
 
 namespace vg::physics
 {
-    VG_REGISTER_OBJECT_CLASS(Body, "Body");
+    VG_REGISTER_CLASS(Body, "Body");
 
     //--------------------------------------------------------------------------------------
     bool Body::registerProperties(IClassDesc & _desc)

@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(Batch, "Batch");
+    VG_REGISTER_CLASS(Batch, "Batch");
 
     //--------------------------------------------------------------------------------------
     bool Batch::registerProperties(core::IClassDesc & _desc)

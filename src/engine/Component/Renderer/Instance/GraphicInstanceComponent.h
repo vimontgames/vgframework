@@ -15,10 +15,7 @@ namespace vg::engine
     class GraphicInstanceComponent : public core::Component
     {
     public:
-        VG_CLASS_DECL(GraphicInstanceComponent, core::Component);
-
-        GraphicInstanceComponent(const core::string & _name, core::IObject * _parent);
-        ~GraphicInstanceComponent();
+        VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(GraphicInstanceComponent, core::Component);
 
         virtual void                            SetOutlineCategory          (renderer::OutlineCategory _category);
         virtual renderer::OutlineCategory       GetOutlineCategory          () const;

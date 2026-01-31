@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(WorldResourceData, "World Resource Data");
+    VG_REGISTER_CLASS(WorldResourceData, "World Resource Data");
 
     //--------------------------------------------------------------------------------------
     bool WorldResourceData::registerProperties(IClassDesc & _desc)

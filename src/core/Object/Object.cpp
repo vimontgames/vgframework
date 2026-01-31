@@ -17,6 +17,8 @@
 
 namespace vg::core
 {
+    VG_REGISTER_CLASS(Object, "Object");
+
     //--------------------------------------------------------------------------------------
     bool IsOriginalUIDHidden(const IObject * _object, const IProperty * _prop, uint _index)
     {

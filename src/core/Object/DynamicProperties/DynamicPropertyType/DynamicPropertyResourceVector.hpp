@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(ResourceOverrideData, "Resource override data");
+    VG_REGISTER_CLASS(ResourceOverrideData, "Resource override data");
 
     //--------------------------------------------------------------------------------------
     ResourceOverrideData::ResourceOverrideData(const string & _name, IObject * _parent) :
@@ -37,7 +37,7 @@ namespace vg::core
         return true;
     }
 
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyResourceVector, "DynamicPropertyResourceVectorItem");
+    VG_REGISTER_CLASS(DynamicPropertyResourceVector, "DynamicPropertyResourceVectorItem");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyResourceVector::registerProperties(IClassDesc & _desc)

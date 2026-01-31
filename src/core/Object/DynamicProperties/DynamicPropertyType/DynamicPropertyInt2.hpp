@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyInt2, "DynamicPropertyInt2");
+    VG_REGISTER_CLASS(DynamicPropertyInt2, "DynamicPropertyInt2");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyInt2::registerProperties(IClassDesc & _desc)

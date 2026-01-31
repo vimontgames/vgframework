@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(Float1Curve, "Float1 curve");
+    VG_REGISTER_CLASS(Float1Curve, "Float1 curve");
 
     //--------------------------------------------------------------------------------------
     Float1Curve::Float1Curve(const string & _name, IObject * _parent) :

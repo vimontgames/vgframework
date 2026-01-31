@@ -13,7 +13,7 @@ VG_OPTIMIZE_OFF
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(ResourceManager, "Resource Manager");
+    VG_REGISTER_CLASS(ResourceManager, "Resource Manager");
 
     //--------------------------------------------------------------------------------------
     bool ResourceManager::registerProperties(IClassDesc & _desc)

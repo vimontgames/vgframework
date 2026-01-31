@@ -15,7 +15,7 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(MeshModel, "Mesh Model", ClassDescFlags::Model);
+    VG_REGISTER_CLASS_EX(MeshModel, "Mesh Model", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool MeshModel::registerProperties(core::IClassDesc & _desc)

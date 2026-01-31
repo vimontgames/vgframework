@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_ABSTRACT_CLASS(Behaviour, "Behaviour");
+    VG_REGISTER_ABSTRACT_CLASS(Behaviour);
 
     //--------------------------------------------------------------------------------------
     bool Behaviour::registerProperties(IClassDesc & _desc)

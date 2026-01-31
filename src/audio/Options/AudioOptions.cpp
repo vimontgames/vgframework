@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::audio
 {
-    VG_REGISTER_OBJECT_CLASS(AudioOptions, "Audio Options");
+    VG_REGISTER_CLASS(AudioOptions, "Audio Options");
 
     //--------------------------------------------------------------------------------------
     bool AudioOptions::registerProperties(IClassDesc & _desc)

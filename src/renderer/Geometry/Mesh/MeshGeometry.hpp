@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(MeshGeometry, "Mesh Geometry");
+    VG_REGISTER_CLASS(MeshGeometry, "Mesh Geometry");
 
     //--------------------------------------------------------------------------------------
     bool MeshGeometry::registerProperties(IClassDesc & _desc)

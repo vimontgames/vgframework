@@ -2,6 +2,8 @@
 
 namespace vg::engine
 {
+    VG_REGISTER_CLASS(PhysicsConstraintComponent, "PhysicsConstraintComponent");
+
     //--------------------------------------------------------------------------------------
     bool PhysicsConstraintComponent::registerProperties(IClassDesc & _desc)
     {

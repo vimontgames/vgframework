@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(CameraSettings, "Camera Settings");
+    VG_REGISTER_CLASS(CameraSettings, "Camera Settings");
 
     //--------------------------------------------------------------------------------------
     float2 getFocalLengthRange(const IObject * _object, const IProperty * _prop, uint _index)

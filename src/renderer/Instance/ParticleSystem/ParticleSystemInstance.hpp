@@ -11,7 +11,7 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(ParticleSystemInstance, "ParticleSystem Instance", core::ClassDescFlags::Instance);
+    VG_REGISTER_CLASS_EX(ParticleSystemInstance, "ParticleSystem Instance", core::ClassDescFlags::Instance);
 
     //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::registerProperties(core::IClassDesc & _desc)

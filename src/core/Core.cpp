@@ -3,6 +3,7 @@
 #include "core/Types/Types.h"
 #include "core/Math/Math.h"
 #include "core/Kernel.h"
+#include "RegisterInterfaces.hpp"
 
 namespace vg::core
 {

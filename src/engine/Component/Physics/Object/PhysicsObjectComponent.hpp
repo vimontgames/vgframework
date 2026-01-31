@@ -12,6 +12,8 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_REGISTER_CLASS(PhysicsObjectComponent, "PhysicsObjectComponent");
+
     //--------------------------------------------------------------------------------------
     core::vector<core::string> getPhysicsCategoryNames(const IObject * _object, const IProperty * _prop, core::uint _index)
     {

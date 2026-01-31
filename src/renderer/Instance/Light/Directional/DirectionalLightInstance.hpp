@@ -10,7 +10,7 @@ namespace vg::renderer
     // DirectionalLightDesc
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_OBJECT_CLASS(DirectionalLightDesc, "Directional Light Desc");
+    VG_REGISTER_CLASS(DirectionalLightDesc, "Directional Light Desc");
 
     //--------------------------------------------------------------------------------------
     bool DirectionalLightDesc::registerProperties(core::IClassDesc & _desc)
@@ -37,7 +37,7 @@ namespace vg::renderer
     // DirectionalLightInstance
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_OBJECT_CLASS(DirectionalLightInstance, "Directional Light Instance");
+    VG_REGISTER_CLASS(DirectionalLightInstance, "Directional Light Instance");
 
     //--------------------------------------------------------------------------------------
     bool DirectionalLightInstance::registerProperties(core::IClassDesc & _desc)

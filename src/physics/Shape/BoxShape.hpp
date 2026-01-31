@@ -5,7 +5,7 @@ using namespace vg::core;
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(BoxShapeDesc, "Box Shape Settings");
+    VG_REGISTER_CLASS(BoxShapeDesc, "Box Shape Settings");
     //--------------------------------------------------------------------------------------
     bool BoxShapeDesc::registerProperties(IClassDesc & _desc)
     {
@@ -33,7 +33,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(BoxShape, "Box Shape");
+    VG_REGISTER_CLASS(BoxShape, "Box Shape");
     //--------------------------------------------------------------------------------------
     bool BoxShape::registerProperties(core::IClassDesc & _desc)
     {

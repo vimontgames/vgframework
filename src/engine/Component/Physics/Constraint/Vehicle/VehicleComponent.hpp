@@ -9,8 +9,8 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(VehicleSlot, "Vehicle Slot");
-    VG_REGISTER_OBJECT_CLASS(VehicleSlotList, "Vehicle Slot List");
+    VG_REGISTER_CLASS(VehicleSlot, "Vehicle Slot");
+    VG_REGISTER_CLASS(VehicleSlotList, "Vehicle Slot List");
     VG_REGISTER_COMPONENT_CLASS(VehicleComponent, "Vehicle Controller", "Physics", "Physics vehicle controller.", editor::style::icon::VehicleController, getPriority(ComponentGroup::Physics, ComponentPriority::Early, ComponentMultithreadType::Job));
 
     //--------------------------------------------------------------------------------------

@@ -2,6 +2,11 @@
 
 #include "engine/Component/Physics/Object/PhysicsObjectComponent.h"
 
+namespace vg::physics
+{
+    enum class GroundState : core::u8;
+}
+
 namespace vg::engine
 {
     class ICharacterControllerComponent : public PhysicsObjectComponent

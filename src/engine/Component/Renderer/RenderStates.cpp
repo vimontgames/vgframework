@@ -12,7 +12,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(StencilState, "StencilState");
+    VG_REGISTER_CLASS(StencilState, "StencilState");
 
     //--------------------------------------------------------------------------------------
     bool isStencilOptionReadOnly(const IObject * _object, const IProperty * _prop, uint _index)

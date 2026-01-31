@@ -3,7 +3,7 @@
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(CylinderShapeDesc, "Cylinder Shape Settings");
+    VG_REGISTER_CLASS(CylinderShapeDesc, "Cylinder Shape Settings");
     //--------------------------------------------------------------------------------------
     bool CylinderShapeDesc::registerProperties(IClassDesc & _desc)
     {
@@ -28,7 +28,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(CylinderShape, "Cylinder Shape");
+    VG_REGISTER_CLASS(CylinderShape, "Cylinder Shape");
     //--------------------------------------------------------------------------------------
     bool CylinderShape::registerProperties(core::IClassDesc & _desc)
     {

@@ -6,7 +6,7 @@
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(DefaultMaterialData, "Default Material Data");
+    VG_REGISTER_CLASS(DefaultMaterialData, "Default Material Data");
     
     //--------------------------------------------------------------------------------------
     bool IsNonOpaquePropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)

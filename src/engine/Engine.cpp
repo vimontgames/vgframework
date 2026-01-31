@@ -34,6 +34,8 @@
 #include "editor/IEditorOptions.h"
 #include "application/IGame.h"
 
+#include "RegisterInterfaces.hpp"
+
 #ifdef VG_WINDOWS
 #include <psapi.h>
 #include <Dbt.h>

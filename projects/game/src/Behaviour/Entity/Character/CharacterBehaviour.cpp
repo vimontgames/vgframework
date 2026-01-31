@@ -24,7 +24,7 @@ using namespace vg::core;
 using namespace vg::engine;
 
 // Component base class is not being exposed but still needs to be registered for custom RTTI
-VG_REGISTER_OBJECT_CLASS(CharacterBehaviour, "Character");
+VG_REGISTER_CLASS(CharacterBehaviour, "Character");
 
 //--------------------------------------------------------------------------------------
 CharacterBehaviour::CharacterBehaviour(const string & _name, IObject * _parent, CharacterType _characterType) :

@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(SoundResourceList, "Sound Resource List");
+    VG_REGISTER_CLASS(SoundResourceList, "Sound Resource List");
 
     //--------------------------------------------------------------------------------------
     SoundResourceList::SoundResourceList(const core::string & _name, core::IObject * _parent) :

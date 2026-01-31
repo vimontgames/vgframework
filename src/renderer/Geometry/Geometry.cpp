@@ -13,7 +13,7 @@
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(Geometry, "Geometry");
+    VG_REGISTER_CLASS(Geometry, "Geometry");
 
     //--------------------------------------------------------------------------------------
     bool Geometry::registerProperties(IClassDesc & _desc)

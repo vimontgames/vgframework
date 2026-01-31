@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyObjectHandle, "DynamicPropertyObjectHandle");
+    VG_REGISTER_CLASS(DynamicPropertyObjectHandle, "DynamicPropertyObjectHandle");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyObjectHandle::registerProperties(IClassDesc & _desc)

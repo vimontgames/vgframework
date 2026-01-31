@@ -9,7 +9,7 @@ using namespace vg::core;
 namespace vg::audio
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(Sound, "Sound instance");
+    VG_REGISTER_CLASS(Sound, "Sound instance");
 
     //--------------------------------------------------------------------------------------
     bool Sound::registerProperties(IClassDesc & _desc)

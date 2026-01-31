@@ -8,7 +8,7 @@ namespace vg::renderer
     // OmniLightDesc
     //--------------------------------------------------------------------------------------
     
-    VG_REGISTER_OBJECT_CLASS(OmniLightDesc, "Omni Light Desc");
+    VG_REGISTER_CLASS(OmniLightDesc, "Omni Light Desc");
 
     //--------------------------------------------------------------------------------------
     bool OmniLightDesc::registerProperties(core::IClassDesc & _desc)
@@ -38,7 +38,7 @@ namespace vg::renderer
     // OmniLightInstance
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_OBJECT_CLASS(OmniLightInstance, "Omni Light Instance");
+    VG_REGISTER_CLASS(OmniLightInstance, "Omni Light Instance");
 
     //--------------------------------------------------------------------------------------
     bool OmniLightInstance::registerProperties(core::IClassDesc & _desc)

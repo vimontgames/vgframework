@@ -8,35 +8,46 @@ namespace vg::core
     using ClassCRC = vg::core::u64;
 }
 
-#define VG_CLASS_SUPER_CLASSNAME(name, parent)		using super = parent;																                    \
-													static const char * getStaticClassName      () { return #name; }						                \
-													const char * GetClassName                   () const override { return name::getStaticClassName(); }	\
-                                                    static vg::core::ClassCRC getStaticClassCRC () { return crc64(#name); }                                 \
-                                                    vg::core::ClassCRC GetClassCRC              () const override { return name::getStaticClassCRC(); }
+#define VG_CLASS_SUPER_CLASSNAME(name, parent)		            using super = parent;																                    \
+													            static const char * getStaticClassName      () { return #name; }						                \
+													            const char * GetClassName                   () const override { return name::getStaticClassName(); }	\
+                                                                static vg::core::ClassCRC getStaticClassCRC () { return crc64(#name); }                                 \
+                                                                vg::core::ClassCRC GetClassCRC              () const override { return name::getStaticClassCRC(); }
 
 // Common class functions with default implementation for registerClass/registerProperty
-#define VG_CLASS_PROPERTIES_IMPL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc) { super::registerProperties(_desc); return true; }	
+#define VG_CLASS_PROPERTIES_IMPL(name, parent)		            static bool registerProperties(vg::core::IClassDesc & _desc) { super::registerProperties(_desc); return true; }	 \
+                                                                static bool registerClass(vg::core::IFactory & _factory);
 
 // Common class functions declaration only
-#define VG_CLASS_PROPERTIES_DECL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc);   \
-													static bool registerClass(vg::core::IFactory & _factory);
+#define VG_CLASS_PROPERTIES_DECL(name, parent)		            static bool registerProperties(vg::core::IClassDesc & _desc);   \
+													            static bool registerClass(vg::core::IFactory & _factory);
 
 // Default ctor
-#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		name(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr) : parent(_name, _parent) { }
+#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		            name(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr) : parent(_name, _parent) { }
 
-// Declare class that implements registerClass and registerProperties 
-#define VG_CLASS_DECL(name, parent)					VG_CLASS_SUPER_CLASSNAME(name, parent)		\
-													VG_CLASS_PROPERTIES_DECL(name, parent)	
+// Declare class that implements registerClass and registerProperties
+// Use with 'VG_REGISTER_CLASS' in .cpp file
+#define VG_CLASS_DECL(name, parent)					            VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_DECL(name, parent)	
 
 // Declare class with default ctor but that implements registerClass and registerProperties 
-#define VG_CLASS_DECL_PASSTHROUGH(name, parent)		VG_CLASS_SUPER_CLASSNAME(name, parent)		\
-													VG_CLASS_PROPERTIES_DECL(name, parent)		\
-													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+// The class itself will no be visible for the factory, but its children can inherit from its properties
+#define VG_CLASS_DECL_PASSTHROUGH(name, parent)		            VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_DECL(name, parent)		\
+													            VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 
 // Declare class used for virtual interface
-#define VG_CLASS_DECL_ABSTRACT(name, parent)		VG_CLASS_SUPER_CLASSNAME(name, parent)		\
-													VG_CLASS_PROPERTIES_IMPL(name, parent)		\
-													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+// Use with 'VG_REGISTER_ABSTRACT_CLASS' in .cpp file
+// The factory will know about the class, but it can't be instantiated
+#define VG_CLASS_DECL_ABSTRACT(name, parent)		            VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_IMPL(name, parent)		\
+													            VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+
+// An abstract class that still declares properties
+// Same as above but the "abstract" class declare properties
+#define VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(name, parent)    VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_DECL(name, parent)		\
+													            VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 												
 namespace vg::core
 {

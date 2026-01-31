@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(MaterialResourceData, "Material Resource Data");
+    VG_REGISTER_CLASS(MaterialResourceData, "Material Resource Data");
 
     //--------------------------------------------------------------------------------------
     bool MaterialResourceData::registerProperties(IClassDesc & _desc)

@@ -10,7 +10,7 @@ namespace vg::renderer
     // CategoryOptions
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_OBJECT_CLASS(OutlineOptions, "Category Options");
+    VG_REGISTER_CLASS(OutlineOptions, "Category Options");
 
     declareResizeVectorDefaultFunc(OutlineOptions);
 
@@ -47,7 +47,7 @@ namespace vg::renderer
     // CategoryOptionsList
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_OBJECT_CLASS(OutlineOptionsList, "Category Options List");
+    VG_REGISTER_CLASS(OutlineOptionsList, "Category Options List");
 
     //--------------------------------------------------------------------------------------
     bool OutlineOptionsList::registerProperties(IClassDesc & _desc)

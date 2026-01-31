@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyBitMask, "DynamicPropertyBitMask");
+    VG_REGISTER_CLASS(DynamicPropertyBitMask, "DynamicPropertyBitMask");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyBitMask::registerProperties(IClassDesc & _desc)

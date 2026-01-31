@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::editor
 {
-    VG_REGISTER_OBJECT_CLASS(EditorOptions, "Editor Options");
+    VG_REGISTER_CLASS(EditorOptions, "Editor Options");
 
     //--------------------------------------------------------------------------------------
     bool EditorOptions::registerProperties(IClassDesc & _desc)

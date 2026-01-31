@@ -5,7 +5,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(MaterialResourceList, "Material Resource List");
+    VG_REGISTER_CLASS(MaterialResourceList, "Material Resource List");
 
     //--------------------------------------------------------------------------------------
     bool MaterialResourceList::registerProperties(vg::core::IClassDesc & _desc)

@@ -2,7 +2,7 @@
 #include "EntityBehaviour.h"
 
 // Component base class is not being exposed but still needs to be registered for custom RTTI
-VG_REGISTER_OBJECT_CLASS(EntityBehaviour, "Entity");
+VG_REGISTER_CLASS(EntityBehaviour, "Entity");
 
 using namespace vg::core;
 

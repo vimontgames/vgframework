@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::physics
 {
-    VG_REGISTER_OBJECT_CLASS(PhysicsBodyDesc, "Body Settings");
+    VG_REGISTER_CLASS(PhysicsBodyDesc, "Body Settings");
 
     //--------------------------------------------------------------------------------------
     bool isStaticMergeHidden(const IObject * _object, const IProperty * _prop, uint _index)

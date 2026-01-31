@@ -5,7 +5,7 @@ using namespace vg::core;
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(SphereShapeDesc, "Sphere Shape Settings");
+    VG_REGISTER_CLASS(SphereShapeDesc, "Sphere Shape Settings");
     //--------------------------------------------------------------------------------------
     bool SphereShapeDesc::registerProperties(IClassDesc & _desc)
     {
@@ -26,7 +26,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(SphereShape, "Sphere Shape");
+    VG_REGISTER_CLASS(SphereShape, "Sphere Shape");
     //--------------------------------------------------------------------------------------
     bool SphereShape::registerProperties(IClassDesc & _desc)
     {

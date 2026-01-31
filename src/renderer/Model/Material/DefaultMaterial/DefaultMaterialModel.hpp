@@ -11,7 +11,7 @@ namespace vg::renderer
     using namespace vg::core;
     using namespace vg::gfx;
 
-    VG_REGISTER_OBJECT_CLASS_EX(DefaultMaterialModel, "Default", ClassDescFlags::Model);
+    VG_REGISTER_CLASS_EX(DefaultMaterialModel, "Default", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)

@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(MaterialModelType, "Material Model Type");
+    VG_REGISTER_CLASS(MaterialModelType, "Material Model Type");
 
     //--------------------------------------------------------------------------------------
     bool MaterialModelType::registerProperties(IClassDesc & _desc)

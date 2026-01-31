@@ -3,7 +3,7 @@
 
 using namespace vg::core;
 
-VG_REGISTER_OBJECT_CLASS(GameOptions, "Game Options");
+VG_REGISTER_CLASS(GameOptions, "Game Options");
 
 //--------------------------------------------------------------------------------------
 bool GameOptions::registerProperties(IClassDesc & _desc)

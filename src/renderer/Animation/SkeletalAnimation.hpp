@@ -6,7 +6,7 @@
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS(SkeletalAnimation, "Skeletal Animation");
+    VG_REGISTER_CLASS(SkeletalAnimation, "Skeletal Animation");
 
     //--------------------------------------------------------------------------------------
     bool SkeletalAnimation::registerProperties(IClassDesc & _desc)

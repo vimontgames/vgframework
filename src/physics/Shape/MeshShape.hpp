@@ -6,7 +6,7 @@ using namespace vg::core;
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(MeshShapeDesc, "Mesh Shape Settings");
+    VG_REGISTER_CLASS(MeshShapeDesc, "Mesh Shape Settings");
 
     //--------------------------------------------------------------------------------------
     MeshShapeDesc::MeshShapeDesc(const vg::core::string & _name, vg::core::IObject * _parent) :
@@ -43,7 +43,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(MeshShape, "Mesh Shape");
+    VG_REGISTER_CLASS(MeshShape, "Mesh Shape");
     //--------------------------------------------------------------------------------------
     bool MeshShape::registerProperties(core::IClassDesc & _desc)
     {

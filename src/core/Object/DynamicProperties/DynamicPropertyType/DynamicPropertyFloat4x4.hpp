@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyFloat4x4, "DynamicPropertyFloat4x4");
+    VG_REGISTER_CLASS(DynamicPropertyFloat4x4, "DynamicPropertyFloat4x4");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyFloat4x4::registerProperties(IClassDesc & _desc)

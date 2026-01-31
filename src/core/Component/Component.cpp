@@ -7,6 +7,7 @@
 #include "core/Kernel.h"
 #include "core/Object/EnumHelper.h"
 #include "core/GameObject/GameObject.h"
+#include "core/Object/AutoRegisterClass.h"
 
 #if !VG_ENABLE_INLINE
 #include "Component.inl"
@@ -14,6 +15,8 @@
 
 namespace vg::core
 {
+    VG_REGISTER_CLASS(Component, "Component");
+
     //--------------------------------------------------------------------------------------
     Component::Component(const core::string & _name, IObject * _parent) :
         IComponent(_name, _parent),

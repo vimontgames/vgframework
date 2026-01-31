@@ -21,6 +21,8 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_REGISTER_CLASS(UIComponent, "UIComponent");
+
     //--------------------------------------------------------------------------------------
     bool UIComponent::registerProperties(IClassDesc & _desc)
     {

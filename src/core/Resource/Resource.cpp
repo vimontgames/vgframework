@@ -9,7 +9,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(Resource, "Resource");
+    VG_REGISTER_CLASS(Resource, "Resource");
 
     //--------------------------------------------------------------------------------------
     bool IsInstanciateHidden(const IObject * _object, const IProperty * _prop, uint _index)

@@ -35,7 +35,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(World, "World");
+    VG_REGISTER_CLASS(World, "World");
 
     //--------------------------------------------------------------------------------------
     World::World(const string & _name, IObject * _parent) :

@@ -20,7 +20,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS_EX(GameObject, "GameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
+    VG_REGISTER_CLASS_EX(GameObject, "GameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
 
     //--------------------------------------------------------------------------------------
     bool GameObject::registerProperties(IClassDesc & _desc)

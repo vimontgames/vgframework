@@ -3,7 +3,7 @@
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(CapsuleShapeDesc, "Capsule Shape Settings");
+    VG_REGISTER_CLASS(CapsuleShapeDesc, "Capsule Shape Settings");
     //--------------------------------------------------------------------------------------
     bool CapsuleShapeDesc::registerProperties(IClassDesc & _desc)
     {
@@ -32,7 +32,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(CapsuleShape, "Capsule Shape");
+    VG_REGISTER_CLASS(CapsuleShape, "Capsule Shape");
     //--------------------------------------------------------------------------------------
     bool CapsuleShape::registerProperties(core::IClassDesc & _desc)
     {

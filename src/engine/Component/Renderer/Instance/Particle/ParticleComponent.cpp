@@ -20,11 +20,6 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    //--------------------------------------------------------------------------------------
-    // Parent abstract class must be registered for RTTI
-    //--------------------------------------------------------------------------------------
-    //VG_REGISTER_ABSTRACT_CLASS(IParticleComponent, "IParticleComponent");
-
     VG_REGISTER_COMPONENT_CLASS(ParticleComponent, "Particle", "Renderer", "Particle system for 3D rendering", editor::style::icon::Fire, getPriority(ComponentGroup::Render, ComponentPriority::Late, ComponentMultithreadType::Job))
 
     //--------------------------------------------------------------------------------------

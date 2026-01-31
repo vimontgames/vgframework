@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::physics
 {
-    VG_REGISTER_OBJECT_CLASS(PhysicsOptions, "Physics Options");
+    VG_REGISTER_CLASS(PhysicsOptions, "Physics Options");
 
     //--------------------------------------------------------------------------------------
     bool PhysicsOptions::registerProperties(IClassDesc & _desc)

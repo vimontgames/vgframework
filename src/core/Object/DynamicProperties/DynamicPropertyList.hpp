@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyList, "DynamicPropertyList");
+    VG_REGISTER_CLASS(DynamicPropertyList, "DynamicPropertyList");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyList::registerProperties(IClassDesc & _desc)

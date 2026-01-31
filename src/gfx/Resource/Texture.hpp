@@ -153,7 +153,7 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS_EX(Texture, "Texture", ClassDescFlags::Model);
+    VG_REGISTER_CLASS_EX(Texture, "Texture", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)

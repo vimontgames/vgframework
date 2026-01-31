@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(EngineOptions, "Engine Options");
+    VG_REGISTER_CLASS(EngineOptions, "Engine Options");
 
     //--------------------------------------------------------------------------------------
     bool isUseComponentUpdateJobsReadOnly(const IObject * _object, const IProperty * _prop, uint _index)

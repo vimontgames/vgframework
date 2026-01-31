@@ -9,7 +9,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(ParticleEmitterDesc, "Particle emitter descriptor");
+    VG_REGISTER_CLASS(ParticleEmitterDesc, "Particle emitter descriptor");
 
     //--------------------------------------------------------------------------------------
     void * ResizeParticleEmitterDescVector(IObject * _parent, uint _offset, uint _count)
