@@ -3,9 +3,7 @@
 #include "core/Singleton/Singleton.h"
 #include "core/Kernel.h"
 
-#if VG_ENABLE_PROFILER
 #define VG_ENABLE_OPTICK
-#endif
 
 #ifdef VG_ENABLE_OPTICK
 
