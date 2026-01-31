@@ -267,7 +267,7 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     core::Blob ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        VG_PROFILE_CPU(asString((ShaderStageFlags)(1 << (uint)_stage)).c_str());
+        VG_PROFILE_CPU(asCString((ShaderStageFlags)(1 << (uint)_stage)));
 
         ShaderManager * shaderManager = ShaderManager::get();
 

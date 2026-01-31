@@ -4,6 +4,7 @@
 #include "core/GameObject/GameObject.h"
 #include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "engine/Engine.h"
+#include "engine/EngineOptions.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
 #include "renderer/ISkeletalAnimation.h"
@@ -16,7 +17,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Engine", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation, 0);
+    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Engine", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation, getPriority(ComponentGroup::Render, ComponentPriority::Early, ComponentMultithreadType::Job));
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::registerProperties(IClassDesc & _desc)
@@ -142,6 +143,19 @@ namespace vg::engine
                     float t = animRes.getTime();
                     animRes.setTime(t + dt * animRes.getSpeed());
                 }
+            }
+        }
+
+        // When MeshComponent are updated in jobs, it's better to start skinning job here:
+        // - They start earlier
+        // - The scheduling is more balanced (no more mixing skinned and non-skinned mesh)
+        const auto * options = EngineOptions::get();
+        if (options->useAnimationJobs())
+        {
+            if (options->useComponentUpdateJobs())
+            {
+                if (auto * meshComp = GetGameObject()->GetComponentT<MeshComponent>())
+                    meshComp->computeAnimation(_context.m_world);
             }
         }
     }

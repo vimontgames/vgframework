@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(SnapComponent, "Snap", "Editor", "Override Snap Settings", editor::style::icon::Snap, 0);
+    VG_REGISTER_COMPONENT_CLASS(SnapComponent, "Snap", "Editor", "Override Snap Settings", editor::style::icon::Snap, getPriority(ComponentGroup::Behaviour));
 
     //--------------------------------------------------------------------------------------
     bool SnapComponent::registerProperties(IClassDesc & _desc)

@@ -10,7 +10,7 @@
 #include "Breakable/BreakableBehaviour.hpp"
 #include "Vehicle/VehicleBehaviour.hpp"
 
-VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 ItemBehaviour::ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType) :

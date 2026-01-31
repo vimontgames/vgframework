@@ -15,7 +15,7 @@ public:
     ~BreakableBehaviour();
 
     void                    OnPlay              () final override;
-    void                    Update              (const Context & _context) final override;
+    void                    FixedUpdate         (const Context & _context) final override;
     bool                    TakeHit             (CharacterBehaviour * _attacker, ItemBehaviour * _weapon) final override;
     void                    OnTriggerEnter      (vg::core::IGameObject * _other);
 

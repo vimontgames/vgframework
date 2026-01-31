@@ -20,7 +20,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(ParticleComponent, "Particle", "Renderer", "Particle system for 3D rendering", editor::style::icon::Fire, 1)
+    VG_REGISTER_COMPONENT_CLASS(ParticleComponent, "Particle", "Renderer", "Particle system for 3D rendering", editor::style::icon::Fire, getPriority(ComponentGroup::Render, ComponentPriority::Late, ComponentMultithreadType::Job))
 
     //--------------------------------------------------------------------------------------
     bool ParticleComponent::playAllParticleEmitters(IObject * _object)

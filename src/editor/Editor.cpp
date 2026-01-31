@@ -638,7 +638,7 @@ namespace vg::editor
             {
                 if (m_imGuiWindows[i]->isVisible())
                 {
-                    VG_PROFILE_CPU(m_imGuiWindows[i]->GetName().c_str());
+                    VG_PROFILE_CPU(m_imGuiWindows[i]->GetStaticName());
                     m_imGuiWindows[i]->DrawGUI();
                 }
             }

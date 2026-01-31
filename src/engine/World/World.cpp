@@ -18,6 +18,10 @@
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
 #include "renderer/IDebugDraw.h"
+#include "core/GameObject/GatherComponentsContext.h"
+#include "ComponentUpdateJob.h"
+#include "core/Scheduler/Scheduler.h"
+#include "core/string/string.h"
 
 #if !VG_ENABLE_INLINE
 #include "World.inl"
@@ -42,8 +46,14 @@ namespace vg::engine
 
         SetPhysicsWorld(Engine::get()->GetPhysics()->CreatePhysicsWorld(this));
         Engine::get()->registerWorld(this);
-        ;
+        
         SetDebugDrawData(Engine::get()->GetRenderer()->GetDebugDraw()->CreateDebugDrawData());
+
+        core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+        const uint workerThreadCount = jobScheduler->GetWorkerThreadCount();
+        m_componentUpdateJobPool.resize(workerThreadCount);
+        for (uint i = 0; i < m_componentUpdateJobPool.size(); ++i)
+            m_componentUpdateJobPool[i] = new ComponentUpdateJob(fmt::sprintf("ComponentUpdateJob %u", i));
     }
 
     //--------------------------------------------------------------------------------------
@@ -56,6 +66,10 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_irradianceCubemap);
         VG_SAFE_RELEASE(m_specularReflectionCubemap);
         VG_SAFE_DELETE(m_debugDrawData);
+
+        for (uint i = 0; i < m_componentUpdateJobPool.size(); ++i)
+            VG_SAFE_DELETE(m_componentUpdateJobPool[i]);
+        m_componentUpdateJobPool.clear();
 
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
@@ -460,7 +474,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void World::BeforeUpdate(const Context & _context)
+    void World::fixedUpdate(const Context & _context)
+    {
+        const GameObject::Context gameObjectUpdateContext(_context, this);
+
+        for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+        {
+            const Scene * scene = (Scene *)GetScene(i, BaseSceneType::Scene);
+            GameObject * root = scene->getRoot();
+            if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
+                root->fixedUpdate(gameObjectUpdateContext);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::beforeUpdate(const Context & _context)
     {
         const auto * options = Engine::get()->GetRenderer()->GetOptions();
 
@@ -474,8 +502,6 @@ namespace vg::engine
 
         // Reset cubemap
         VG_SAFE_RELEASE_ASYNC(m_environmentCubemap);
-        //VG_SAFE_RELEASE_ASYNC(m_irradianceCubemap);
-        //VG_SAFE_RELEASE_ASYNC(m_specularReflectionCubemap);
 
         // Use default ambient
         m_irradianceIntensity = options->GetDefaultIrradianceIntensity();
@@ -483,13 +509,159 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void World::SetEnvironmentColor(const core::float4 & _environmentColor)
+    ComponentUpdateJob * World::getComponentUpdateJobFromPool()
     {
-        m_nextEnvironmentColor = _environmentColor;        
+        VG_ASSERT(m_componentUpdateJobPoolIndex < m_componentUpdateJobPool.size());
+        return m_componentUpdateJobPool[m_componentUpdateJobPoolIndex++];
     }
 
     //--------------------------------------------------------------------------------------
-    void World::AfterUpdate(const Context & _context)
+    void World::update(const Context & _context)
+    {
+        beforeUpdate(_context);
+
+        const auto * options = EngineOptions::get();
+        const bool useUpdateJobOrder = options->useJobsUpdateOrder();
+        const bool useUpdateJobs = options->useComponentUpdateJobs();
+
+        const GameObject::Context gameObjectUpdateContext(_context, this);
+
+        if (useUpdateJobOrder)
+        {
+            m_gatherComponentsContext.reset();
+            GatherComponentsContext & gatherComponentsContext = m_gatherComponentsContext;
+            gatherComponentsContext.m_flags = UpdateFlags::Update;
+
+            // Gather components to update
+            {
+                VG_PROFILE_CPU("getComponentsToUpdate");
+
+                for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+                {
+                    const Scene * scene = (Scene *)GetScene(i, BaseSceneType::Scene);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
+                        root->getComponentsToUpdate(gatherComponentsContext);
+                }
+            }
+
+            core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+            const uint workerThreadCount = jobScheduler->GetWorkerThreadCount();
+
+            // execute in order
+            ComponentUpdateContext componentUpdateContext(gameObjectUpdateContext, nullptr);
+            for (uint g = 0; g < enumCount<ComponentGroup>(); ++g)
+            {
+                const ComponentGroup group = (ComponentGroup)g;
+                VG_PROFILE_CPU(asCString(group));
+
+                auto & priorityList = gatherComponentsContext.m_componentsToUpdate[g];
+
+                for (uint p = 0; p < enumCount<ComponentPriority>(); ++p)
+                {
+                    const ComponentPriority prio = (ComponentPriority)p;
+                    VG_PROFILE_CPU(asCString(prio));
+
+                    auto & mtTypeList = priorityList[p];
+
+                    for (uint m = 0; m < enumCount<ComponentMultithreadType>(); ++m)
+                    {
+                        const ComponentMultithreadType mtType = (ComponentMultithreadType)m;
+
+                        auto & list = mtTypeList[m];
+
+                        const uint componentCount = (uint)list.m_pairs.size();
+
+                        if (useUpdateJobs && mtType == ComponentMultithreadType::Job && componentCount > 8)
+                        {
+                            // run N job and wait
+                            VG_PROFILE_CPU("Jobs");
+                            // Determine how many jobs to run
+                            const uint maxJobs = (uint)m_componentUpdateJobPool.size();
+                            const uint N = min(componentCount, maxJobs);
+                            const uint minElementsPerJob = 1;
+
+                            uint numJobs = N;
+
+                            // If the calculated base size would be below the minimum, reduce the number of jobs
+                            if (componentCount / N < minElementsPerJob)
+                            {
+                                numJobs = componentCount / minElementsPerJob;
+                                numJobs = clamp(numJobs, uint(1), maxJobs); // ensure at least 1 job, no more than pool size
+                            }
+
+                            const uint baseSize = componentCount / N;
+                            const uint remainder = componentCount % N;
+
+                            uint index = 0;
+                            uint remaining = componentCount;
+
+                            core::JobSync renderJobSync;
+
+                            // Init
+                            //ComponentUpdateJob::s_counter = 0;
+                            {
+                                VG_PROFILE_CPU("Start");
+                                for (uint n = 0; n < N; ++n)
+                                {
+                                    const uint count = baseSize + (n < remainder ? 1 : 0);
+                                    VG_ASSERT(count > 0);
+                                    auto components = core::span<GatherComponentsContext::Pair>(list.m_pairs.data() + index, count);
+                                    VG_ASSERT(index + count <= list.m_pairs.size());
+                                    ComponentUpdateJob * job = getComponentUpdateJobFromPool();
+                                    job->init(group, prio, componentUpdateContext, components);
+                                    index += count;
+                                    remaining -= count;
+                                    jobScheduler->Start(job, &renderJobSync);
+
+                                    //VG_DEBUGPRINT("jobID = 0x%016llx\n", list.m_jobSync.id);
+                                }
+                            }
+
+                            // Wait for job to complete
+                            {
+                                VG_PROFILE_CPU("Wait");
+                                jobScheduler->Wait(&renderJobSync);
+
+                                // Reset job pool
+                                m_componentUpdateJobPoolIndex = 0;
+
+                                //// Paranoid check that all jobs were completed
+                                //uint value = ComponentUpdateJob::s_counter.load(std::memory_order_acquire);
+                                //VG_ASSERT(value == N); 
+                            }
+                        }
+                        else
+                        {
+                            // Not using jobs but using job update order on main thread
+                            for (uint c = 0; c < componentCount; ++c)
+                            {
+                                auto & entry = list.m_pairs[c];
+                                VG_PROFILE_CPU(entry.m_component->GetClassName());
+                                componentUpdateContext.m_gameObject = entry.m_gameObject;
+                                entry.m_component->Update(componentUpdateContext);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+            {
+                const Scene * scene = (Scene *)GetScene(i, BaseSceneType::Scene);
+                GameObject * root = scene->getRoot();
+                if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
+                    root->update(gameObjectUpdateContext);
+            }
+        }
+
+        afterUpdate(_context);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::afterUpdate(const Context & _context)
     {
         if (any(m_nextEnvironmentColor != m_currentEnvironmentColor))
         {
@@ -497,6 +669,74 @@ namespace vg::engine
             Engine::get()->GetRenderer()->SetResized();
             m_currentEnvironmentColor = m_nextEnvironmentColor;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::lateUpdate(const Context & _context)
+    {
+        const GameObject::Context gameObjectUpdateContext(_context, this);
+
+        for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+        {
+            const Scene * scene = (Scene *)GetScene(i, BaseSceneType::Scene);
+            GameObject * root = scene->getRoot();
+            if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
+                root->lateUpdate(gameObjectUpdateContext);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::toolUpdate(const Context & _context)
+    {
+        if (anyToolmodeViewVisible())
+        {
+            const GameObject::Context gameObjectUpdateContext(_context, this);
+
+            for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+            {
+                const Scene * scene = (Scene *)GetScene(i, BaseSceneType::Scene);
+                GameObject * root = scene->getRoot();
+                if (root && asBool(UpdateFlags::ToolUpdate & root->getUpdateFlags()))
+                    root->toolUpdate(gameObjectUpdateContext);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool World::anyToolmodeViewVisible() const
+    {
+        const auto & renderer = Engine::get()->GetRenderer();
+        auto & editorViews = renderer->GetViews(gfx::ViewTarget::Editor);
+        for (auto & view : editorViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                {
+                    if (view->GetWorld() == this)
+                        return true;
+                }
+            }
+        }
+        auto & gameViews = renderer->GetViews(gfx::ViewTarget::Game);
+        for (auto & view : gameViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                {
+                    if (view->GetWorld() == this)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetEnvironmentColor(const core::float4 & _environmentColor)
+    {
+        m_nextEnvironmentColor = _environmentColor;
     }
 
     //--------------------------------------------------------------------------------------

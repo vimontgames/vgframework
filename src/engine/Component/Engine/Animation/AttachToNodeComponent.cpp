@@ -10,7 +10,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AttachToNodeComponent, "AttachToNode", "Engine", "Attach object to an animation node", editor::style::icon::Link, 0);
+    VG_REGISTER_COMPONENT_CLASS(AttachToNodeComponent, "AttachToNode", "Engine", "Attach object to an animation node", editor::style::icon::Link, getPriority(ComponentGroup::Behaviour));
 
     //--------------------------------------------------------------------------------------
     bool AttachToNodeComponent::registerProperties(IClassDesc & _desc)

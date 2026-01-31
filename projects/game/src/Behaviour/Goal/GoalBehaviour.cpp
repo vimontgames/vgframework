@@ -7,7 +7,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(GoalBehaviour, "Goal", "Game", "A goal where you can score", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(GoalBehaviour, "Goal", "Game", "A goal where you can score", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 GoalBehaviour::GoalBehaviour(const string & _name, IObject * _parent) :

@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(UITextComponent, "UIText", "Renderer", "UI Text Element", editor::style::icon::Font, 2);
+    VG_REGISTER_COMPONENT_CLASS(UITextComponent, "UIText", "Renderer", "UI Text Element", editor::style::icon::Font, getPriority(ComponentGroup::Render, ComponentPriority::Late));
 
     //--------------------------------------------------------------------------------------
     bool UITextComponent::registerProperties(IClassDesc & _desc)

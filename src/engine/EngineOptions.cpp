@@ -11,6 +11,13 @@ namespace vg::engine
     VG_REGISTER_OBJECT_CLASS(EngineOptions, "Engine Options");
 
     //--------------------------------------------------------------------------------------
+    bool isUseComponentUpdateJobsReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const EngineOptions * engineOptions = VG_SAFE_STATIC_CAST(const EngineOptions, _object);
+        return !engineOptions->useJobsUpdateOrder();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool EngineOptions::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -137,6 +144,18 @@ namespace vg::engine
         {
             registerPropertyEnumBitfield(EngineOptions, DummyType, m_dummyTypeFlags, "Type");
             registerProperty(EngineOptions, m_drawDummiesInPrefabsOnly, "Prefabs only");
+        }
+        registerPropertyOptionalGroupEnd(EngineOptions);
+
+        registerPropertyGroupBegin(EngineOptions, "Multithreading");
+        {
+            registerPropertyGroupBegin(EngineOptions, "Components");
+            {
+                registerProperty(EngineOptions, m_useJobsUpdateOrder, "Use Job Order");
+                registerProperty(EngineOptions, m_useComponentUpdateJobs, "Use Update Jobs");
+                setPropertyReadOnlyCallback(EngineOptions, m_useComponentUpdateJobs, isUseComponentUpdateJobsReadOnly);
+            }
+            registerPropertyOptionalGroupEnd(EngineOptions);
         }
         registerPropertyOptionalGroupEnd(EngineOptions);
 

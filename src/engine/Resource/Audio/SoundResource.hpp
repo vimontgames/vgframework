@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(SoundResource, "Sound", 1000);
+    VG_REGISTER_RESOURCE_CLASS(SoundResource, "Sound", ResourcePriority::Sound);
 
     //--------------------------------------------------------------------------------------
     void * ResizeSoundResourceVector(IObject * _parent, uint _offset, uint _count)

@@ -666,10 +666,6 @@ namespace vg::renderer
                     if (sum[iLayer] <= 0.0f && !forceTPose)
                         continue;
 
-                    //float3 lTranslation = skeletonNode.pos * tPoseWeight[iLayer];
-                    //quaternion lRotation = skeletonNode.rot * tPoseWeight[iLayer];
-                    //float3 lScale = skeletonNode.scale * tPoseWeight[iLayer];
-
                     float3 lTranslation = skeletonNode.pos;
                     quaternion lRotation = skeletonNode.rot;
                     float3 lScale = skeletonNode.scale;

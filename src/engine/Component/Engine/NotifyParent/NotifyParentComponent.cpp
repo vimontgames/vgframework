@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(NotifyParentComponent, "Notify Parent", "Engine", "This component will propagate selected engine callbacks to parent GameObject", editor::style::icon::Parent, 0);
+    VG_REGISTER_COMPONENT_CLASS(NotifyParentComponent, "Notify Parent", "Engine", "This component will propagate selected engine callbacks to parent GameObject", editor::style::icon::Parent, getPriority(ComponentGroup::Behaviour));
 
     //--------------------------------------------------------------------------------------
     bool NotifyParentComponent::registerProperties(core::IClassDesc & _desc)

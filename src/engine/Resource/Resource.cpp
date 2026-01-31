@@ -1,8 +1,8 @@
 #include "engine/Precomp.h"
-
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
 #include "engine/resource/ResourceManager.h"
+#include "ResourcePriority.h"
 #include "Texture/TextureResource.hpp"
 #include "Material/MaterialModelType.hpp"
 #include "Material/MaterialResourceData.hpp"

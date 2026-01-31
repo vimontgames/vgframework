@@ -6,7 +6,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(GameCameraManagerBehaviour, "Game Camera Manager", "Game", "Camera Manager for Game cameras", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(GameCameraManagerBehaviour, "Game Camera Manager", "Game", "Camera Manager for Game cameras", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour, ComponentPriority::Early));
 
 //--------------------------------------------------------------------------------------
 GameCameraManagerBehaviour::GameCameraManagerBehaviour(const string & _name, IObject * _parent) :

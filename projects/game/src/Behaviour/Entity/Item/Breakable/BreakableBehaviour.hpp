@@ -7,13 +7,13 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(BreakableBehaviour, "Breakable", "Game", "A breakable object that can be destroyed", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(BreakableBehaviour, "Breakable", "Game", "A breakable object that can be destroyed", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 BreakableBehaviour::BreakableBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent, ItemType::Chest)
 {
-    EnableUpdateFlags(UpdateFlags::Update, true);
+    SetUpdateFlags(UpdateFlags::FixedUpdate);
 }
 
 //--------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ void BreakableBehaviour::OnPlay()
 }
 
 //--------------------------------------------------------------------------------------
-void BreakableBehaviour::Update(const Context & _context)
+void BreakableBehaviour::FixedUpdate(const Context & _context)
 {
     if (_context.m_playing && !_context.m_paused && !_context.m_world->IsPrefabWorld())
     {

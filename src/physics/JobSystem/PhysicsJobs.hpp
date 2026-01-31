@@ -23,7 +23,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void PhysicsJob::Run()
     {
-        VG_PROFILE_CPU(GetName().c_str());
+        VG_PROFILE_CPU(GetStaticName());
 
         m_jphJob->Execute();
 

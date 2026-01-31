@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(MeshResourceMeta, "MeshResourceMeta", 199);
+    VG_REGISTER_OBJECT_CLASS(MeshResourceMeta, "MeshResourceMeta");
 
     //--------------------------------------------------------------------------------------
     bool MeshResourceMeta::registerProperties(IClassDesc & _desc)

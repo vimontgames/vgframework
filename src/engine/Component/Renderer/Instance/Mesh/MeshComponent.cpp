@@ -25,7 +25,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Renderer", "Mesh model for 3D rendering", editor::style::icon::Mesh, 1)
+    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Renderer", "Mesh model for 3D rendering", editor::style::icon::Mesh, getPriority(ComponentGroup::Render, ComponentPriority::Late, ComponentMultithreadType::Job))
 
     //--------------------------------------------------------------------------------------
     core::vector<core::string> getBatchNames(const IObject * _object, const IProperty * _prop, core::uint _index)
@@ -115,6 +115,38 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void MeshComponent::startAnimationJob()
+    {
+        if (nullptr == m_updateSkeletonJob)
+            m_updateSkeletonJob = new AnimationJob(this);
+
+        const auto animSync = Engine::get()->getJobSync(EngineJobType::Animation);
+
+        core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+        jobScheduler->Start(m_updateSkeletonJob, animSync);
+
+        const bool displayBones = isSkeletonVisible();
+        if (displayBones)
+        {
+            const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(RendererJobType::DebugDraw);
+
+            if (nullptr == m_drawSkeletonJob)
+                m_drawSkeletonJob = new DrawSkeletonJob(this);
+            jobScheduler->StartAfter(animSync, m_drawSkeletonJob, debugDrawSync);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshComponent::computeAnimation(const core::IWorld * _world)
+    {
+        m_meshInstance->UpdateSkeleton();
+
+        const bool displayBones = isSkeletonVisible();
+        if (displayBones)
+            m_meshInstance->DrawSkeleton(_world);
+    }
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::Update(const Context & _context)
     {
         // Only dynamic instance need refresh every frame
@@ -122,35 +154,15 @@ namespace vg::engine
 
         if (m_meshInstance->IsSkinned())
         {
-            const bool displayBones = isSkeletonVisible();
-
-            if (EngineOptions::get()->useAnimationJobs())
+            const auto * options = EngineOptions::get();
+            if (options->useAnimationJobs())
             {
-                if (nullptr == m_updateSkeletonJob)
-                    m_updateSkeletonJob = new AnimationJob(this);
-
-                const auto animSync = Engine::get()->getJobSync(EngineJobType::Animation);
-
-                core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-                jobScheduler->Start(m_updateSkeletonJob, animSync);
-
-                if (displayBones)
-                {
-                    const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(RendererJobType::DebugDraw);
-
-                    if (nullptr == m_drawSkeletonJob)
-                        m_drawSkeletonJob = new DrawSkeletonJob(this);
-                    jobScheduler->StartAfter(animSync, m_drawSkeletonJob, debugDrawSync);
-                }
+                if (!options->useComponentUpdateJobs())
+                    startAnimationJob();
             }
             else
             {
-                VG_PROFILE_CPU("Animation");
-
-                m_meshInstance->UpdateSkeleton();
-
-                if (displayBones)
-                    m_meshInstance->DrawSkeleton(_context.m_world);
+                computeAnimation(_context.m_world);
             }
         }
     }

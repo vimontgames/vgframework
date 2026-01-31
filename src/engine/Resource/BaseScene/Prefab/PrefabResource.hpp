@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(PrefabResource, "Prefab", -800);
+    VG_REGISTER_RESOURCE_CLASS(PrefabResource, "Prefab", ResourcePriority::Prefab);
 
     //--------------------------------------------------------------------------------------
     void* ResizePrefabResourceVector(IObject* _parent, uint _offset, uint _count)

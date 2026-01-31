@@ -36,6 +36,7 @@ namespace vg::core
         virtual void                EnableComponentFlags    (ComponentFlags _flags, bool _enabled = true) = 0;
 
         virtual UpdateFlags         GetUpdateFlags          () const = 0;
+        virtual void                SetUpdateFlags          (UpdateFlags _flags) = 0;
         virtual void                EnableUpdateFlags       (UpdateFlags _flags, bool _enabled = true) = 0;
 
         virtual const string        GetSubObjectName        (uint _subObjectIndex) const = 0;

@@ -12,7 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(DummyComponent, "Dummy", "Renderer", "A dummy component is an helper object only visible in toolmode", editor::style::icon::Unchecked, 0);
+    VG_REGISTER_COMPONENT_CLASS(DummyComponent, "Dummy", "Renderer", "A dummy component is an helper object only visible in toolmode", editor::style::icon::Unchecked, getPriority(ComponentGroup::Render, ComponentPriority::Late));
 
     //--------------------------------------------------------------------------------------
     bool DummyComponent::registerProperties(IClassDesc & _desc)

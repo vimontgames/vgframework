@@ -7,7 +7,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(WeaponBehaviour, "Weapon", "Game", "A weapon the player can pick", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(WeaponBehaviour, "Weapon", "Game", "A weapon the player can pick", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 WeaponBehaviour::WeaponBehaviour(const string & _name, IObject * _parent) :

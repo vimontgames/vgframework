@@ -10,7 +10,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(EnvironmentComponent, "Environment", "Renderer", "Environment settings for scene", editor::style::icon::Environment, 0);
+    VG_REGISTER_COMPONENT_CLASS(EnvironmentComponent, "Environment", "Renderer", "Environment settings for scene", editor::style::icon::Environment, getPriority(ComponentGroup::Render, ComponentPriority::Late));
 
     //--------------------------------------------------------------------------------------
     bool EnvironmentComponent::registerProperties(IClassDesc & _desc)

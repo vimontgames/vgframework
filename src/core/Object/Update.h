@@ -25,6 +25,8 @@ namespace vg::core
 
         }
 
+        WorldUpdateContext(){}
+
         bool            m_playing : 1;
         bool            m_paused : 1;
         float           m_dt;
@@ -38,6 +40,8 @@ namespace vg::core
         {
 
         }
+
+        GameObjectUpdateContext() {}
         
         IWorld *        m_world;
     };
@@ -50,6 +54,8 @@ namespace vg::core
         {
    
         }
+
+        ComponentUpdateContext() : GameObjectUpdateContext() {}
 
         IGameObject *   m_gameObject;
     };

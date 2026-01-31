@@ -105,6 +105,7 @@ namespace vg::core
 		const string &					GetName					() const override;
 		const string 					GetFullName				() const override;
 		const string					GetShortName			() const override;
+        const char *                    GetStaticName           () const override;
 
         bool							HasFile					() const override;
         void							SetFile					(const string & _file) override;
@@ -141,7 +142,9 @@ namespace vg::core
 
         string                          m_name;
         string                          m_file;
+
         mutable const IClassDesc *      m_classDesc             = nullptr;
+        mutable std::atomic<const char *> m_staticName          = nullptr;
 	};
 }
 

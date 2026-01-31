@@ -12,7 +12,7 @@ namespace vg::engine
     // TODO: This component should be hidden to user.
     //--------------------------------------------------------------------------------------
 
-    VG_REGISTER_COMPONENT_CLASS(MergeStaticCollidersComponent, "Merge Static Colliders", "Physics", "Merge all static colliders in a single physics body.", editor::style::icon::PhysicsMergeStatic, -1);
+    VG_REGISTER_COMPONENT_CLASS(MergeStaticCollidersComponent, "Merge Static Colliders", "Physics", "Merge all static colliders in a single physics body.", editor::style::icon::PhysicsMergeStatic, getPriority(ComponentGroup::Physics, ComponentPriority::Early));
 
     //--------------------------------------------------------------------------------------
     bool MergeStaticCollidersComponent::registerProperties(core::IClassDesc & _desc)

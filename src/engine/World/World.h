@@ -2,6 +2,7 @@
 
 #include "core/IWorld.h"
 #include "core/IBaseScene.h"
+#include "core/GameObject/GatherComponentsContext.h"
 
 namespace vg::physics
 {
@@ -12,6 +13,7 @@ namespace vg::engine
 {
     class Scene;
     class IPhysicsBodyComponent;
+    class ComponentUpdateJob;
 
     //--------------------------------------------------------------------------------------
     // A "World" is a container for a list of scenes
@@ -31,9 +33,6 @@ namespace vg::engine
         void                                OnStop                          () final override;
         void                                OnPause                         () final override;
         void                                OnResume                        () final override;
-
-        void                                BeforeUpdate                    (const Context & _context) final override;
-        void                                AfterUpdate                     (const Context & _context) final override;
 
         bool                                SetActiveScene                  (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
         core::IBaseScene *                  GetActiveScene                  (core::BaseSceneType _sceneType) const final override;
@@ -73,11 +72,24 @@ namespace vg::engine
         void                                SetSpecularReflectionIntensity  (float _value) final override;
         float                               GetSpecularReflectionIntensity  () const final override;
 
+        using Context = core::WorldUpdateContext;
+        void                                fixedUpdate                     (const Context & _context);
+        void                                update                          (const Context & _context);
+        void                                lateUpdate                      (const Context & _context);
+        void                                toolUpdate                      (const Context & _context);
+
         const core::vector<IPhysicsBodyComponent *> & GetMergedStaticBodyComponents() const { return m_staticBodyComponents; }
 
-    protected:
+    private:
         void                                mergeStaticBodies               ();
         void                                clearUI                         ();
+
+        void                                beforeUpdate                    (const Context & _context);
+        void                                afterUpdate                     (const Context & _context);
+
+        bool                                anyToolmodeViewVisible          () const;
+
+        ComponentUpdateJob *                getComponentUpdateJobFromPool   ();
 
     private:
         core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];
@@ -95,6 +107,9 @@ namespace vg::engine
         gfx::ITexture *                     m_specularReflectionCubemap = nullptr;
         float                               m_irradianceIntensity = 0.0f;
         float                               m_specularReflectionIntensity = 0.0f;
+        core::GatherComponentsContext       m_gatherComponentsContext;
+        core::vector<ComponentUpdateJob *>  m_componentUpdateJobPool;
+        core::uint                          m_componentUpdateJobPoolIndex = 0;
     };
 }
 

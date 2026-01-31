@@ -7,7 +7,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(GameCameraBehaviour, "Game Camera", "Game", "Camera Behaviour following the average of player positions", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(GameCameraBehaviour, "Game Camera", "Game", "Camera Behaviour following the average of player positions", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 GameCameraBehaviour::GameCameraBehaviour(const string & _name, IObject * _parent) :

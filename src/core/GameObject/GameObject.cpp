@@ -8,6 +8,8 @@
 #include "core/Component/Component.h"
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/AutoRegisterClass.h"  
+#include "core/GameObject/GatherComponentsContext.h"
+#include "core/Object/ClassDesc.h"
 
 #include "renderer/IGraphicScene.h"
 #include "renderer/IGraphicInstance.h"
@@ -336,7 +338,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::FixedUpdate(const Context & _context)
+    void GameObject::fixedUpdate(const Context & _context)
     {
         // Static object do not need update every frame 
         const InstanceFlags instanceFlags = getInstanceFlags();
@@ -345,7 +347,7 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(GetName().c_str());
+            VG_PROFILE_CPU(GetStaticName());
             VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -365,13 +367,13 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::FixedUpdate & child->getUpdateFlags()))
-                    child->FixedUpdate(componentUpdateContext);
+                    child->fixedUpdate(componentUpdateContext);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::Update(const Context & _context)
+    void GameObject::update(const Context & _context)
     {
         // Static object do not need update every frame 
         const InstanceFlags instanceFlags = getInstanceFlags();
@@ -380,7 +382,7 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & instanceFlags))
         {
-            VG_PROFILE_CPU(GetName().c_str());
+            VG_PROFILE_CPU(GetStaticName());
             VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::Update).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -400,13 +402,13 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::Update & child->getUpdateFlags()))
-                    child->Update(componentUpdateContext);
+                    child->update(componentUpdateContext);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::LateUpdate(const Context & _context)
+    void GameObject::lateUpdate(const Context & _context)
     {
         // Static object do not need update every frame 
         const InstanceFlags instanceFlags = getInstanceFlags();
@@ -415,7 +417,7 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(GetName().c_str());
+            VG_PROFILE_CPU(GetStaticName());
             VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -435,17 +437,17 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::LateUpdate & child->getUpdateFlags()))
-                    child->LateUpdate(componentUpdateContext);
+                    child->lateUpdate(componentUpdateContext);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::ToolUpdate(const Context & _context)
+    void GameObject::toolUpdate(const Context & _context)
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(GetName().c_str());
+            VG_PROFILE_CPU(GetStaticName());
             VG_ASSERT(asBool(UpdateFlags::ToolUpdate & getUpdateFlags()), "[ToolUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -465,10 +467,47 @@ namespace vg::core
             {
                 auto * child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::ToolUpdate & child->getUpdateFlags()))
-                    child->ToolUpdate(componentUpdateContext);
+                    child->toolUpdate(componentUpdateContext);
             }
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::getComponentsToUpdate(GatherComponentsContext & _gatherComponentsContext) const
+    {
+        // Static object do not need update every frame 
+        const InstanceFlags instanceFlags = getInstanceFlags();
+        if (asBool(InstanceFlags::Static & instanceFlags))
+            return;
+
+        if (asBool(InstanceFlags::Enabled & instanceFlags))
+        {
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component * component = m_components[i];
+                if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(_gatherComponentsContext.m_flags & component->getUpdateFlags()))
+                {
+                    const uint priority = ((core::ClassDesc *)component->GetClassDesc())->GetPriority();
+
+                    const ComponentGroup group = getComponentGroup(priority);
+                    const ComponentPriority prio = getComponentPriority(priority);
+                    const ComponentMultithreadType mtType = getComponentMultithreadType(priority);
+                    
+                    auto & list = _gatherComponentsContext.m_componentsToUpdate[asInteger(group)][asInteger(prio)][asInteger(mtType)];
+                    list.m_pairs.push_back({(GameObject *)this, component});
+                }
+            }
+        
+            const auto & children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto * child = children[e];
+                if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(_gatherComponentsContext.m_flags & child->getUpdateFlags()))
+                    child->getComponentsToUpdate(_gatherComponentsContext);
+            }
+        }
+    }
+
 
     //--------------------------------------------------------------------------------------
     void GameObject::AddComponent(IComponent * _component, core::uint _index)

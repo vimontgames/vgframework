@@ -53,6 +53,9 @@ namespace vg::engine
 
         VG_INLINE bool              useResourceLoadingPriority          () const { return core::asBool(core::operator & (LoadingOptionFlags::ResourcePriority, m_loadingOptionFlags)); }
 
+        VG_INLINE bool              useJobsUpdateOrder                  () const { return m_useJobsUpdateOrder || m_useComponentUpdateJobs; }
+        VG_INLINE bool              useComponentUpdateJobs              () const { return m_useComponentUpdateJobs; }
+
     private:
         void                        updateDynamicEnum                   (const core::IProperty & _prop);
 
@@ -85,5 +88,9 @@ namespace vg::engine
         bool                        m_drawDummies = true;
         DummyType                   m_dummyTypeFlags;
         bool                        m_drawDummiesInPrefabsOnly = true;
+
+        // Multi threaded component update
+        bool                        m_useJobsUpdateOrder = false;       // is always 'true' when m_useComponentUpdateJobs is enabled
+        bool                        m_useComponentUpdateJobs = false;
     };
 }

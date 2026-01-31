@@ -100,6 +100,7 @@ namespace vg::core
 		virtual const string &			    GetName		            () const = 0;
         virtual const string                GetFullName             () const = 0;
         virtual const string                GetShortName            () const = 0;
+        virtual const char *                GetStaticName           () const = 0;
 
         virtual bool                        HasFile                 () const = 0;
         virtual void					    SetFile                 (const string & _file) = 0;

@@ -16,7 +16,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(PhysicsBodyComponent, "Physics Body", "Physics", "A physics body to interact with physics world", editor::style::icon::PhysicsBody, 0);
+    VG_REGISTER_COMPONENT_CLASS(PhysicsBodyComponent, "Physics Body", "Physics", "A physics body to interact with physics world", editor::style::icon::PhysicsBody, getPriority(ComponentGroup::Physics, ComponentPriority::Late, ComponentMultithreadType::Job));
 
     //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::registerProperties(core::IClassDesc & _desc)

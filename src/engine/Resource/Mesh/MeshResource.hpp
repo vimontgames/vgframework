@@ -11,7 +11,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(MeshResource, "Mesh", 100);
+    VG_REGISTER_RESOURCE_CLASS(MeshResource, "Mesh", ResourcePriority::Mesh);
 
     //--------------------------------------------------------------------------------------
     bool MeshResource::registerProperties(IClassDesc & _desc)

@@ -8,7 +8,7 @@ using namespace vg::audio;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(SoundComponent, "Sound", "Audio", "Audio sound component", editor::style::icon::Sound, 0);
+    VG_REGISTER_COMPONENT_CLASS(SoundComponent, "Sound", "Audio", "Audio sound component", editor::style::icon::Sound, getPriority(ComponentGroup::Render));
 
     //--------------------------------------------------------------------------------------
     bool SoundComponent::registerProperties(core::IClassDesc & _desc)

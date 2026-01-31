@@ -144,7 +144,6 @@ namespace vg::engine
         void                                    resume                  ();
 
         bool                                    anyToolmodeViewVisible  () const;
-        bool                                    anyToolmodeViewVisible  (const core::IWorld * _world) const;
 
         void                                    updateMemoryBudgets     ();
 

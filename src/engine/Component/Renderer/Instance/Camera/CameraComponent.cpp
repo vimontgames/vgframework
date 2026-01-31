@@ -19,7 +19,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Renderer", "Setup camera settings for a View", editor::style::icon::Camera, 1);
+    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Renderer", "Setup camera settings for a View", editor::style::icon::Camera, getPriority(ComponentGroup::Render));
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerProperties(IClassDesc & _desc)

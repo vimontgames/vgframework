@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(LensResource, "Lens", 1);
+    VG_REGISTER_RESOURCE_CLASS(LensResource, "Lens", ResourcePriority::Lens);
 
     //--------------------------------------------------------------------------------------
     void * ResizeLensResourceVector(IObject * _parent, uint _offset, uint _count)

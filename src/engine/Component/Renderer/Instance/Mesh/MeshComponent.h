@@ -51,6 +51,9 @@ namespace vg::engine
         VG_INLINE MeshResource &            getMeshResource         ();
         VG_INLINE renderer::IMeshInstance * getMeshInstance         () const;
 
+        void                                startAnimationJob       ();
+        void                                computeAnimation        (const core::IWorld * _world);
+
     private:
         renderer::IMeshInstance *           m_meshInstance          = nullptr;
         AnimationJob *                      m_updateSkeletonJob     = nullptr;

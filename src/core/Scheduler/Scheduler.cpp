@@ -18,7 +18,15 @@ namespace px_sched
 #define PX_SCHED_IMPLEMENTATION 1
 #pragma push_macro("new")
 #undef new
-//#define PX_SCHED_DOES_CHECKS 1
+
+#if VG_FINAL
+#define PX_SCHED_DOES_CHECKS 0
+#else
+#define PX_SCHED_DOES_CHECKS 1
+#define PX_SCHED_CHECK_FN(cond, ...) VG_ASSERT(cond, __VA_ARGS__)
+//#define PX_SCHED_TRACE_FN(...) VG_PROFILE_CPU(__VA_ARGS__)
+#endif
+
 #include "px/px_sched.h"
 #pragma pop_macro("new")
 

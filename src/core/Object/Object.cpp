@@ -4,6 +4,7 @@
 #include "core/Kernel.h"
 #include "core/File/File.h"
 #include "core/Resource/Resource.h"
+#include "core/IGameObject.h"
 
 #if !VG_ENABLE_INLINE
 #include "Object.inl"
@@ -121,7 +122,7 @@ namespace vg::core
 	Object::Object() :
         m_refCount(1)
 	{
-		
+        VG_SAFE_DELETE(m_staticName);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -529,7 +530,10 @@ namespace vg::core
         {
             const auto * factory = Kernel::getFactory();
             if (factory)
-                m_classDesc = factory->GetClassDescriptor(GetClassName());
+            {
+                const char * className = GetClassName();
+                m_classDesc = factory->GetClassDescriptor(className);
+            }
         }
         VG_ASSERT(m_classDesc);
         return m_classDesc;
@@ -575,13 +579,17 @@ namespace vg::core
         while (obj)
         {
             if (obj->IsRegisteredClass())
-            { 
+            {
                 if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
-                    return (IGameObject*)obj;
+                {
+                    VG_ASSERT(dynamic_cast<const IGameObject *>(obj));
+                    return (IGameObject *)obj;
+                }
             }
 
             if (auto * parent = obj->GetParent())
             {
+                VG_ASSERT(obj->GetParent()->GetRefCount() > 0, "Parent of %s \"%s\" is a deleted object!", obj->GetClassName(), obj->GetName().c_str());
                 VG_ASSERT(parent != this, "Object \"%s\" cannot have himself at its own parent!", obj->GetName().c_str());
                 obj = parent;
             }
@@ -630,6 +638,31 @@ namespace vg::core
             obj = obj->GetParent();
         }
         return name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Object::GetStaticName() const
+    {
+        const char * current = m_staticName.load(std::memory_order_acquire);
+        if (!current)
+        {
+            std::string temp = m_name;
+            char * str = new char[temp.size() + 1];
+            std::memcpy(str, temp.c_str(), temp.size() + 1);
+
+            const char * expected = nullptr;
+            if (!m_staticName.compare_exchange_strong(expected, str, std::memory_order_release, std::memory_order_relaxed))
+            {
+                delete[] str;
+                current = expected;
+            }
+            else
+            {
+                current = str;
+            }
+        }
+
+        return current;
     }
 
     //--------------------------------------------------------------------------------------

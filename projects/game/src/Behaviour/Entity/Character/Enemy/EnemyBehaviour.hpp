@@ -4,7 +4,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Enemy Behaviour", vg::editor::style::icon::Script, -2);
+VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Enemy Behaviour", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour));
 
 //--------------------------------------------------------------------------------------
 EnemyBehaviour::EnemyBehaviour(const string & _name, IObject * _parent) :

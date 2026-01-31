@@ -30,7 +30,7 @@ namespace vg::core
         Hidden          = 0x0000000000004000
     };
 
-    using Priority = core::i16;
+    using Priority = core::u16;
     using ClassCRC = core::u64;
 
     class IClassDesc

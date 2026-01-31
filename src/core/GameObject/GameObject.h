@@ -13,6 +13,7 @@ namespace vg::core
     class IFactory;
     class IClassDesc;
     class IBehaviour;
+    struct GatherComponentsContext;
 
     class GameObject : public IGameObject
     {
@@ -58,10 +59,13 @@ namespace vg::core
 
         using Context = GameObjectUpdateContext;
 
-        void                                            FixedUpdate                 (const Context & _context);
-        void                                            Update                      (const Context & _context);
-        void                                            LateUpdate                  (const Context & _context);
-        void                                            ToolUpdate                  (const Context & _context);
+        void                                            fixedUpdate                 (const Context & _context);
+        void                                            update                      (const Context & _context);
+        void                                            lateUpdate                  (const Context & _context);
+        void                                            toolUpdate                  (const Context & _context);
+
+        void                                            getComponentsToUpdate       (GatherComponentsContext & _gatherComponentsContext) const;
+
 
         const core::vector<IBehaviour*> /*&*/           getBehaviours               () const;
 

@@ -8,19 +8,12 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture", 200);
+    VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture", ResourcePriority::Texture);
 
     //--------------------------------------------------------------------------------------
     bool TextureResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        //auto * rm = ResourceManager::get();
-        //
-        //rm->RegisterExtension("TextureResource", ".psd");
-        //rm->RegisterExtension("TextureResource", ".tga");
-        //rm->RegisterExtension("TextureResource", ".jpg");
-        //rm->RegisterExtension("TextureResource", ".png");
 
         return true;
     }

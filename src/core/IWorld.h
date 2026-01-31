@@ -49,10 +49,6 @@ namespace vg::core
         virtual void                OnPause                         () = 0;
         virtual void                OnResume                        () = 0;
 
-        using Context = WorldUpdateContext;
-        virtual void                BeforeUpdate                    (const Context & _context) = 0;
-        virtual void                AfterUpdate                     (const Context & _context) = 0;
-
         virtual bool                SetActiveScene                  (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
         virtual core::IBaseScene *  GetActiveScene                  (BaseSceneType _sceneType) const = 0;
 

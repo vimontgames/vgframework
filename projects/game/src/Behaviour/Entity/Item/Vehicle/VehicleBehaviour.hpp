@@ -11,7 +11,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(VehicleBehaviour, "Vehicle", "Game", "Game vehicle behaviour", vg::editor::style::icon::Script, 0);
+VG_REGISTER_COMPONENT_CLASS(VehicleBehaviour, "Vehicle", "Game", "Game vehicle behaviour", vg::editor::style::icon::Script, getPriority(ComponentGroup::Behaviour, ComponentPriority::Late));
 
 //--------------------------------------------------------------------------------------
 bool VehicleBehaviour::registerProperties(IClassDesc & _desc)

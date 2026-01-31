@@ -11,7 +11,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(CharacterControllerComponent, "Character Controller", "Physics", "Cheap and accurate collisions between the character and dynamic bodies.", editor::style::icon::CharacterController, -1);
+    VG_REGISTER_COMPONENT_CLASS(CharacterControllerComponent, "Character Controller", "Physics", "Cheap and accurate collisions between the character and dynamic bodies.", editor::style::icon::CharacterController, getPriority(ComponentGroup::Physics, ComponentPriority::Early, ComponentMultithreadType::Job));
 
     //--------------------------------------------------------------------------------------
     bool CharacterControllerComponent::registerProperties(core::IClassDesc & _desc)

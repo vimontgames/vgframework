@@ -17,7 +17,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(AnimationResource, "Animation", 300);
+    VG_REGISTER_RESOURCE_CLASS(AnimationResource, "Animation", ResourcePriority::Animation);
 
     //--------------------------------------------------------------------------------------
     void * ResizeAnimationResourceVector(IObject * _parent, uint _offset, uint _count)

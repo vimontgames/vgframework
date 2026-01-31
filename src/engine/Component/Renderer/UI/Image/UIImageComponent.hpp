@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(UIImageComponent, "UIImage", "Renderer", "UI Image Element", editor::style::icon::Image, 2);
+    VG_REGISTER_COMPONENT_CLASS(UIImageComponent, "UIImage", "Renderer", "UI Image Element", editor::style::icon::Image, getPriority(ComponentGroup::Render, ComponentPriority::Late));
 
     //--------------------------------------------------------------------------------------
     bool UIImageComponent::registerProperties(IClassDesc & _desc)

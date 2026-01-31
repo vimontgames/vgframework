@@ -16,7 +16,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Renderer", "Light component to light up scene", editor::style::icon::Light, 0);
+    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Renderer", "Light component to light up scene", editor::style::icon::Light, getPriority(ComponentGroup::Render, ComponentPriority::Late));
 
     //--------------------------------------------------------------------------------------
     bool LightComponent::registerProperties(IClassDesc & _desc)

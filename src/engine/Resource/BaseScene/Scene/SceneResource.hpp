@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-	VG_REGISTER_RESOURCE_CLASS(SceneResource, "Scene", -900);
+	VG_REGISTER_RESOURCE_CLASS(SceneResource, "Scene", ResourcePriority::Scene);
 
 	//--------------------------------------------------------------------------------------
 	void * ResizeSceneResourceVector(IObject * _parent, uint _offset, uint _count)

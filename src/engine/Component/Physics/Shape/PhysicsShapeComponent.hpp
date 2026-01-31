@@ -17,7 +17,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(PhysicsShapeComponent, "Physics Shape", "Physics", "A shape to use with physics body", editor::style::icon::PhysicsShape, 0);
+    VG_REGISTER_COMPONENT_CLASS(PhysicsShapeComponent, "Physics Shape", "Physics", "A shape to use with physics body", editor::style::icon::PhysicsShape, getPriority(ComponentGroup::Physics));
 
     //--------------------------------------------------------------------------------------
     bool PhysicsShapeComponent::registerProperties(core::IClassDesc & _desc)

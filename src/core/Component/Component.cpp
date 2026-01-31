@@ -132,6 +132,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Component::SetUpdateFlags(UpdateFlags _flags)
+    {
+        m_update = _flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Component::EnableUpdateFlags(UpdateFlags _flags, bool _enabled)
     {
         enableUpdateFlags(_flags, _enabled);

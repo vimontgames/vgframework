@@ -6,6 +6,52 @@ namespace vg::core
 {
     class GameObject;
 
+    //--------------------------------------------------------------------------------------
+    // Convert component priority to a single u16 value for sorting
+    //--------------------------------------------------------------------------------------
+    vg_enum_class(vg::core, ComponentGroup, core::u16,
+        Behaviour = 0,
+        Physics,
+        Animation,
+        Render
+    );
+
+    vg_enum_class(vg::core, ComponentPriority, core::u16,
+        Early = 0,
+        Default,
+        Late
+    );
+
+    vg_enum_class(vg::core, ComponentMultithreadType, core::u16,
+        Serial = 0,
+        Job
+    );
+
+    inline u16 getPriority(ComponentGroup _group, ComponentPriority _priority = ComponentPriority::Default, ComponentMultithreadType _multithreadType = ComponentMultithreadType::Serial)
+    {
+        return (u16(_group) << 3) | u16(_priority)<<1 | u16(_multithreadType);
+    }
+
+    inline ComponentGroup getComponentGroup(u16 _priority)
+    {
+        return (ComponentGroup)(_priority >> 3);
+    }
+
+    inline ComponentPriority getComponentPriority(u16 _priority)
+    {
+        return (ComponentPriority)((_priority>>1) & 0x3);
+    }
+
+    inline ComponentMultithreadType getComponentMultithreadType(u16 _priority)
+    {
+        return (ComponentMultithreadType)(_priority & 1);
+    }
+
+    // Random thoughts ...
+    // - Instead of a list of {GameObject, Component} shall we gather a list of {GameObject(1), Components(N)}? 
+    // - Is it possible to register Components to update the way we do for graphic instances?
+    // - Just store a list of enabled GameObjects to split between jobs and skip components not to update? GameObject + component indices? Just GO = slower in // jobs but faster gather
+
     class Component : public IComponent
     {
     public:
@@ -38,6 +84,7 @@ namespace vg::core
         void                        EnableComponentFlags    (ComponentFlags _flags, bool _enabled = true) override;
 
         UpdateFlags                 GetUpdateFlags          () const final override;
+        void                        SetUpdateFlags          (UpdateFlags _flags) final override;
         void                        EnableUpdateFlags       (UpdateFlags _flags, bool _enabled = true) final override;
 
         bool                        TryGetAABB              (AABB & _aabb) const override { return false; }

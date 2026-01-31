@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.54
+# VGFramework 0.55
 VGFramework is a pet game engine for fun, modern graphics APIs, and fast iteration.
 
 ![Demo](doc/img/0.54.6.gif)
