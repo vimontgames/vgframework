@@ -570,7 +570,7 @@ namespace vg::engine
         const vector<IResource *> & clients = _info.getClients();
         const string & path = _info.getPath();
 
-        VG_PROFILE_CPU(path.c_str());
+        VG_PROFILE_CPU(path); // string
 
         // check for an up-to-date cooked version of the resource
         auto needCook = needsCook(_info);

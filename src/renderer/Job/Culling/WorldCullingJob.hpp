@@ -86,7 +86,7 @@ namespace vg::renderer
         m_output = m_sharedOutput->getWorldCullingJobOutput(m_world);
 
         const string name = fmt::sprintf("Culling \"%s\" World", m_output->m_world->GetName());
-        VG_PROFILE_CPU(name.c_str());
+        VG_PROFILE_CPU(name); // string
 
         if (nullptr != m_output)
         {

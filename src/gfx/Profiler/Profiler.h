@@ -3,7 +3,9 @@
 #include "core/Singleton/Singleton.h"
 #include "core/Kernel.h"
 
+#if VG_ENABLE_PROFILER
 #define VG_ENABLE_OPTICK
+#endif
 
 #ifdef VG_ENABLE_OPTICK
 
@@ -12,8 +14,20 @@
 #include "optick/src/optick.h"
 #pragma pop_macro("new")
 
+//--------------------------------------------------------------------------------------
+inline const char * getGpuEventString(const char * _value)
+{
+    return _value;
+}
+
+//--------------------------------------------------------------------------------------
+inline const char * getGpuEventString(const vg::core::string & _value)
+{
+    return _value.c_str();
+}
+
 #define VG_PROFILE_CATEGORY(name, cat)  OPTICK_CATEGORY(name, Optick::Category::cat)
-#define VG_PROFILE_GPU(name)            OPTICK_GPU_EVENT_DYNAMIC(name); vg::gfx::ScopedGPUEvent scopedGPUEvent##__COUNTER__(name)   
+#define VG_PROFILE_GPU(name)            { const char * staticName = getGpuEventString(name); OPTICK_GPU_EVENT_DYNAMIC(staticName); vg::gfx::ScopedGPUEvent scopedGPUEvent##__COUNTER__(staticName); }
 #define VG_PROFILE_SAVE()               Profiler::save();
 
 #ifdef VG_DX12
@@ -43,6 +57,7 @@ namespace vg::gfx
         bool                                    IsCaptureInProgress         () const final override;
 
         void                                    StartCpuEvent               (const char * _name) final override;
+        void                                    StartCpuEvent               (const core::string & _name) final override;
         void                                    StopCpuEvent                () final override;
         
         void                                    AddCpuEventLabel            (const char * _name, float _data) final override;
@@ -53,6 +68,7 @@ namespace vg::gfx
         void                                    AddCpuEventLabel            (const char * _name, const core::string & _data) final override;
 
         void                                    StartGpuEvent               (const char * _name) final override;
+        void                                    StartGpuEvent               (const core::string & _name) final override;
         void                                    StopGpuEvent                () final override;
         void                                    RegisterProfilerThread      (const char * _name) final override;
         void                                    UnregisterProfilerThread    () final override;
@@ -68,21 +84,37 @@ namespace vg::gfx
     class ScopedGPUEvent
     {
     public:
-        inline ScopedGPUEvent(const char * _name) :
-            m_name(_name)
+
+        //--------------------------------------------------------------------------------------
+        inline ScopedGPUEvent(const char * _name)
         {
-            if (m_name[0] != '\0')
+            VG_ASSERT(nullptr != _name);
+            if (_name[0] != '\0')
+            {
                 core::Kernel::getProfiler()->StartGpuEvent(_name);
+                m_started = true;
+            }
         }
 
+        //--------------------------------------------------------------------------------------
+        //inline ScopedGPUEvent(const core::string & _name)
+        //{
+        //    if (!_name.empty())
+        //    {
+        //        core::Kernel::getProfiler()->StartGpuEvent(_name);
+        //        m_started = true;
+        //    }
+        //}
+
+        //--------------------------------------------------------------------------------------
         inline ~ScopedGPUEvent()
         {
-            if (m_name[0] != '\0')
+            if (m_started)
                 core::Kernel::getProfiler()->StopGpuEvent();
         }
 
     private:
-        const char * m_name = nullptr;
+        bool m_started = false;
     };
 }
 

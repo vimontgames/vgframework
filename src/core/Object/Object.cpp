@@ -122,7 +122,7 @@ namespace vg::core
 	Object::Object() :
         m_refCount(1)
 	{
-        VG_SAFE_DELETE(m_staticName);
+
 	}
 
     //--------------------------------------------------------------------------------------
@@ -139,6 +139,10 @@ namespace vg::core
 	{
         VG_ASSERT(m_refCount <= 1, "An object is being deleted with a RefCount of %u\nUse VG_SAFE_RELEASE for refcounted objects", m_refCount.load());
         UnregisterUID();
+
+        #if VG_OBJECT_HAS_STATIC_NAME
+        VG_SAFE_DELETE(m_staticName);
+        #endif
 	}
 
     //--------------------------------------------------------------------------------------
@@ -640,6 +644,7 @@ namespace vg::core
         return name;
     }
 
+    #if VG_OBJECT_HAS_STATIC_NAME
     //--------------------------------------------------------------------------------------
     const char * Object::GetStaticName() const
     {
@@ -664,6 +669,7 @@ namespace vg::core
 
         return current;
     }
+    #endif
 
     //--------------------------------------------------------------------------------------
     bool Object::HasFile() const

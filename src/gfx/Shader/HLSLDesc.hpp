@@ -192,7 +192,7 @@ namespace vg::gfx
         io::Buffer cachedShaderData;
         if (io::readFile(cookedPath, cachedShaderData, false))
         {
-            VG_PROFILE_CPU(m_file.c_str());
+            VG_PROFILE_CPU(m_file); // string
 
             while (!cachedShaderData.isEndOfFile())
             {

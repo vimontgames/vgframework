@@ -232,7 +232,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraph::setupNode(UserPassInfoNode & _node)
     {
-        VG_PROFILE_CPU(_node.m_name.c_str());
+        VG_PROFILE_CPU(_node.m_name); // string
 
         for (auto & child : _node.m_children)
             setupNode(child);
@@ -256,7 +256,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraph::buildNode(UserPassInfoNode & _node)
     {
-        VG_PROFILE_CPU(_node.m_name.c_str());
+        VG_PROFILE_CPU(_node.m_name); // string
 
         for (auto & child : _node.m_children)
             buildNode(child);
@@ -900,7 +900,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraph::renderNode(const UserPassInfoNode & _node, gfx::CommandList * cmdList, bool _recur)
     {
-        VG_PROFILE_GPU(_node.m_name.c_str());
+        VG_PROFILE_GPU(_node.m_name); // string
 
         if (_recur)
         {
@@ -1115,7 +1115,7 @@ namespace vg::gfx
             VG_PROFILE_CPU("GatherResources");
             for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             {
-                VG_PROFILE_CPU(node.m_name.c_str());
+                VG_PROFILE_CPU(node.m_name); // string
                 gatherResources(node);
             }
         }
@@ -1123,7 +1123,7 @@ namespace vg::gfx
             VG_PROFILE_CPU("BeforeAll");
             for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             {
-                VG_PROFILE_CPU(node.m_name.c_str());
+                VG_PROFILE_CPU(node.m_name); // string
                 beforeAll(node);
             }
         }

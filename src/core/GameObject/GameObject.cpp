@@ -347,7 +347,12 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
+            #if VG_OBJECT_HAS_STATIC_NAME
             VG_PROFILE_CPU(GetStaticName());
+            #else
+            VG_PROFILE_CPU(GetName()); // string
+            #endif
+
             VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -382,7 +387,12 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & instanceFlags))
         {
+            #if VG_OBJECT_HAS_STATIC_NAME
             VG_PROFILE_CPU(GetStaticName());
+            #else
+            VG_PROFILE_CPU(GetName()); // string
+            #endif
+
             VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::Update).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -417,7 +427,12 @@ namespace vg::core
 
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
+            #if VG_OBJECT_HAS_STATIC_NAME
             VG_PROFILE_CPU(GetStaticName());
+            #else
+            VG_PROFILE_CPU(GetName()); // string
+            #endif
+
             VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
@@ -447,7 +462,12 @@ namespace vg::core
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
+            #if VG_OBJECT_HAS_STATIC_NAME
             VG_PROFILE_CPU(GetStaticName());
+            #else
+            VG_PROFILE_CPU(GetName()); // string
+            #endif
+
             VG_ASSERT(asBool(UpdateFlags::ToolUpdate & getUpdateFlags()), "[ToolUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);

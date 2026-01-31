@@ -149,7 +149,7 @@ namespace vg::renderer
             else
                 name = fmt::sprintf("%s #%u", asString(viewID.target), viewID.index);
 
-            VG_PROFILE_CPU(name.c_str());
+            VG_PROFILE_CPU(name); // string
 
             const auto * world = cullingOptions.m_view->getWorld();
 
@@ -296,7 +296,7 @@ namespace vg::renderer
             else
                 name = fmt::sprintf("%s #%u", asString(viewID.target), viewID.index);
 
-            VG_PROFILE_CPU(name.c_str());
+            VG_PROFILE_CPU(name); // string
             CullSceneObjects(world, cullingOptions, m_result, m_first, m_count);
         }
     }

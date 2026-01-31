@@ -140,6 +140,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void Profiler::StartCpuEvent(const string & _name)
+    {
+        OPTICK_PUSH_DYNAMIC(_name.c_str());
+    }
+
+    //--------------------------------------------------------------------------------------
     void Profiler::AddCpuEventLabel(const char * _name, float _data)
     {
         OPTICK_TAG(_name, _data);
@@ -185,6 +191,14 @@ namespace vg::gfx
     {
         #if VG_ENABLE_GPU_MARKER
         getCommandList()->beginGPUEvent(_name, 0xFFFFFFFF);
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::StartGpuEvent(const core::string & _name)
+    {
+        #if VG_ENABLE_GPU_MARKER
+        getCommandList()->beginGPUEvent(_name.c_str(), 0xFFFFFFFF);
         #endif
     }
 
