@@ -1,7 +1,9 @@
 #include "engine/Precomp.h"
 #include "GraphicInstanceComponent.h"
 #include "renderer/IGraphicInstance.h"
+#include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
+#include "renderer/IPicking.h"
 #include "core/GameObject/GameObject.h"
 #include "engine/Engine.h"
 #include "Shaders/system/outlinemask.hlsli"
@@ -99,6 +101,14 @@ namespace vg::engine
             {
                 if (getGameObject()->addGraphicInstance(instance))
                 {
+                    auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                    PickingID id = instance->GetPickingID();
+                    if (!id)
+                    {
+                        id = picking->CreatePickingID(this);
+                        instance->SetPickingID(id);
+                    }
+
                     m_registered = true;
                     return true;
                 }
@@ -116,6 +126,10 @@ namespace vg::engine
             {
                 if (getGameObject()->removeGraphicInstance(instance))
                 {
+                    auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                    picking->ReleasePickingID(instance->GetPickingID());
+                    instance->ClearPickingID();
+
                     m_registered = false;
                     return true;
                 }

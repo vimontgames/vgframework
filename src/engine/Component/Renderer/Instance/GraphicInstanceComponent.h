@@ -45,6 +45,8 @@ namespace vg::engine
         bool                                    registerGraphicInstance     ();
         bool                                    unregisterGraphicInstance   ();
 
+        friend class PrefabGameObject;
+
     protected:
         bool                                    m_registered = false;
         renderer::OutlineCategory               m_outlineCategory = (renderer::OutlineCategory)0;

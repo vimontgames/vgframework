@@ -47,15 +47,7 @@ namespace vg::engine
     {
         VG_SAFE_RELEASE(m_lightDesc);
 
-        if (m_registered)
-        {
-            auto * picking = Engine::get()->GetRenderer()->GetPicking();
-            picking->ReleasePickingID(m_light->GetPickingID());
-            m_light->ClearPickingID();
-
-            getGameObject()->removeGraphicInstance(m_light);
-            m_registered = false;
-        }
+        unregisterGraphicInstance();
 
         VG_SAFE_RELEASE_ASYNC(m_light);
     }
@@ -115,14 +107,6 @@ namespace vg::engine
         if (m_light)
         {
             m_light->SetName(GetGameObject()->GetName());
-
-            auto * picking = Engine::get()->GetRenderer()->GetPicking();
-            PickingID id = m_light->GetPickingID();
-            if (!id)
-            {
-                id = picking->CreatePickingID(this);
-                m_light->SetPickingID(id);
-            }
 
             UpdateFlagsFromGameObject();
 

@@ -20,6 +20,11 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
+    //--------------------------------------------------------------------------------------
+    // Parent abstract class must be registered for RTTI
+    //--------------------------------------------------------------------------------------
+    //VG_REGISTER_ABSTRACT_CLASS(IParticleComponent, "IParticleComponent");
+
     VG_REGISTER_COMPONENT_CLASS(ParticleComponent, "Particle", "Renderer", "Particle system for 3D rendering", editor::style::icon::Fire, getPriority(ComponentGroup::Render, ComponentPriority::Late, ComponentMultithreadType::Job))
 
     //--------------------------------------------------------------------------------------
@@ -74,36 +79,20 @@ namespace vg::engine
     {
         m_particleSystemInstance = (IParticleSystemInstance *)CreateFactoryObject(ParticleSystemInstance, _name, this);
 
-        auto * picking = Engine::get()->GetRenderer()->GetPicking();
-        PickingID id = m_particleSystemInstance->GetPickingID();
-        if (!id)
-        {
-            id = picking->CreatePickingID(this);
-            m_particleSystemInstance->SetPickingID(id);
-        }
+        m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
+        m_particleSystemInstance->SetWorldSpace(m_worldSpace);
 
-        if (false == m_registered)
-        {
-            registerGraphicInstance();
-            m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
-            m_particleSystemInstance->SetWorldSpace(m_worldSpace);
-
-            // Initial refresh
-            UpdateFlagsFromGameObject();
-            RefreshGraphicInstance();
-        }
+        // Initial refresh
+        UpdateFlagsFromGameObject();
+        registerGraphicInstance();
+        RefreshGraphicInstance();
     }
 
     //--------------------------------------------------------------------------------------
     ParticleComponent::~ParticleComponent()
     {
-        // MeshComponent may have no PickingID if the mesh was not found
-        auto * picking = Engine::get()->GetRenderer()->GetPicking();
-        PickingID id = m_particleSystemInstance->GetPickingID();
-        if (id)
-            picking->ReleasePickingID(id);
+        unregisterGraphicInstance();
 
-        getGameObject()->removeGraphicInstance(m_particleSystemInstance);
         m_registered = false;
         Engine::get()->GetRenderer()->ReleaseAsync(m_particleSystemInstance);
     }

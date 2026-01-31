@@ -4,7 +4,8 @@
 #include "core/Object/DynamicProperties/DynamicProperties.h"
 #include "engine/Component/Editor/Snap/SnapComponent.h"
 #include "engine/Engine.h"
-
+//#include "engine/Component/Renderer/Instance/GraphicInstanceComponent.h"
+#include "engine/Component/Renderer/Instance/Particle/ParticleComponent.h" // TODO: fix RTTI and use GraphicInstanceComponent instead
 using namespace vg::core;
 
 namespace vg::engine
@@ -595,6 +596,16 @@ namespace vg::engine
 
                     // Recompute children
                     instance->OnLocalMatrixChanged(false, true);
+
+                    // Register all active GraphicInstances
+                    auto particleSystems = instance->GetComponentsInChildrenT<ParticleComponent>();
+                    for (auto * graphicInstance : particleSystems)
+                    {
+                        if (graphicInstance->isEnabled() && graphicInstance->GetGameObject()->isEnabledInHierarchy())
+                            graphicInstance->registerGraphicInstance();
+                    }
+
+                    //auto graphicInstances = instance->GetComponentsInChildrenT<GraphicInstanceComponent>();
 
                     VG_SAFE_RELEASE(instance);
                 }

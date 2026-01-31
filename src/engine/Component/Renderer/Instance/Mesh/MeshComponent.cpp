@@ -79,13 +79,8 @@ namespace vg::engine
     MeshComponent::~MeshComponent()
     {
         // MeshComponent may have no PickingID if the mesh was not found
-        auto * picking = Engine::get()->GetRenderer()->GetPicking();
-        PickingID id = m_meshInstance->GetPickingID();
-        if (id)
-            picking->ReleasePickingID(id);
+        unregisterGraphicInstance();
 
-        getGameObject()->removeGraphicInstance(m_meshInstance);
-        m_registered = false;
         Engine::get()->GetRenderer()->ReleaseAsync(m_meshInstance);
 
         VG_SAFE_RELEASE(m_updateSkeletonJob);
@@ -269,14 +264,6 @@ namespace vg::engine
 
             if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
             {
-                auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                PickingID id = m_meshInstance->GetPickingID();
-                if (!id)
-                {
-                    id = picking->CreatePickingID(this);
-                    m_meshInstance->SetPickingID(id);
-                }
-
                 if (false == m_registered)
                 {
                     registerGraphicInstance();
@@ -316,16 +303,7 @@ namespace vg::engine
         {
             // Mesh unloaded
             m_meshInstance->SetModel(Lod::Lod0, nullptr);
-            //m_batchMask.setBitCount(0);
-
-            if (m_registered)
-            {
-                auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                picking->ReleasePickingID(m_meshInstance->GetPickingID());
-                m_meshInstance->ClearPickingID();
-                getGameObject()->removeGraphicInstance(m_meshInstance);
-                m_registered = false;
-            }
+            unregisterGraphicInstance();
         }
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
         {
