@@ -175,7 +175,7 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 
 #define _hlslpp_rcp_ps(x)						__vrcp((x))
 
-#define _hlslpp_neg_ps(x)						__vxor((x), __vset1(negMask._f32))
+#define _hlslpp_neg_ps(x)						__vxor((x), f4negativeMask)
 
 #define _hlslpp_madd_ps(x, y, z)				__vmaddfp((x), (y), (z)) // x * y + z
 #define _hlslpp_msub_ps(x, y, z)				_hlslpp_neg_ps(__vnmsubfp((x), (y), (z))) // Negate because __vnmsubfp does -(x * y - z)
@@ -187,7 +187,7 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 #define _hlslpp_sqrt_ps(x)						__vsqrt(x)
 
 #define _hlslpp_cmpeq_ps(x, y)					__vcmpeqfp((x), (y))
-#define _hlslpp_cmpneq_ps(x, y)					__vxor(__vcmpeqfp((x), (y)), __vset1(fffMask._f32))
+#define _hlslpp_cmpneq_ps(x, y)					__vxor(__vcmpeqfp((x), (y)), f4_fff)
 
 #define _hlslpp_cmpgt_ps(x, y)					__vcmpgtfp((x), (y))
 #define _hlslpp_cmpge_ps(x, y)					__vcmpgefp((x), (y))
@@ -223,7 +223,22 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 #define _hlslpp_movehl_ps(x, y)					__vperm((y), (x), __vset(2, 3, 2, 3))
 #define _hlslpp_movehdup_ps(x)					__vpermwi((x), VPERMWI_CONST(1, 1, 3, 3))
 
-#define _hlslpp_perm_ps(x, X, Y, Z, W)			__vpermwi((x), HLSLPP_XBOX360_PERMWI_MASK(X, Y, Z, W))
+namespace hlslpp
+{
+	template<unsigned int X, unsigned int Y, unsigned int Z, unsigned int W>
+	hlslpp_inline __vector4 permute(__vector4 x)
+	{
+		return __vpermwi(x, HLSLPP_XBOX360_PERMWI_MASK(X, Y, Z, W));
+	}
+
+	template<>
+	hlslpp_inline __vector4 permute<0, 1, 2, 3>(__vector4 x)
+	{
+		return x;
+	}
+};
+
+#define _hlslpp_perm_ps(x, X, Y, Z, W)			hlslpp::permute<X, Y, Z, W>((x))
 #define _hlslpp_shuffle_ps(x, y, X, Y, A, B)	__vperm((x), (y), __vperm_mask<X, Y, 4 + A, 4 + B>())
 
 #define _hlslpp_unpacklo_ps(x, y)				__vmrghw((x), (y))
@@ -241,89 +256,89 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 // Float Store/Load
 //-----------------
 
-hlslpp_inline void _hlslpp_store1_ps(float* p, n128 x)
+hlslpp_inline void _hlslpp_store1_ps(float* dst, n128 src)
 {
-	__stvewx(x, p, 0);
+	__stvewx(src, dst, 0);
 }
 
-hlslpp_inline void _hlslpp_store2_ps(float* p, n128 x)
+hlslpp_inline void _hlslpp_store2_ps(float* dst, n128 src)
 {
-	__stvewx(x, p, 0);
-	__stvewx(__vpermwi(x, 1), p, 4);
+	__stvewx(src, dst, 0);
+	__stvewx(__vpermwi(src, 1), dst, 4);
 }
 
-hlslpp_inline void _hlslpp_store3_ps(float* p, n128 x)
+hlslpp_inline void _hlslpp_store3_ps(float* dst, n128 src)
 {
-	__stvewx(x, p, 0);
-	__stvewx(__vpermwi(x, 1), p, 4);
-	__stvewx(__vpermwi(x, 2), p, 8);
+	__stvewx(src, dst, 0);
+	__stvewx(__vpermwi(src, 1), dst, 4);
+	__stvewx(__vpermwi(src, 2), dst, 8);
 }
 
-hlslpp_inline void _hlslpp_store4_ps(float* p, n128 x)
+hlslpp_inline void _hlslpp_store4_ps(float* dst, n128 src)
 {
-	__stvlx(x, p, 0);
-	__stvrx(x, p, 16);
+	__stvlx(src, dst, 0);
+	__stvrx(src, dst, 16);
 }
 
-hlslpp_inline void _hlslpp_store3x3_ps(float* p, n128 x0, n128 x1, n128 x2)
+hlslpp_inline void _hlslpp_store3x3_ps(float* dst, n128 src0, n128 src1, n128 src2)
 {
-	__stvlx(x0, p, 0);
-	__stvrx(x0, p, 16);
+	__stvlx(src0, dst, 0);
+	__stvrx(src0, dst, 16);
 
-	__stvlx(x1, p + 3, 0);
-	__stvrx(x1, p + 3, 16);
+	__stvlx(src1, dst + 3, 0);
+	__stvrx(src1, dst + 3, 16);
 
-	__stvewx(x2, p + 6, 0);
-	__stvewx(__vpermwi(x2, 1), p + 6, 4);
-	__stvewx(__vpermwi(x2, 2), p + 6, 8);
+	__stvewx(src2, dst + 6, 0);
+	__stvewx(__vpermwi(src2, 1), dst + 6, 4);
+	__stvewx(__vpermwi(src2, 2), dst + 6, 8);
 }
 
-hlslpp_inline void _hlslpp_store4x4_ps(float* p, n128 x0, n128 x1, n128 x2, n128 x3)
+hlslpp_inline void _hlslpp_store4x4_ps(float* dst, n128 src0, n128 src1, n128 src2, n128 src3)
 {
-	__stvlx(x0, p, 0);
-	__stvrx(x0, p, 16);
-	__stvlx(x1, p + 4, 0);
-	__stvrx(x1, p + 4, 16);
-	__stvlx(x2, p + 8, 0);
-	__stvrx(x2, p + 8, 16);
-	__stvlx(x3, p + 12, 0);
-	__stvrx(x3, p + 12, 16);
+	__stvlx(src0, dst, 0);
+	__stvrx(src0, dst, 16);
+	__stvlx(src1, dst + 4, 0);
+	__stvrx(src1, dst + 4, 16);
+	__stvlx(src2, dst + 8, 0);
+	__stvrx(src2, dst + 8, 16);
+	__stvlx(src3, dst + 12, 0);
+	__stvrx(src3, dst + 12, 16);
 }
 
-hlslpp_inline void _hlslpp_load1_ps(float* p, n128& x)
+hlslpp_inline void _hlslpp_load1_ps(n128& dst, const float* src)
 {
-	x = __lvlx(p, 0);
+	dst = __lvlx(src, 0);
 }
 
 // http://fastcpp.blogspot.com/2011/03/loading-3d-vector-into-sse-register.html
-hlslpp_inline void _hlslpp_load2_ps(float* p, n128& x)
+hlslpp_inline void _hlslpp_load2_ps(n128& dst, const float* src)
 {
-	x = __lvlx(p, 0);
+	dst = __lvlx(src, 0);
 }
 
-hlslpp_inline void _hlslpp_load3_ps(float* p, n128& x)
+hlslpp_inline void _hlslpp_load3_ps(n128& dst, const float* src)
 {
-	x = __vor(__lvlx(p, 0), __lvrx(p, 16));
+	dst = __vor(__lvlx(src, 0), __lvrx(src, 16));
 }
 
-hlslpp_inline void _hlslpp_load4_ps(float* p, n128& x)
+hlslpp_inline void _hlslpp_load4_ps(n128& dst, const float* src)
 {
-	x = __vor(__lvlx(p, 0), __lvrx(p, 16));
+	dst = __vor(__lvlx(src, 0), __lvrx(src, 16));
 }
 
-hlslpp_inline void _hlslpp_load3x3_ps(float* p, n128& x0, n128& x1, n128& x2)
+hlslpp_inline void _hlslpp_load3x3_ps(n128& dst0, n128& dst1, n128& dst2, const float* src)
 {
-	x0 = __vor(__lvlx(p + 0, 0), __lvrx(p + 0, 16));
-	x1 = __vor(__lvlx(p + 3, 0), __lvrx(p + 3, 16));
-	x2 = __vor(__lvlx(p + 6, 0), __lvrx(p + 6, 16));
+	dst0 = __vor(__lvlx(src + 0, 0), __lvrx(src + 0, 16));
+	dst1 = __vor(__lvlx(src + 3, 0), __lvrx(src + 3, 16));
+	dst2 = __vor(__lvlx(src + 6, 0), __lvrx(src + 6, 16));
 }
 
-hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n128& x3)
+hlslpp_inline void _hlslpp_load4x4_ps(n128& dst0, n128& dst1, n128& dst2, n128& dst3, const float* src)
 {
-	x0 = __vor(__lvlx(p + 0, 0), __lvrx(p + 0, 16));
-	x1 = __vor(__lvlx(p + 4, 0), __lvrx(p + 4, 16));
-	x2 = __vor(__lvlx(p + 8, 0), __lvrx(p + 8, 16));
-	x3 = __vor(__lvlx(p + 12, 0), __lvrx(p + 12, 16));
+	dst0 = __vor(__lvlx(src + 0, 0), __lvrx(src + 0, 16));
+	dst1 = __vor(__lvlx(src + 4, 0), __lvrx(src + 4, 16));
+	dst2 = __vor(__lvlx(src + 8, 0), __lvrx(src + 8, 16));
+	dst3 = __vor(__lvlx(src + 12, 0), __lvrx(src + 12, 16));
 }
 
 //--------
@@ -356,7 +371,7 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 }
 
 #define _hlslpp_cmpeq_epi32(x, y)				__vcmpequw((x), (y))
-#define _hlslpp_cmpneq_epi32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask._f32))
+#define _hlslpp_cmpneq_epi32(x, y)				__vxor(__vcmpequw((x), (y)), f4_fff)
 
 #define _hlslpp_cmpgt_epi32(x, y)				__vcmpgtsw((x), (y))
 #define _hlslpp_cmpge_epi32(x, y)				__vor(__vcmpgtsw((x), (y)), __vcmpequw((x), (y)))
@@ -380,7 +395,7 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 #define _hlslpp_or_si128(x, y)					__vor((x), (y))
 #define _hlslpp_xor_si128(x, y)					__vxor((x), (y))
 
-#define _hlslpp_perm_epi32(x, X, Y, Z, W)		__vpermwi((x), HLSLPP_XBOX360_PERMWI_MASK(X, Y, Z, W))
+#define _hlslpp_perm_epi32(x, X, Y, Z, W)		hlslpp::permute<X, Y, Z, W>((x))
 #define _hlslpp_shuffle_epi32(x, y, X, Y, A, B)	__vperm((x), (y), __vperm_mask<X, Y, 4 + A, 4 + B>())
 
 // There are no intrinsics to reinterpret cast like these do as integer and float are all in the same __vector4 structure
@@ -389,9 +404,6 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 
 #define _hlslpp_cvttps_epi32(x)					__vcfpsxws((x), 0)
 #define _hlslpp_cvtepi32_ps(x)					__vcsxwfp((x), 0)
-
-// Extracts first component of vector to int32_t
-#define _hlslpp_cvtsi128_si32(x)				x.vector4_u32[0]
 
 #define _hlslpp_slli_epi32(x, y)				__vslw((x), __vset1(y))
 #define _hlslpp_srli_epi32(x, y)				__vsrw((x), __vset1(y))
@@ -413,45 +425,45 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 // Float Store/Load
 //-----------------
 
-hlslpp_inline void _hlslpp_store1_epi32(int32_t* p, n128i x)
+hlslpp_inline void _hlslpp_store1_epi32(int32_t* dst, n128i src)
 {
-	_hlslpp_store1_ps((float*)p, x);
+	_hlslpp_store1_ps((float*)dst, src);
 }
 
-hlslpp_inline void _hlslpp_store2_epi32(int32_t* p, n128i x)
+hlslpp_inline void _hlslpp_store2_epi32(int32_t* dst, n128i src)
 {
-	_hlslpp_store2_ps((float*)p, x);
+	_hlslpp_store2_ps((float*)dst, src);
 }
 
-hlslpp_inline void _hlslpp_store3_epi32(int32_t* p, n128i x)
+hlslpp_inline void _hlslpp_store3_epi32(int32_t* dst, n128i src)
 {
-	_hlslpp_store3_ps((float*)p, x);
+	_hlslpp_store3_ps((float*)dst, src);
 }
 
-hlslpp_inline void _hlslpp_store4_epi32(int32_t* p, n128i x)
+hlslpp_inline void _hlslpp_store4_epi32(int32_t* dst, n128i src)
 {
-	_hlslpp_store4_ps((float*)p, x);
+	_hlslpp_store4_ps((float*)dst, src);
 }
 
-hlslpp_inline void _hlslpp_load1_epi32(int32_t* p, n128i& x)
+hlslpp_inline void _hlslpp_load1_epi32(n128i& dst, const int32_t* src)
 {
-	_hlslpp_load1_ps((float*)p, x);
+	_hlslpp_load1_ps(dst, (const float*)src);
 }
 
 // http://fastcpp.blogspot.com/2011/03/loading-3d-vector-into-sse-register.html
-hlslpp_inline void _hlslpp_load2_epi32(int32_t* p, n128i& x)
+hlslpp_inline void _hlslpp_load2_epi32(n128i& dst, const int32_t* src)
 {
-	_hlslpp_load2_ps((float*)p, x);
+	_hlslpp_load2_ps(dst, (const float*)src);
 }
 
-hlslpp_inline void _hlslpp_load3_epi32(int32_t* p, n128i& x)
+hlslpp_inline void _hlslpp_load3_epi32(n128i& dst, const int32_t* src)
 {
-	_hlslpp_load3_ps((float*)p, x);
+	_hlslpp_load3_ps(dst, (const float*)src);
 }
 
-hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
+hlslpp_inline void _hlslpp_load4_epi32(n128i& dst, const int32_t* src)
 {
-	_hlslpp_load4_ps((float*)p, x);
+	_hlslpp_load4_ps(dst, (const float*)src);
 }
 
 //-----------------
@@ -474,7 +486,7 @@ hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
 #define _hlslpp_subm_epu32(x, y, z)				__vcfpuxws(__vnmsubfp(__vcuxwfp((z), 0), __vcuxwfp((x), 0), __vcuxwfp((y), 0)))
 
 #define _hlslpp_cmpeq_epu32(x, y)				__vcmpequw((x), (y))
-#define _hlslpp_cmpneq_epu32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask._f32))
+#define _hlslpp_cmpneq_epu32(x, y)				__vxor(__vcmpequw((x), (y)), f4_fff)
 
 #define _hlslpp_cmpgt_epu32(x, y)				__vcmpgtuw((x), (y))
 #define _hlslpp_cmpge_epu32(x, y)				__vor(__vcmpgtuw((x), (y)), __vcmpequw((x), (y)))
@@ -491,7 +503,7 @@ hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
 #define _hlslpp_clamp_epu32(x, minx, maxx)		__vmaxuw(__vminuw((x), (maxx)), (minx))
 #define _hlslpp_sat_epu32(x)					__vmaxuw(__vminuw((x), i4_1), i4_0)
 
-#define _hlslpp_perm_epu32(x, X, Y, Z, W)		__vpermwi((x), HLSLPP_XBOX360_PERMWI_MASK(X, Y, Z, W))
+#define _hlslpp_perm_epu32(x, X, Y, Z, W)		hlslpp::permute<X, Y, Z, W>((x))
 #define _hlslpp_shuffle_epu32(x, y, X, Y, A, B)	__vperm((x), (y), __vperm_mask<X, Y, 4 + A, 4 + B>())
 
 #define _hlslpp_cvttps_epu32(x)					__vcfpuxws((x), 0)
@@ -517,14 +529,14 @@ hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
 // Unsigned Integer Store/Load
 //----------------------------
 
-hlslpp_inline void _hlslpp_store1_epu32(uint32_t* p, n128u x) { _hlslpp_store1_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_store2_epu32(uint32_t* p, n128u x) { _hlslpp_store2_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_store3_epu32(uint32_t* p, n128u x) { _hlslpp_store3_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_store4_epu32(uint32_t* p, n128u x) { _hlslpp_store4_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_load1_epu32(uint32_t* p, n128u& x) { _hlslpp_load1_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_load2_epu32(uint32_t* p, n128u& x) { _hlslpp_load2_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_load3_epu32(uint32_t* p, n128u& x) { _hlslpp_load3_epi32((int32_t*)p, x); }
-hlslpp_inline void _hlslpp_load4_epu32(uint32_t* p, n128u& x) { _hlslpp_load4_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_store1_epu32(uint32_t* dst, n128u src) { _hlslpp_store1_epi32((int32_t*)dst, src); }
+hlslpp_inline void _hlslpp_store2_epu32(uint32_t* dst, n128u src) { _hlslpp_store2_epi32((int32_t*)dst, src); }
+hlslpp_inline void _hlslpp_store3_epu32(uint32_t* dst, n128u src) { _hlslpp_store3_epi32((int32_t*)dst, src); }
+hlslpp_inline void _hlslpp_store4_epu32(uint32_t* dst, n128u src) { _hlslpp_store4_epi32((int32_t*)dst, src); }
+hlslpp_inline void _hlslpp_load1_epu32(n128u& dst, const uint32_t* src) { _hlslpp_load1_epi32(dst, (int32_t*)src); }
+hlslpp_inline void _hlslpp_load2_epu32(n128u& dst, const uint32_t* src) { _hlslpp_load2_epi32(dst, (int32_t*)src); }
+hlslpp_inline void _hlslpp_load3_epu32(n128u& dst, const uint32_t* src) { _hlslpp_load3_epi32(dst, (int32_t*)src); }
+hlslpp_inline void _hlslpp_load4_epu32(n128u& dst, const uint32_t* src) { _hlslpp_load4_epi32(dst, (int32_t*)src); }
 
 #if !defined(XM_CRMASK_CR6TRUE)
 #define XM_CRMASK_CR6TRUE  (1 << 7)

@@ -1427,7 +1427,7 @@ HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 	template<int A>
 	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (const dswizzle1<A>& s)
 	{
-		n128d t = _hlslpp_shuffle_pd(s.vec[A / 2], s.vec[A / 2], HLSLPP_SHUFFLE_MASK_PD(A % 2, A % 2));
+		n128d t = _hlslpp_shuffle_pd(s.vec[A / 2], s.vec[A / 2], A % 2, A % 2);
 		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], t, HLSLPP_COMPONENT_X(X % 2));
 		return *this;
 	}
@@ -1435,7 +1435,7 @@ HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 	template<int X>
 	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (const dswizzle1<X>& s)
 	{
-		n128d t = _hlslpp_shuffle_pd(s.vec[X / 2], s.vec[X / 2], HLSLPP_SHUFFLE_MASK_PD(X % 2, X % 2));
+		n128d t = _hlslpp_shuffle_pd(s.vec[X / 2], s.vec[X / 2], X % 2, X % 2);
 		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], t, HLSLPP_COMPONENT_X(X % 2));
 		return *this;
 	}
@@ -1471,8 +1471,7 @@ HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 
 		hlslpp_constexpr_if((X < 2 && Y < 2) || (X >= 2 && Y >= 2))
 		{
-			vec[(X < 2 && Y < 2) ? 0 : 1] = _hlslpp_perm_pd(f.vec, HLSLPP_SHUFFLE_MASK_PD((X % 2) == 0 ? 0 : 1, (Y % 2) == 0 ? 0 : 1));
-			//vec[(X < 2 && Y < 2) ? 0 : 1] = swizzle<0, 1, X, Y>(f.vec);
+			vec[(X < 2 && Y < 2) ? 0 : 1] = _hlslpp_perm_pd(f.vec, X % 2, Y % 2);
 		}
 		else
 		{

@@ -1910,7 +1910,7 @@ hlslpp_module_export namespace hlslpp
 #elif defined(HLSLPP_SIMD_REGISTER_256)
 
 		n256 o_vec0, o_vec1;
-		_hlslpp256_transpose4x4_ps(m.vec0, m.vec1, o_vec0, o_vec1);
+		_hlslpp256_transpose4x4_ps(o_vec0, o_vec1, m.vec0, m.vec1);
 		return float4x4(o_vec0, o_vec1);
 
 #else
@@ -2090,7 +2090,7 @@ hlslpp_module_export namespace hlslpp
 		return float2x2(_hlslpp_inv_2x2_ps(m.vec));
 	}
 
-	hlslpp_inline  float3x3 inverse(const float3x3& m)
+	hlslpp_inline float3x3 inverse(const float3x3& m)
 	{
 		n128 vec0, vec1, vec2;
 		_hlslpp_inv_3x3_ps(m.vec0, m.vec1, m.vec2, vec0, vec1, vec2);

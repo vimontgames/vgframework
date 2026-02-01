@@ -21,7 +21,7 @@ hlslpp_module_export namespace hlslpp
 		template<int E, int A>
 		static hlslpp_inline n128d swizzle(n128d v)
 		{
-			return _hlslpp_perm_pd(v, (((IdentityMask2 >> E) & 1) << A) | (IdentityMask2 & ~((1 << A))));
+			return _hlslpp_perm_pd(v, E, A);
 		}
 
 		template<int E, int A>
@@ -58,7 +58,7 @@ hlslpp_module_export namespace hlslpp
 		{
 			// Select which vector to read from and how to build the mask based on the output
 			#define HLSLPP_SELECT(Dst) ((Dst % 2) == 0 ? (SrcA < 2 ? vec0 : vec1) : (SrcB < 2 ? vec0 : vec1))
-			n128d result = _hlslpp_shuffle_pd(HLSLPP_SELECT(DstA), HLSLPP_SELECT(DstB), HLSLPP_SHUFFLE_MASK_PD((DstA % 2) == 0 ? (SrcA % 2) : (SrcB % 2), (DstB % 2) == 0 ? (SrcA % 2) : (SrcB % 2)));
+			n128d result = _hlslpp_shuffle_pd(HLSLPP_SELECT(DstA), HLSLPP_SELECT(DstB), (DstA % 2) == 0 ? (SrcA % 2) : (SrcB % 2), (DstB % 2) == 0 ? (SrcA % 2) : (SrcB % 2));
 			#undef HLSLPP_SELECT
 			return result;
 		}
@@ -68,7 +68,7 @@ hlslpp_module_export namespace hlslpp
 		{
 			// Select which vector to read from and how to build the mask based on the output
 			#define HLSLPP_SELECT(Dst) (Dst % 2) == 0 ? vec[(SrcA < 2) ? 0 : 1] : vec[(SrcB < 2) ? 0 : 1]
-			n128d result = _hlslpp_shuffle_pd(HLSLPP_SELECT(DstA), HLSLPP_SELECT(DstB), HLSLPP_SHUFFLE_MASK_PD((DstA % 2) == 0 ? (SrcA % 2) : (SrcB % 2), (DstB % 2) == 0 ? (SrcA % 2) : (SrcB % 2)));
+			n128d result = _hlslpp_shuffle_pd(HLSLPP_SELECT(DstA), HLSLPP_SELECT(DstB), (DstA % 2) == 0 ? (SrcA % 2) : (SrcB % 2), (DstB % 2) == 0 ? (SrcA % 2) : (SrcB % 2));
 			#undef HLSLPP_SELECT
 			return result;
 		}
@@ -158,7 +158,7 @@ hlslpp_module_export namespace hlslpp
 		template<int SrcA, int SrcB>
 		static hlslpp_inline n128d swizzle(n128d vec0, n128d vec1)
 		{
-			return _hlslpp_shuffle_pd(SrcA < 2 ? vec0 : vec1, SrcB < 2 ? vec0 : vec1, HLSLPP_SHUFFLE_MASK_PD(SrcA % 2, SrcB % 2));
+			return _hlslpp_shuffle_pd(SrcA < 2 ? vec0 : vec1, SrcB < 2 ? vec0 : vec1, SrcA % 2, SrcB % 2);
 		}
 
 		// Swizzles SrcA into 0, SrcB into 1 and SrcC into 2
@@ -228,7 +228,7 @@ hlslpp_module_export namespace hlslpp
 			#define HLSLPP_SELECT(x) (DstA == x ? SrcA : (DstB == x ? SrcB : (DstC == x ? SrcC : SrcD)))
 
 			#define hlslpp_dswizzle4_swizzle2(SrcA, SrcB, vec0, vec1) \
-				_hlslpp_shuffle_pd((SrcA) < 2 ? vec0 : vec1, (SrcB) < 2 ? vec0 : vec1, HLSLPP_SHUFFLE_MASK_PD((SrcA) % 2, (SrcB) % 2))
+				_hlslpp_shuffle_pd((SrcA) < 2 ? vec0 : vec1, (SrcB) < 2 ? vec0 : vec1, (SrcA) % 2, (SrcB) % 2)
 
 			ovec0 = hlslpp_dswizzle4_swizzle2(HLSLPP_SELECT(0), HLSLPP_SELECT(1), vec0, vec1);
 			ovec1 = hlslpp_dswizzle4_swizzle2(HLSLPP_SELECT(2), HLSLPP_SELECT(3), vec0, vec1);
@@ -566,59 +566,59 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	hlslpp_inline void store(const double1& v, double* f)
+	hlslpp_inline void store(double* dst, const double1& src)
 	{
-		_hlslpp_store1_pd(f, v.vec);
+		_hlslpp_store1_pd(dst, src.vec);
 	}
 
-	hlslpp_inline void store(const double2& v, double* f)
+	hlslpp_inline void store(double* dst, const double2& sc)
 	{
-		_hlslpp_store2_pd(f, v.vec);
+		_hlslpp_store2_pd(dst, sc.vec);
 	}
 
-	hlslpp_inline void store(const double3& v, double* f)
+	hlslpp_inline void store(double* dst, const double3& src)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_store3_pd(f, v.vec);
+		_hlslpp256_store3_pd(dst, src.vec);
 #else
-		_hlslpp_store3_pd(f, v.vec0, v.vec1);
+		_hlslpp_store3_pd(dst, src.vec0, src.vec1);
 #endif
 	}
 
-	hlslpp_inline void store(const double4& v, double* f)
+	hlslpp_inline void store(double* dst, const double4& src)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_store4_pd(f, v.vec);
+		_hlslpp256_store4_pd(dst, src.vec);
 #else
-		_hlslpp_store4_pd(f, v.vec0, v.vec1);
+		_hlslpp_store4_pd(dst, src.vec0, src.vec1);
 #endif
 	}
 
-	hlslpp_inline void load(double1& v, double* f)
+	hlslpp_inline void load(double1& dst, const double* src)
 	{
-		_hlslpp_load1_pd(f, v.vec);
+		_hlslpp_load1_pd(dst.vec, src);
 	}
 
-	hlslpp_inline void load(double2& v, double* f)
+	hlslpp_inline void load(double2& dst, const double* src)
 	{
-		_hlslpp_load2_pd(f, v.vec);
+		_hlslpp_load2_pd(dst.vec, src);
 	}
 
-	hlslpp_inline void load(double3& v, double* f)
+	hlslpp_inline void load(double3& dst, const double* src)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_load3_pd(f, v.vec);
+		_hlslpp256_load3_pd(dst.vec, src);
 #else
-		_hlslpp_load3_pd(f, v.vec0, v.vec1);
+		_hlslpp_load3_pd(dst.vec0, dst.vec1, src);
 #endif
 	}
 
-	hlslpp_inline void load(double4& v, double* f)
+	hlslpp_inline void load(double4& dst, const double* src)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_load4_pd(f, v.vec);
+		_hlslpp256_load4_pd(dst.vec, src);
 #else
-		_hlslpp_load4_pd(f, v.vec0, v.vec1);
+		_hlslpp_load4_pd(dst.vec0, dst.vec1, src);
 #endif
 	}
 
@@ -626,22 +626,22 @@ hlslpp_module_export namespace hlslpp
 	{
 		struct double4
 		{
-			double4() = default;
-			double4(const hlslpp::double4& f) { hlslpp::store(f, &x); }
+			double4() hlslpp_constructor_default;
+			double4(const hlslpp::double4& f) { hlslpp::store(&x, f); }
 			double x, y, z, w;
 		};
 
 		struct double3
 		{
-			double3() = default;
-			double3(const hlslpp::double3& f) { hlslpp::store(f, &x); }
+			double3() hlslpp_constructor_default;
+			double3(const hlslpp::double3& f) { hlslpp::store(&x, f); }
 			double x, y, z;
 		};
 
 		struct double2
 		{
-			double2() = default;
-			double2(const hlslpp::double2& f) { hlslpp::store(f, &x); }
+			double2() hlslpp_constructor_default;
+			double2(const hlslpp::double2& f) { hlslpp::store(&x, f); }
 			double x, y;
 		};
 
