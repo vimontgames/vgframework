@@ -177,6 +177,20 @@ namespace vg::core
     float4 smoothdamp(float4 _currentValue, float4 _targetValue, float4 & _currentVelocity, float _duration, float _dt);
 
     //--------------------------------------------------------------------------------------
+    inline float getDeltaAngleInDegrees(float _current, float _target)
+    {
+        float delta = fmodf(_target - _current, 360.0f);
+
+        if (delta > 180.0f)
+            delta -= 360.0f;
+
+        if (delta < -180.0f)
+            delta += 360.0f;
+
+        return delta;
+    }
+
+    //--------------------------------------------------------------------------------------
     inline core::u32 ctz(core::u32 value)
     {
         #ifdef _MSC_VER

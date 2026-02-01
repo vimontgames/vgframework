@@ -214,7 +214,11 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     if (m_moveState != MoveState::Hurt)
                         charaController->SetVelocity(updatedVelocity);
 
-                    m_currentRotation = smoothdamp(m_currentRotation, m_targetRotation, m_rotationSmoothdamp, 0.02f, _context.m_dt);
+                    float deltaRot = getDeltaAngleInDegrees(m_currentRotation, m_targetRotation);
+
+                    float smoothedDelta = smoothdamp(0.0f, deltaRot, m_rotationSmoothdamp, 0.02f, _context.m_dt);
+
+                    m_currentRotation += smoothedDelta;
 
                     charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
                 }
