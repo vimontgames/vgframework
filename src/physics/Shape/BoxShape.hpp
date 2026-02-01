@@ -76,6 +76,6 @@ namespace vg::physics
     {
         float4x4 matrix = mul(m_transform, clearScale(_matrix));
         const float3 halfSize = m_size * 0.5f;
-        getDebugDraw()->AddWireframeCube(_world, -halfSize, halfSize, m_color, matrix);
+        getDebugDraw()->AddWireframeCube(_world, halfSize * (-1.0f), halfSize, m_color, matrix); // Using 'halfSize * (-1.0f)' instead of '-halfSize' because of a bug with CLang and hlsl++
     }
 }
