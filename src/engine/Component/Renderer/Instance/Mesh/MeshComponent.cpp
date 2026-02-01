@@ -264,11 +264,15 @@ namespace vg::engine
 
             if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
             {
-                if (false == m_registered)
-                {
+                // Mesh Instance may have been previously registered as non-skinned but is now skinned after loading. (Is the opposite even possible?)
+                if (m_registered && m_meshInstance->IsSkinned())
+                    unregisterGraphicInstance();
+
+                if (!m_registered)
                     registerGraphicInstance();
-                    m_meshInstance->SetName(getGameObject()->GetName().c_str());;
-                }
+
+                // Update mesh instance name
+                m_meshInstance->SetName(getGameObject()->GetName().c_str());;
             }
 
             // In case Animations were loaded before Mesh we need to rebind them

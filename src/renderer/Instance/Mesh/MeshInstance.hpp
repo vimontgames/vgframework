@@ -288,6 +288,7 @@ namespace vg::renderer
 
             if (isSkinned())
             {
+                VG_ASSERT(getInstanceVertexBuffer());
                 vbHandle = getInstanceVertexBuffer()->getBufferHandle();
                 vbOffset = getInstanceVertexBufferOffset();
             }
@@ -380,6 +381,7 @@ namespace vg::renderer
 
             if (IsSkinned())
             {
+                VG_ASSERT(getInstanceVertexBuffer());
                 _vb = getInstanceVertexBuffer()->getBufferHandle();
                 _offset = getInstanceVertexBufferOffset();
             }
