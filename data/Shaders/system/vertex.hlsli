@@ -258,6 +258,7 @@ struct Vertex
         
         if (hasUV1(_format))
         {
+            // UV1 is not working only in RT and I don't know why
             uv[1].xy    = _buffer.Load<float2>(offset);
             offset += 2 * sizeof(float);
         }

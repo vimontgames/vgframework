@@ -72,6 +72,7 @@ struct MaterialSample
     CullMode cullMode;
     uint matID;    
     float2 uv0;
+    float2 uv1;
     float4 albedo;
 };
 
@@ -94,6 +95,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
 
     float3 worldPosition = worldRayOrigin + (rayT-rayTMin) * worldRayDirection;
     float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
+    float2 uv1 = vert.uv[1];
                     
     float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), _flags, _mode);
     
@@ -101,6 +103,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     mat.surfaceType = materialData.getSurfaceType();
     mat.cullMode = materialData.getCullMode();
     mat.uv0 = uv0;
+    mat.uv1 = uv1;
     
     //float3 worldNormal = vert.getNrm(); // TODO: matrix should be part of the instance data?
     
@@ -123,7 +126,32 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
             break;
                 
         case DisplayMode::RayTracing_Geometry_UV0:
-            mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
+            mat.albedo.rgb = SRGBToLinear(float3(frac(mat.uv0.xy), any(saturate(mat.uv0) != mat.uv0) ? 1 : 0)); 
+            mat.albedo.a = 1;
+            break;
+    
+        case DisplayMode::RayTracing_Geometry_UV1: 
+            mat.albedo.rgb = SRGBToLinear(float3(frac(mat.uv1.xy), any(saturate(mat.uv1) != mat.uv1) ? 1 : 0)); 
+            mat.albedo.a = 1;
+            break;
+    
+        case DisplayMode::RayTracing_Geometry_VertexColor: 
+            mat.albedo.rgb = SRGBToLinear(vert.getColor().rgb);
+            mat.albedo.a = 1;
+            break;
+    
+        case DisplayMode::RayTracing_Geometry_VertexNormal:
+            mat.albedo.rgb = SRGBToLinear(vert.nrm.xyz * 0.5f + 0.5f);
+            mat.albedo.a = 1;
+            break;
+    
+        case DisplayMode::RayTracing_Geometry_VertexTangent:
+            mat.albedo.rgb = SRGBToLinear(vert.tan.xyz * 0.5f + 0.5f);
+            mat.albedo.a = 1;
+            break;
+    
+        case DisplayMode::RayTracing_Geometry_VertexBinormal:
+            mat.albedo.rgb = SRGBToLinear(vert.bin.xyz * 0.5f + 0.5f);
             mat.albedo.a = 1;
             break;
         
@@ -189,6 +217,11 @@ bool IsRaytracingDebugDisplayMode(DisplayMode mode)
         case DisplayMode::RayTracing_Instance_WorldPosition:
         case DisplayMode::RayTracing_Instance_MaterialID:
         case DisplayMode::RayTracing_Geometry_UV0: 
+        case DisplayMode::RayTracing_Geometry_UV1: 
+        case DisplayMode::RayTracing_Geometry_VertexColor: 
+        case DisplayMode::RayTracing_Geometry_VertexNormal:
+        case DisplayMode::RayTracing_Geometry_VertexTangent:
+        case DisplayMode::RayTracing_Geometry_VertexBinormal:
         case DisplayMode::RayTracing_Material_SurfaceType:
         case DisplayMode::RayTracing_Material_Albedo: 
             return true;
