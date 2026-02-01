@@ -3660,7 +3660,7 @@
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Grass"/>
                                         <Property type="Uint32" name="m_uid" value="914119281"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -23205,7 +23205,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Barriers"/>
                                 <Property type="Uint32" name="m_uid" value="2443821444"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -23628,7 +23628,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="0.00048823751" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048823751" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="-1.4666907" Ty="-1.4489822" Tz="0.5" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="0.00048823751" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048823751" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="-1.4666905" Ty="-1.4489822" Tz="0.5" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -23636,38 +23636,6 @@
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Barrier_03"/>
                                                         <Property type="Uint32" name="m_uid" value="1434006557"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/Barrier.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="String" name="m_name" value="Barrier_07"/>
-                                                <Property type="Uint32" name="m_uid" value="785619712"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.55848026" Ty="1.9096375" Tz="0.5" Tw="1"/>
-                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children">
-                                                    <Object class="GameObject">
-                                                        <Property type="String" name="m_name" value="Root"/>
-                                                        <Property type="Uint32" name="m_uid" value="2062473471"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_components"/>
-                                                        <Property type="ObjectPtrVector" name="m_children"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="Resource" name="m_prefabResource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="String" name="m_name" value="Barrier_07"/>
-                                                        <Property type="Uint32" name="m_uid" value="348058628"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/Barrier.prefab"/>
                                                     </Object>
@@ -23846,26 +23814,6 @@
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                             </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="String" name="m_name" value="Barrier_07"/>
-                                                <Property type="Uint32" name="m_uid" value="1227725786"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.55848026" Ty="1.9096375" Tz="0.5" Tw="1"/>
-                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children"/>
-                                                <Property type="Resource" name="m_prefabResource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="String" name="m_name" value="Barrier_07"/>
-                                                        <Property type="Uint32" name="m_uid" value="2205067845"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/Barrier.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                            </Object>
                                         </Property>
                                     </Object>
                                     <Object class="GameObject">
@@ -24032,26 +23980,6 @@
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Barrier_03"/>
                                                         <Property type="Uint32" name="m_uid" value="2128506149"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/Barrier.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="String" name="m_name" value="Barrier_07"/>
-                                                <Property type="Uint32" name="m_uid" value="3233873332"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.55848026" Ty="1.9096375" Tz="0.5" Tw="1"/>
-                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children"/>
-                                                <Property type="Resource" name="m_prefabResource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="String" name="m_name" value="Barrier_07"/>
-                                                        <Property type="Uint32" name="m_uid" value="1108812422"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Road/Barrier.prefab"/>
                                                     </Object>
