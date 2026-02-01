@@ -17,6 +17,8 @@
 
 namespace vg::renderer
 {
+    VG_REGISTER_ABSTRACT_CLASS(GraphicInstance);
+
     //--------------------------------------------------------------------------------------
     bool GraphicInstance::registerProperties(core::IClassDesc & _desc)
     {

@@ -7,7 +7,7 @@ namespace vg::core
     template <class T> class ResourceList : public IResourceList
     {
     public:
-        VG_CLASS_DECL(ResourceList, IResourceList);
+        VG_CLASS_DECL_TEMPLATE(ResourceList, IResourceList);
 
         //--------------------------------------------------------------------------------------
         ResourceList(const core::string & _name, core::IObject * _parent) :
@@ -47,7 +47,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool MoveUp(size_t _index)
+        bool MoveUp(size_t _index) override
         {
             if (_index > 0 && _index < m_resources.size())
             {
@@ -58,7 +58,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool MoveDown(size_t _index)
+        bool MoveDown(size_t _index) override
         {
             if (_index + 1 < m_resources.size())
             {

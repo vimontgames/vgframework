@@ -2,6 +2,8 @@
 
 namespace vg::core
 {
+    VG_REGISTER_CLASS(ResourceMeta, "Resource Metadata");
+
     //--------------------------------------------------------------------------------------
     bool ResourceMeta::registerProperties(IClassDesc & _desc)
     {

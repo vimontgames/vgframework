@@ -16,11 +16,7 @@ namespace vg::core
     class IGameObject : public Instance
     {
     public:
-        IGameObject(const core::string & _name, IObject * _parent) :
-            Instance(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IGameObject, Instance);
 
         virtual void                            AddChild                        (IGameObject * _gameObject, core::uint _index = -1) = 0;
         virtual bool                            RemoveChild                     (IGameObject * _gameObject, bool _recomputeFlags = true) = 0;

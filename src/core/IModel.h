@@ -7,10 +7,6 @@ namespace vg::core
     class IModel : public Object
     {
     public:
-        IModel(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IModel, Object);
     };
 }

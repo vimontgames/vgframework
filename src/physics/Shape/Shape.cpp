@@ -64,6 +64,9 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    VG_REGISTER_ABSTRACT_CLASS(Shape);
+
+    //--------------------------------------------------------------------------------------
     Shape::Shape(const core::string & _name, core::IObject * _parent) :
         IShape(_name, _parent)
     {

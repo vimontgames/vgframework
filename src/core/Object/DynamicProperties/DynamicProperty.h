@@ -9,7 +9,7 @@ namespace vg::core
     class DynamicProperty : public IDynamicProperty
     {
     public:
-        VG_CLASS_DECL(DynamicProperty, IDynamicProperty);
+        VG_CLASS_DECL(DynamicProperty, IDynamicProperty); // Abstract with custom CTOR
 
         DynamicProperty(const core::string & _name = "", core::IObject * _parent = nullptr);
         ~DynamicProperty();
@@ -41,6 +41,9 @@ namespace vg::core
     template <typename T> class DynamicPropertyT : public DynamicProperty
     {
     public:
+        VG_CLASS_SUPER_CLASSNAME(DynamicPropertyT, DynamicProperty);
+        VG_CLASS_PROPERTIES_IMPL(DynamicPropertyT, DynamicProperty);
+
         DynamicPropertyT(const core::string & _name = "", core::IObject * _parent = nullptr)
         {
             SetName(_name);
@@ -56,7 +59,11 @@ namespace vg::core
             m_value = _value;
         }
 
-        virtual T * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const = 0;
+        virtual T * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
+        {
+            VG_ASSERT_NOT_IMPLEMENTED();
+            return nullptr;
+        }
 
         bool ApplyOverride(IObject * _object, const IProperty * _prop) final override
         {

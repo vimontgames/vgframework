@@ -49,6 +49,8 @@
 #include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
+#include "RegisterInterfaces.hpp"
+
 using namespace vg::core;
 using namespace vg::editor;
 using namespace ImGui;
@@ -116,17 +118,18 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    // Register classes to auto-register from the "Editor" module
+    //--------------------------------------------------------------------------------------
     bool Editor::RegisterClasses()
     {
         core::IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register from the "Editor" module
-        AutoRegisterClassInfo::registerClasses(*factory);
+        bool result = AutoRegisterClassInfo::registerClasses(*factory);
 
         if (core::IClassDesc * desc = factory->registerPlugin(Editor, "Editor"))
-            registerProperties(*desc);
+            result |= registerProperties(*desc);
 
-        return true;
+        return result;
     }
 
     //--------------------------------------------------------------------------------------

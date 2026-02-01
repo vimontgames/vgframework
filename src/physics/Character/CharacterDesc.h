@@ -7,7 +7,7 @@ namespace vg::physics
     class CharacterDesc : public ICharacterDesc
     {
     public:
-        VG_CLASS_DECL_PASSTHROUGH(CharacterDesc, ICharacterDesc);
+        VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(CharacterDesc, ICharacterDesc);
 
         virtual CharacterType GetCharacterType() const = 0;
 

@@ -33,11 +33,7 @@ namespace vg::core
     class IWorld : public Object
     {
     public:
-        IWorld(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IWorld, Object);
 
         virtual ~IWorld() {}
 

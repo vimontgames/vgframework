@@ -36,6 +36,7 @@ namespace vg::core
     class IClassDesc
     {
     public:
+
         using Func              = std::function<IObject*(const string &, class IObject *)>;
         using SingletonFunc     = std::function<IObject*()>;
         using ResizeVectorFunc  = std::function<void * (core::IObject *, core::uint, core::uint)>;

@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyU64 : public DynamicPropertyT<u64>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyU64, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyU64, DynamicPropertyT);
 
         DynamicPropertyU64(const core::string & _name = "", core::IObject * _parent = nullptr);
 

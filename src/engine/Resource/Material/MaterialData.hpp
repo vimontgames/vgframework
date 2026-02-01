@@ -9,6 +9,8 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_REGISTER_ABSTRACT_CLASS(MaterialData);
+
     //--------------------------------------------------------------------------------------
     bool MaterialData::registerProperties(IClassDesc & _desc)
     {

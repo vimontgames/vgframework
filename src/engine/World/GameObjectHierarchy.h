@@ -18,7 +18,7 @@ namespace vg::engine
     class GameObjectHierarchy : public core::IBaseScene
     {
     public:
-        VG_CLASS_DECL(GameObjectHierarchy, core::IBaseScene);
+        VG_CLASS_DECL(GameObjectHierarchy, core::IBaseScene); // abstract with custom CTOR
 
                                                 GameObjectHierarchy      (const core::string & _name, core::IObject * _parent);
                                                 ~GameObjectHierarchy     ();

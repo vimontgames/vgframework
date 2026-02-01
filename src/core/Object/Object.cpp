@@ -5,6 +5,7 @@
 #include "core/File/File.h"
 #include "core/Resource/Resource.h"
 #include "core/IGameObject.h"
+#include "core/Object/ObjectList.h"
 
 #if !VG_ENABLE_INLINE
 #include "Object.inl"
@@ -17,6 +18,7 @@
 
 namespace vg::core
 {
+    VG_REGISTER_TEMPLATE_CLASS(ObjectList, Object, "Object List");
     VG_REGISTER_CLASS(Object, "Object");
 
     //--------------------------------------------------------------------------------------

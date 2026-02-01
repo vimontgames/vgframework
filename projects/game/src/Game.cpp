@@ -57,17 +57,18 @@ bool Game::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
+// Register classes to auto-register from the "Game" module
+//--------------------------------------------------------------------------------------
 bool Game::RegisterClasses()
 {
     IFactory * factory = Kernel::getFactory();
 
-    // Register classes to auto-register from the "Game" module
-    AutoRegisterClassInfo::registerClasses(*factory);
+    bool result = AutoRegisterClassInfo::registerClasses(*factory);
 
     if (IClassDesc * desc = factory->registerPlugin(Game, "Game"))
-        registerProperties(*desc);
+        result |= registerProperties(*desc);
 
-    return true;
+    return result;
 }
 
 //--------------------------------------------------------------------------------------

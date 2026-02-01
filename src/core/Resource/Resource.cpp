@@ -4,11 +4,13 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
 #include "core/IResourceManager.h"
+#include "core/Resource/ResourceList.h"
 
 #include "ResourceMeta.hpp"
 
 namespace vg::core
 {
+    VG_REGISTER_TEMPLATE_CLASS(ResourceList, Resource, "Resource List Template");
     VG_REGISTER_CLASS(Resource, "Resource");
 
     //--------------------------------------------------------------------------------------

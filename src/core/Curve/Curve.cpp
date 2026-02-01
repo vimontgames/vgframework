@@ -11,6 +11,8 @@
 
 namespace vg::core
 {
+    VG_REGISTER_ABSTRACT_CLASS(Curve);
+
     //--------------------------------------------------------------------------------------
     bool IsCurveTypeHidden(const IObject * _object, const IProperty * _prop, uint _index)
     {

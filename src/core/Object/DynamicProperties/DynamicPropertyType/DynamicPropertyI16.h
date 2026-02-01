@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyI16 : public DynamicPropertyT<i16>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyI16, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyI16, DynamicPropertyT);
 
         DynamicPropertyI16(const core::string & _name = "", core::IObject * _parent = nullptr);
 

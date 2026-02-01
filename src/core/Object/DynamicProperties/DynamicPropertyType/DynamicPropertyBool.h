@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyBool : public DynamicPropertyT<bool>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyBool, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyBool, DynamicPropertyT);
 
         DynamicPropertyBool(const core::string & _name = "", core::IObject * _parent = nullptr);
 

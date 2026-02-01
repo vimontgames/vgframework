@@ -642,7 +642,8 @@ namespace vg::core
                 if (parentCRC != baseObjectInterfaceCRC)
                 {
                     classDesc = GetClassDescriptorFromCRC(parentCRC, false);
-                    VG_ASSERT(classDesc, "Parent class of class \"%s\" is not registered", childClassDesc->GetClassName());
+                    if (!classDesc)
+                    VG_ERROR("Parent class \"%s\" of class \"%s\" is not registered", childClassDesc->GetParentClassName(), childClassDesc->GetClassName());
                 }
                 else
                 {

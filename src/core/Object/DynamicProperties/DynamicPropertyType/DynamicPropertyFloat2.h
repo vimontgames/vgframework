@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyFloat2 : public DynamicPropertyT<core::float2>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyFloat2, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyFloat2, DynamicPropertyT);
 
         DynamicPropertyFloat2(const core::string & _name = "", core::IObject * _parent = nullptr);
 

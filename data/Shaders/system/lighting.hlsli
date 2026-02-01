@@ -195,9 +195,6 @@ float4 getRaytracedColor(RaytracingAccelerationStructure _tlas, float3 _origin, 
         
 		    // We do not need this case because we initialize the values by default to be as if the ray missed
             case COMMITTED_NOTHING:
-		    {
-                color.rgb = float3(1, 0, 1);
-            }
             break;
         }
     }

@@ -26,7 +26,7 @@ namespace vg::engine
     class VehicleSlotList : public core::ObjectList<VehicleSlot>
     {
     public:
-        VG_CLASS_DECL_PASSTHROUGH(VehicleSlotList, ObjectList<VehicleSlot>);
+        VG_CLASS_DECL_PASSTHROUGH(VehicleSlotList, ObjectList);
     };
 
     //--------------------------------------------------------------------------------------

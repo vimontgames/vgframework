@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/IObjectList.h"
+#include "core/IClassDesc.h"
 
 namespace vg::core
 {

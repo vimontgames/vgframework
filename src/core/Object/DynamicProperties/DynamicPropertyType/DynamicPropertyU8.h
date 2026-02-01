@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyU8 : public DynamicPropertyT<u8>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyU8, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyU8, DynamicPropertyT);
 
         DynamicPropertyU8(const core::string & _name = "", core::IObject * _parent = nullptr);
 

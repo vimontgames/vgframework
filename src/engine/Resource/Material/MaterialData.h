@@ -16,7 +16,7 @@ namespace vg::engine
     class MaterialData : public core::Object
     {
     public:
-        VG_CLASS_DECL(MaterialData, core::Object);
+        VG_CLASS_DECL(MaterialData, core::Object); // Should be abstract but has custom ctor
 
         MaterialData(const core::string & _name = "", IObject * _parent = nullptr);
         ~MaterialData();

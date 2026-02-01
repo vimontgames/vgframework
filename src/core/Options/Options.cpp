@@ -3,9 +3,12 @@
 #include "core/Kernel.h"
 #include "core/IFactory.h"
 #include "core/IScheduler.h"
+#include "core/Object/AutoRegisterClass.h"
 
 namespace vg::core
 {
+    VG_REGISTER_CLASS(Options, "Options");
+
     //--------------------------------------------------------------------------------------
     Options::Options(const string & _name, IObject * _parent) :
         super(_name, _parent)

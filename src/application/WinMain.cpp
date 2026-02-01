@@ -17,6 +17,8 @@
 #include "version.h"
 #include "commit.h"
 
+#include "RegisterInterfaces.hpp"
+
 HINSTANCE hInst;
 HWND g_hWnd;
 
@@ -25,8 +27,6 @@ engine::IEngine * g_engine = nullptr;
 renderer::IRenderer * g_renderer = nullptr;
 
 WINDOWPLACEMENT g_windowedPlacement = {};
-
-
 
 //--------------------------------------------------------------------------------------
 void SetBorderlessFullscreen()
@@ -348,7 +348,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (fullscreen)
         SetBorderlessFullscreen();
 
-    Application * app = new Application(*g_engine);
+    Application * app = new Application();
+    ApplicationCreationParams appCreationParams = {};
+    appCreationParams.engine = g_engine;
+    app->Init(appCreationParams, singletons);
 	auto * profiler = g_renderer->GetProfiler();
 
     // Start in play mode? In Editor mode the default is not to start in 'Play' mode but in standalone we default to 'Play' mode start
@@ -379,6 +382,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 
+    app->Deinit();
     VG_SAFE_DELETE(app);
     g_engine->Deinit();
     VG_SAFE_RELEASE(g_engine);

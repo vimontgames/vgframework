@@ -23,6 +23,8 @@ namespace vg::core
     class IBaseScene : public Object
     {
     public:
+        VG_CLASS_DECL_ABSTRACT(IBaseScene, Object);
+
         virtual void                    SetRoot             (IGameObject * _sector) = 0;
         virtual IGameObject *           GetRoot             () const  = 0;
 

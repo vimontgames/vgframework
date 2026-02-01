@@ -23,8 +23,7 @@ namespace vg::physics
     class Character : public ICharacter
     {
     public:
-        VG_CLASS_DECL(Character, ICharacter);
-        VG_CLASS_CTOR_HEADER_IMPL(Character, ICharacter);
+        VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(Character, ICharacter);
 
         Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Character();

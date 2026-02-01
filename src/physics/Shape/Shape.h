@@ -17,7 +17,7 @@ namespace vg::physics
     class ShapeDesc : public IShapeDesc
     {
     public:
-        VG_CLASS_DECL_PASSTHROUGH(ShapeDesc, IShapeDesc);
+        VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(ShapeDesc, IShapeDesc);
 
         ShapeType               GetShapeType        () const override = 0;
         const core::IResource * GetResource         () const override { return nullptr; }
@@ -38,7 +38,7 @@ namespace vg::physics
     class Shape : public IShape
     {
     public:
-        VG_CLASS_DECL(Shape, IShape);
+        VG_CLASS_DECL_ABSTRACT_WITH_CTOR_AND_PROPERTIES(Shape, IShape);
 
         Shape(const core::string & _name, core::IObject * _parent);
         ~Shape();

@@ -9,7 +9,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    //VG_REGISTER_CLASS_EX(GameObjectTree, "GameObjectTree", ClassDescFlags::SceneNode);
+    VG_REGISTER_ABSTRACT_CLASS(GameObjectHierarchy);
 
     //--------------------------------------------------------------------------------------
     GameObjectHierarchy::GameObjectHierarchy(const string & _name, IObject * _parent) :

@@ -19,11 +19,7 @@ namespace vg::renderer
     class ILightInstance : public GraphicInstance
     {
     public:
-        ILightInstance(const core::string & _name, core::IObject * _parent) :
-            GraphicInstance(_name, _parent)
-        {
-            
-        }
+        VG_CLASS_DECL_ABSTRACT(ILightInstance, GraphicInstance);
 
         void                            Draw            (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override = 0;
 

@@ -214,18 +214,21 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
+    // Register engine *BEFORE* registering classes so as to be able to display asserts related to properties
+    // Register classes to auto-register the "Engine" module
+    //--------------------------------------------------------------------------------------
     bool Engine::RegisterClasses()
     {
         core::IFactory * factory = Kernel::getFactory();
 
-        // Register engine *BEFORE* registering classes so as to be able to display asserts related to properties
+        bool result = true;
+
         if (core::IClassDesc * desc = factory->registerPlugin(Engine, "Engine"))
-            registerProperties(*desc);
+            result |= registerProperties(*desc);
 
-        // Register classes to auto-register the "Engine" module
-        AutoRegisterClassInfo::registerClasses(*factory);
+        result |= AutoRegisterClassInfo::registerClasses(*factory);
 
-        return true;
+        return result;
     }
 
     //--------------------------------------------------------------------------------------
@@ -335,7 +338,7 @@ namespace vg::engine
 		switch (_params.renderer.device.api)
 		{
 			default:
-				VG_ASSERT(false);
+				VG_ASSERT_ENUM_NOT_IMPLEMENTED(_params.renderer.device.api);
 				break;
 
 			case gfx::API::DirectX12:

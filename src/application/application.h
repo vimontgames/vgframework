@@ -1,24 +1,29 @@
 #pragma once
 
 #include "core/IPlugin.h"
-
-namespace vg::engine
-{
-    class IEngine;
-}
+#include "application_consts.h"
 
 namespace vg
 {
+    namespace core { struct Singletons; }
+    namespace engine { class IEngine; }
+
     class Application 
     {
     public:
-        Application(vg::engine::IEngine & _engine);
+        Application();
         ~Application();
+
+        void Init(const ApplicationCreationParams & _creationParams, const core::Singletons & _singletons);
+        void Deinit();
 
         bool Update();
 
     private:
-        vg::engine::IEngine & m_engine;
+        bool RegisterClasses();
+
+    private:
+        vg::engine::IEngine * m_engine = nullptr;
     };
 
 }

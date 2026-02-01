@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyString : public DynamicPropertyT<string>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyString, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyString, DynamicPropertyT);
 
         DynamicPropertyString(const core::string & _name = "", core::IObject * _parent = nullptr);
 

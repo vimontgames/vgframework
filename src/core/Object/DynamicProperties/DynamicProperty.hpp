@@ -2,6 +2,9 @@
 
 namespace vg::core
 {
+    VG_REGISTER_TEMPLATE_CLASS(DynamicPropertyT, core::string, "Dynamic Property Template");
+    VG_REGISTER_ABSTRACT_CLASS(DynamicProperty);
+
     //--------------------------------------------------------------------------------------
     bool DynamicProperty::registerProperties(IClassDesc & _desc)
     {

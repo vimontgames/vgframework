@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyInt2 : public DynamicPropertyT<core::int2>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyInt2, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyInt2, DynamicPropertyT);
 
         DynamicPropertyInt2(const core::string & _name = "", core::IObject * _parent = nullptr);
 

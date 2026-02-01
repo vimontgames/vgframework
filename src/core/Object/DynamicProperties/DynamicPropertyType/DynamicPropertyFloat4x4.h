@@ -7,7 +7,7 @@ namespace vg::core
     class DynamicPropertyFloat4x4 : public DynamicPropertyT<core::float4x4>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyFloat4x4, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyFloat4x4, DynamicPropertyT);
 
         DynamicPropertyFloat4x4(const core::string & _name = "", core::IObject * _parent = nullptr);
 

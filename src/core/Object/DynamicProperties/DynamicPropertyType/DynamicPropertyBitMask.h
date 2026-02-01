@@ -8,7 +8,7 @@ namespace vg::core
     class DynamicPropertyBitMask : public DynamicPropertyT<BitMask>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyBitMask, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyBitMask, DynamicPropertyT);
 
         DynamicPropertyBitMask(const core::string & _name = "", core::IObject * _parent = nullptr);
 

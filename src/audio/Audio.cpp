@@ -7,6 +7,8 @@
 #include "audio.inl"
 #endif
 
+#include "RegisterInterfaces.hpp"
+
 using namespace vg::core;
 using namespace vg::audio;
 
@@ -33,17 +35,18 @@ namespace vg::audio
 	}
 
     //--------------------------------------------------------------------------------------
+    // Register classes to auto-register the "Audio" module
+    //--------------------------------------------------------------------------------------
     bool Audio::RegisterClasses()
     {
         IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register the "Audio" module
-        AutoRegisterClassInfo::registerClasses(*factory);
+        bool result = AutoRegisterClassInfo::registerClasses(*factory);
 
         if (IClassDesc * desc = factory->registerPlugin(Audio, "Audio"))
-            registerProperties(*desc);
+            result |= registerProperties(*desc);
 
-        return true;
+        return result;
     }
 
     //--------------------------------------------------------------------------------------

@@ -32,6 +32,19 @@
 
 #define VG_REGISTER_CLASS(className, displayName)                                                   VG_REGISTER_CLASS_EX(className, displayName, vg::core::ClassDescFlags::None)
 
+#define VG_REGISTER_TEMPLATE_CLASS_EX(className, typeName, displayName, flags)                      template <> bool className<typeName>::registerClass(vg::core::IFactory & _factory)                                                  \
+                                                                                                    {                                                                                                                                   \
+                                                                                                        if (vg::core::IClassDesc * desc = _factory.registerTemplateClassHelper(className, typeName, displayName, flags))                \
+                                                                                                        {                                                                                                                               \
+                                                                                                            registerProperties(*desc);                                                                                                  \
+                                                                                                            return true;                                                                                                                \
+                                                                                                        }                                                                                                                               \
+                                                                                                        return false;                                                                                                                   \
+                                                                                                    }                                                                                                                                   \
+                                                                                                    vg::core::AutoRegisterObjectClassHelper<className<typeName>> autoRegister##className(#className, &className<typeName>::registerClass);
+
+#define VG_REGISTER_TEMPLATE_CLASS(className, typeName, displayName)                                VG_REGISTER_TEMPLATE_CLASS_EX(className, typeName, displayName, vg::core::ClassDescFlags::None)
+
 #define VG_REGISTER_RESOURCE_CLASS(className, displayName, priority)                                vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
                                                                                                     bool className::registerClass(vg::core::IFactory & _factory)                                                                        \
                                                                                                     {                                                                                                                                   \

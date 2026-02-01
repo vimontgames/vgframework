@@ -30,6 +30,10 @@ namespace vg::core
 #define VG_CLASS_DECL(name, parent)					            VG_CLASS_SUPER_CLASSNAME(name, parent)		\
 													            VG_CLASS_PROPERTIES_DECL(name, parent)	
 
+// Use with 'VG_REGISTER_TEMPLATE_CLASS' in .cpp file
+#define VG_CLASS_DECL_TEMPLATE(name, parent)					VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_DECL(name, parent)	
+
 // Declare class with default ctor but that implements registerClass and registerProperties 
 // The class itself will no be visible for the factory, but its children can inherit from its properties
 #define VG_CLASS_DECL_PASSTHROUGH(name, parent)		            VG_CLASS_SUPER_CLASSNAME(name, parent)		\
@@ -43,11 +47,17 @@ namespace vg::core
 													            VG_CLASS_PROPERTIES_IMPL(name, parent)		\
 													            VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 
+#define VG_CLASS_DECL_ABSTRACT_WITH_CTOR(name, parent)		    VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													            VG_CLASS_PROPERTIES_IMPL(name, parent)
+
 // An abstract class that still declares properties
 // Same as above but the "abstract" class declare properties
 #define VG_CLASS_DECL_ABSTRACT_WITH_PROPERTIES(name, parent)    VG_CLASS_SUPER_CLASSNAME(name, parent)		\
 													            VG_CLASS_PROPERTIES_DECL(name, parent)		\
 													            VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+
+#define VG_CLASS_DECL_ABSTRACT_WITH_CTOR_AND_PROPERTIES(name, parent)   VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													                    VG_CLASS_PROPERTIES_DECL(name, parent)
 												
 namespace vg::core
 {

@@ -41,7 +41,7 @@ namespace vg::renderer
             ParticleList    = 0x00000004,  // Has been added to particle system list
         };
 
-        VG_CLASS_DECL(GraphicInstance, IGraphicInstance);
+        VG_CLASS_DECL_ABSTRACT_WITH_CTOR_AND_PROPERTIES(GraphicInstance, IGraphicInstance);
 
         GraphicInstance(const core::string & _name, core::IObject * _parent);
         ~GraphicInstance();

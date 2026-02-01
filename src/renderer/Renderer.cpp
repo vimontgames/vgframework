@@ -58,6 +58,8 @@
 #include "Renderer.inl"
 #endif
 
+#include "RegisterInterfaces.hpp"
+
 // TODO : parse shader techniques & flag names from .hlsli
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/debugdraw/debugdraw.hlsl.h"
@@ -160,17 +162,18 @@ namespace vg::renderer
 	}
 
     //--------------------------------------------------------------------------------------
+    // Register classes to auto-register from the "Renderer" module
+    //--------------------------------------------------------------------------------------
     bool Renderer::RegisterClasses()
     {
         IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register from the "Renderer" module
-        AutoRegisterClassInfo::registerClasses(*factory);
+        bool result = AutoRegisterClassInfo::registerClasses(*factory);
 
         if (IClassDesc * desc = factory->registerPlugin(Renderer, "Renderer"))
-            registerProperties(*desc);
+            result |= registerProperties(*desc);
 
-        return true;
+        return result;
     }
 
     //--------------------------------------------------------------------------------------

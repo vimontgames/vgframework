@@ -1,6 +1,8 @@
 #include "engine/Precomp.h"
 #include "core/Object/AutoRegisterClass.h"
 
+#include "IEngineOptions.h"
+
 #include "IUICanvasComponent.h"
 #include "IUICanvasComponent.h"
 #include "IUIImageComponent.h"
@@ -20,6 +22,11 @@
 #include "IAttachToNodeComponent.h"
 #include "IVehicleComponent.h"
 
+#include "IMaterialResource.h"
+#include "IAnimationResource.h"
+#include "ISoundResource.h"
+#include "IWorldResource.h"
+
 #include "ISnapComponent.h"
 #include "ICameraComponent.h"
 
@@ -31,6 +38,8 @@
 //--------------------------------------------------------------------------------------
 namespace vg::engine
 {
+    VG_REGISTER_ABSTRACT_CLASS(IEngineOptions);
+
     VG_REGISTER_ABSTRACT_CLASS(IUIComponent);
     VG_REGISTER_ABSTRACT_CLASS(IUICanvasComponent);
     VG_REGISTER_ABSTRACT_CLASS(IUIImageComponent);
@@ -49,6 +58,11 @@ namespace vg::engine
     VG_REGISTER_ABSTRACT_CLASS(IPhysicsConstraintComponent);
     VG_REGISTER_ABSTRACT_CLASS(IAttachToNodeComponent);
     VG_REGISTER_ABSTRACT_CLASS(IVehicleComponent);
+
+    VG_REGISTER_ABSTRACT_CLASS(IMaterialResource);
+    VG_REGISTER_ABSTRACT_CLASS(IAnimationResource);
+    VG_REGISTER_ABSTRACT_CLASS(ISoundResource);
+    VG_REGISTER_ABSTRACT_CLASS(IWorldResource);
 
     VG_REGISTER_ABSTRACT_CLASS(ISnapComponent);
     VG_REGISTER_ABSTRACT_CLASS(ICameraComponent);

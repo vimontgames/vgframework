@@ -25,7 +25,7 @@ namespace vg::core
     class Curve : public core::Object
     {
         public:
-            VG_CLASS_DECL(Curve, core::Object);
+            VG_CLASS_DECL_ABSTRACT_WITH_CTOR_AND_PROPERTIES(Curve, core::Object);
 
             Curve(const string & _name = "", IObject * _parent = nullptr);
             ~Curve();

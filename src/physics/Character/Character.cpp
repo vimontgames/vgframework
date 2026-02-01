@@ -19,6 +19,8 @@ using namespace vg::core;
 
 namespace vg::physics
 {
+    VG_REGISTER_ABSTRACT_CLASS(Character);
+
     //--------------------------------------------------------------------------------------
     bool Character::registerProperties(IClassDesc & _desc)
     {

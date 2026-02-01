@@ -4,6 +4,8 @@ using namespace vg::core;
 
 namespace vg::physics
 {
+    VG_REGISTER_ABSTRACT_CLASS(CharacterDesc);
+
     //--------------------------------------------------------------------------------------
     bool CharacterDesc::registerProperties(IClassDesc & _desc)
     {

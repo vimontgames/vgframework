@@ -23,9 +23,9 @@ namespace vg::core
     class IResource : public Object
     {
     public:
+        VG_CLASS_DECL_ABSTRACT(IResource, Object);
         using UserData = core::u64;
 
-        IResource(const string & _name = "", IObject * _parent = nullptr) : Object(_name, _parent) { }
         IResource(const IResource & _other) : Object(_other) { }
         virtual ~IResource() = default;
 

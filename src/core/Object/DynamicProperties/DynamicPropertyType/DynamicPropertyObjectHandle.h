@@ -8,7 +8,7 @@ namespace vg::core
     class DynamicPropertyObjectHandle : public DynamicPropertyT<ObjectHandle>
     {
     public:
-        VG_CLASS_DECL(DynamicPropertyObjectHandle, DynamicProperty);
+        VG_CLASS_DECL(DynamicPropertyObjectHandle, DynamicPropertyT);
 
         DynamicPropertyObjectHandle(const core::string & _name = "", core::IObject * _parent = nullptr);
 

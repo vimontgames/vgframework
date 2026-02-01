@@ -6,6 +6,8 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_REGISTER_CLASS(BaseSceneResource, "Base Scene Resource");
+
     //--------------------------------------------------------------------------------------
     bool BaseSceneResource::registerProperties(IClassDesc & _desc)
     {

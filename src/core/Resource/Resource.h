@@ -56,7 +56,7 @@ namespace vg::core
         bool                        CanCreateFile           () const override { return false; }
         bool                        CanSaveFile             () const override { return false; }
         bool                        CanInstanciate          () const override { return false; }
-        bool                        IsInstanciated          () const { return m_instance != nullptr;}
+        bool                        IsInstanciated          () const override { return m_instance != nullptr;}
 
         IResourceMeta *             CreateResourceMeta      (const core::string & _path) const override;
         bool                        CanOverrideProperties   () const override;

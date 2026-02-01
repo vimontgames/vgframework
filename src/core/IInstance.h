@@ -26,11 +26,7 @@ namespace vg::core
     class IInstance : public Object
     {
     public:
-        IInstance(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IInstance, Object);
 
         virtual void                    SetLocalMatrix          (const float4x4 & _local) = 0;
         virtual const float4x4 &        GetLocalMatrix          () const = 0;
