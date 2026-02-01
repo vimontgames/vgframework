@@ -896,31 +896,6 @@ namespace vg::core
 
         if (!strcmp(_srcProp->GetName(), "m_uid"))
         {
-            // Original UID is only used when instanciating Prefabs or when copying DynamicPropertyList (because in this case OriginalUID is the ID of the target object)
-            // rem 'CanCopyUID' only returns true for DynamicPropertyList (TODO: find a better name)
-            //if (_srcObj->CanCopyUID())
-            //{
-            //    // New UID for property list
-            //    _dstObj->RegisterUID();
-            //
-            //    // But keep track of the original target
-            //    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
-            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
-            //
-            //    return true;
-            //}
-            //else if (asBool(CopyPropertyFlags::Prefab))
-            //{
-            //    // Keep track of the original target
-            //    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
-            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
-            //}
-            //else
-            //{
-            //    // New UID
-            //    _dstObj->RegisterUID();
-            //}
-
             // In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
             const bool canCopyUID = _srcObj->CanCopyUID();
 
@@ -933,6 +908,7 @@ namespace vg::core
                 }
                 else
                 {
+                    // If the copied object is a prefab instance, we must propagate the original prefab object UID
                     if (asBool(CopyPropertyFlags::Prefab & _copyPropertyFlags))
                         _dstObj->SetOriginalUID(_srcObj->GetUID());
                     _dstObj->RegisterUID();
@@ -941,30 +917,6 @@ namespace vg::core
 
             if (!canCopyUID)
                 return true;
-
-            //// In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
-            //const bool canCopyUID = _srcObj->CanCopyUID();
-            //
-            //if (_srcObj->HasValidUID())
-            //{
-            //    if (canCopyUID)
-            //    {
-            //        _dstObj->SetUID(_srcObj->GetUID(false));
-            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
-            //    }
-            //    else
-            //    {
-            //        //if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
-            //        //    _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
-            //        //else
-            //            _dstObj->SetOriginalUID(_srcObj->GetUID());
-            //
-            //        _dstObj->RegisterUID();
-            //    }
-            //}
-            //
-            //if (!canCopyUID)
-            //    return true;
         }
         else if(!strcmp(_srcProp->GetName(), "m_originalUID"))
         {
@@ -1131,8 +1083,18 @@ namespace vg::core
             for (uint i = 0; i < count; ++i)
             {
                 IObject * srcChild = (*srcVec)[i];
-                IObject * newChild = CreateObject(srcChild->GetClassName(), srcChild->GetName(), _dstObj);
-                CopyProperties((IObject *)srcChild, newChild, _copyPropertyFlags);
+                IObject * newChild = nullptr;
+                if (asBool(ObjectRuntimeFlags::Prefab & srcChild->GetObjectRuntimeFlags()) && !asBool(CopyPropertyFlags::Prefab & _copyPropertyFlags))
+                {
+                    IGameObject * srcPrefab = VG_SAFE_STATIC_CAST(IGameObject, srcChild);
+                    newChild = srcChild->Instanciate((InstanciateFlags)0x0);
+                }
+                else
+                {
+                    newChild = CreateObject(srcChild->GetClassName(), srcChild->GetName(), _dstObj);
+                    CopyProperties((IObject *)srcChild, newChild, _copyPropertyFlags);
+                }
+
                 newChild->SetParent(_dstObj);
                 dstVec->push_back(newChild);
             }
