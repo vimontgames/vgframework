@@ -114,22 +114,27 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     
         case DisplayMode::RayTracing_Instance_WorldPosition:
             mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
+            mat.albedo.a = 1;
         break;
         
         case DisplayMode::RayTracing_Instance_MaterialID:
             mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
+            mat.albedo.a = 1;
             break;
                 
         case DisplayMode::RayTracing_Geometry_UV0:
             mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
+            mat.albedo.a = 1;
             break;
         
         case DisplayMode::RayTracing_Material_SurfaceType:
             mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
+            mat.albedo.a = 1;
             break;
         
         case DisplayMode::RayTracing_Material_Albedo:
             mat.albedo.rgb = mat.albedo.rgb;
+            mat.albedo.a = 1;
             break;
     }
     #endif
