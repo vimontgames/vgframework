@@ -813,6 +813,9 @@ namespace vg::engine
 
         VG_PROFILE_CPU("OverrideProperties");
 
+        const PrefabGameObject * parentPrefab = (PrefabGameObject*)_gameObject->GetParentPrefab();
+        VG_ASSERT(parentPrefab);
+
         for (uint j = 0; j < m_dynamicProperties.size(); ++j)
         {
             auto & propList = m_dynamicProperties[j];
@@ -826,7 +829,7 @@ namespace vg::engine
             {
                 auto * classDesc = obj->GetClassDesc();
 
-                //VG_INFO("[Prefab] Could find GUID 0x%08X in GameObject \"%s\"", propListUID, _gameObject->getName().c_str());
+                //VG_INFO("[Prefab] Could find UID 0x%08X in GameObject \"%s\"", propListUID, _gameObject->getName().c_str());
 
                 for (uint i = 0; i < propList->m_properties.size(); ++i)
                 {
@@ -849,19 +852,19 @@ namespace vg::engine
                         }
                         else
                         {
-                            VG_WARNING("[Prefab] Instance \"%s\" of \"%s\" is overriding a property \"%s\" that does not exist in Prefab", _gameObject->GetFullName().c_str(), _gameObject->GetParentPrefab()->GetShortName().c_str(), overrideProp->GetName().c_str());
+                            VG_WARNING_OBJECT(parentPrefab, "[Prefab] Instance \"%s\" of \"%s\" is overriding a property \"%s\" that does not exist in Prefab", parentPrefab->GetFullName().c_str(), parentPrefab->GetShortName().c_str(), overrideProp->GetName().c_str());
                         }
                     }                    
                 }
             }
             else
             {
-                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\" instance \"%s\"", propListUID, m_prefabResource.GetResourcePath().c_str(), _gameObject->GetFullName().c_str());
+                VG_WARNING_OBJECT(parentPrefab, "[Prefab] Could not find UID 0x%08X in Prefab \"%s\" instance \"%s\"", propListUID, m_prefabResource.GetResourcePath().c_str(), parentPrefab->GetFullName().c_str());
             }
         }
 
         if (nullptr != _dynProp && !found)
-            VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", _dynProp->GetName().c_str(), m_prefabResource.GetResourcePath().c_str());
+            VG_WARNING_OBJECT(parentPrefab, "[Prefab] Could not find property \"%s\" in Prefab \"%s\"", _dynProp->GetName().c_str(), m_prefabResource.GetResourcePath().c_str());
     }
 
     //--------------------------------------------------------------------------------------

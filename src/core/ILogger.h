@@ -8,30 +8,35 @@
 #endif
 
 #if VG_ENABLE_LOGGER
-#define VG_LOG(level, ...)    vg::core::Kernel::getLogger()->Log(level, __VA_ARGS__)
-#define VG_LOG_ONCE(level, ...)         \
-	do                                  \
-	{                                   \
-		static bool done = false;       \
-		if (!done)                      \
-        {                               \
-			VG_LOG(level, __VA_ARGS__); \
-            done = true;                \
-        }                               \
-	}                                   \
-	while(0)
+#define VG_LOG(level, ...)                  vg::core::Kernel::getLogger()->Log(level, nullptr, __VA_ARGS__)
+#define VG_LOG_OBJECT(level, object, ...)   vg::core::Kernel::getLogger()->Log(level, object, __VA_ARGS__)
+#define VG_LOG_ONCE(level, ...)             do                                  \
+	                                        {                                   \
+	                                        	static bool done = false;       \
+	                                        	if (!done)                      \
+                                                {                               \
+	                                        		VG_LOG(level, __VA_ARGS__); \
+                                                    done = true;                \
+                                                }                               \
+	                                        }                                   \
+	                                        while(0)
 #else
-#define VG_LOG(level, ...)      __noop
-#define VG_LOG_ONCE(level, ...) __noop
+#define VG_LOG(level, ...)                  __noop
+#define VG_LOG_OBJECT(level, object, ...)   __noop
+#define VG_LOG_ONCE(level, ...)             __noop
 #endif
 
-#define VG_INFO(...)         VG_LOG(vg::core::Level::Info, __VA_ARGS__)
-#define VG_WARNING(...)      VG_LOG(vg::core::Level::Warning, __VA_ARGS__)
-#define VG_ERROR(...)        VG_LOG(vg::core::Level::Error, __VA_ARGS__)
+#define VG_INFO(...)            VG_LOG(vg::core::Level::Info, __VA_ARGS__)
+#define VG_WARNING(...)         VG_LOG(vg::core::Level::Warning, __VA_ARGS__)
+#define VG_ERROR(...)           VG_LOG(vg::core::Level::Error, __VA_ARGS__)
 
-#define VG_INFO_ONCE(...)    VG_LOG_ONCE(vg::core::Level::Info, __VA_ARGS__)
-#define VG_WARNING_ONCE(...) VG_LOG_ONCE(vg::core::Level::Warning, __VA_ARGS__)
-#define VG_ERROR_ONCE(...)   VG_LOG_ONCE(vg::core::Level::Error, __VA_ARGS__)
+#define VG_INFO_OBJECT(object, ...)    VG_LOG_OBJECT(vg::core::Level::Info, object, __VA_ARGS__)
+#define VG_WARNING_OBJECT(object, ...) VG_LOG_OBJECT(vg::core::Level::Warning, object, __VA_ARGS__)
+#define VG_ERROR_OBJECT(object, ...)   VG_LOG_OBJECT(vg::core::Level::Error, object, __VA_ARGS__)
+
+#define VG_INFO_ONCE(...)       VG_LOG_ONCE(vg::core::Level::Info, __VA_ARGS__)
+#define VG_WARNING_ONCE(...)    VG_LOG_ONCE(vg::core::Level::Warning, __VA_ARGS__)
+#define VG_ERROR_ONCE(...)      VG_LOG_ONCE(vg::core::Level::Error, __VA_ARGS__)
 
 namespace vg::core
 {
@@ -47,14 +52,19 @@ namespace vg::core
         Error   = 1 << (u32)Level::Error
     );
 
+    using UID = core::u32;
+
     struct LogEntry
     {
         u64 crc;
         Level level;
         string category;
         string message;
+        UID uid;
         uint count;
     };
+
+    class IObject;
 
     class ILogger
     {
@@ -64,7 +74,7 @@ namespace vg::core
         virtual void                Init        () = 0;
         virtual void                Deinit      () = 0;
 
-        virtual void                Log         (Level _level, const char * _format, ...) = 0;
+        virtual void                Log         (Level _level, const IObject * _object, const char * _format, ...) = 0;
 
         virtual void                Clear       () = 0;
 

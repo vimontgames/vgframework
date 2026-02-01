@@ -5,7 +5,7 @@
 #include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "renderer/IView.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
-#include "shaders/system/picking.hlsli"    
+#include "Shaders/system/picking.hlsli"    
 #include "Frustum.h"
 
 namespace vg::core

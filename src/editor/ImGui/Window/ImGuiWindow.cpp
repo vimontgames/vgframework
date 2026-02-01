@@ -57,7 +57,6 @@ using namespace ImGui;
 #include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.hpp"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.hpp"
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.hpp"
-#include "editor/ImGui/Window/Console/ImGuiConsole.hpp"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.hpp"
 #include "editor/ImGui/Window/UndoRedo/ImGuiUndoRedo.hpp"
 

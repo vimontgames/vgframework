@@ -12,7 +12,7 @@ namespace vg::core
         Float3Curve(const string & _name = "", IObject * _parent = nullptr);
         ~Float3Curve();
 
-        bool CanChangeCurveCount() const { return false; }
+        bool CanChangeCurveCount() const override { return false; }
         core::float3 getValue(float _time) const { return super::getFloat3Value(_time); }
     };
 }

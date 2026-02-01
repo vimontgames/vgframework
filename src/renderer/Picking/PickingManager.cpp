@@ -179,15 +179,7 @@ namespace vg::renderer
                 {
                     auto * obj = dynamic_cast<IGameObject *>(topSelectedObjects[i]);
                     if (obj)
-                    {
-                        // Open all parents but not the object itself
-                        obj = dynamic_cast<IGameObject *>(obj->GetParent());
-                        while (nullptr != obj)
-                        {
-                            obj->SetObjectFlags(ObjectFlags::Opened, true);
-                            obj = dynamic_cast<IGameObject *>(obj->GetParent());
-                        }
-                    }
+                        obj->OpenAncestors();
                 }
             }
             else

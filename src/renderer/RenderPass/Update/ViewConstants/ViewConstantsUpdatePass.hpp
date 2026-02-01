@@ -1,5 +1,5 @@
 #include "ViewConstantsUpdatePass.h"
-#include "shaders/system/view.hlsli"
+#include "Shaders/system/view.hlsli"
 #include "Shaders/system/toolmode.hlsl.h"
 #include "Shaders/system/lightsBuffer.hlsli"
 #include "renderer/Instance/Light/Directional/DirectionalLightInstance.h"

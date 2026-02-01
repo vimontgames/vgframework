@@ -1,5 +1,5 @@
 #include "HDROutputPass.h"
-#include "shaders/system/rootConstants2D.hlsli"
+#include "Shaders/system/rootConstants2D.hlsli"
 #include "shaders/driver/driver.hlsl.h"
 
 namespace vg::renderer

@@ -3,6 +3,7 @@
 #include "core/Math/Math.h"
 #include "core/File/File.h"
 #include "core/string/string.h"
+#include "core/IObject.h"
 
 namespace vg::core
 {
@@ -19,7 +20,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Logger::Log(Level _level, const char * _format, ...)
+    void Logger::Log(Level _level, const IObject * _object, const char * _format, ...)
     {
         const int bufferSize = 4096;
         char tempBuffer[bufferSize];
@@ -30,7 +31,7 @@ namespace vg::core
             va_list args;
             va_start(args, _format);
             vsnprintf_s(tempBuffer, bufferSize - 1, _format, args);
-            log(_level, tempBuffer);
+            log(_level, _object, tempBuffer);
             va_end(args);
         }        
     }  
@@ -70,7 +71,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Logger::log(Level _level, const char * _msg)
+    void Logger::log(Level _level, const IObject * _object, const char * _msg)
     {
         Lock();
         {
@@ -97,6 +98,8 @@ namespace vg::core
                 VG_DEBUGPRINT("[%s] %s\n", asString(_level).c_str(), _msg);
             }
 
+            const UID uid = _object ? _object->GetUID() : (UID)0;
+
             string category;
             string message = _msg;
             auto begin = message.find('[');
@@ -114,7 +117,7 @@ namespace vg::core
                 message = message.substr(first);
 
             // In case the exact same message is used with different category or warning level
-            const u64 crc = computeCRC64(category.c_str()) + computeCRC64(message.c_str()) + (u64)_level;
+            const u64 crc = computeCRC64(category.c_str()) + computeCRC64(message.c_str()) + (u64)_level ^ uid;
             size_t index = -1;
             for (uint i = 0; i < m_entries.size(); ++i)
             {
@@ -127,7 +130,7 @@ namespace vg::core
 
             if (-1 == index)
             {
-                m_entries.emplace_back(LogEntry{ crc, _level, category, message, 1 });
+                m_entries.emplace_back(LogEntry{ crc, _level, category, message, uid, 1 });
             }
             else
             {

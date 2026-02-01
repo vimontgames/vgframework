@@ -21,7 +21,7 @@
 #include "MeshInstance.inl"
 #endif
 
-#include "shaders/system/rootConstants3D.hlsli"
+#include "Shaders/system/rootConstants3D.hlsli"
 
 using namespace vg::core;
 using namespace vg::gfx;

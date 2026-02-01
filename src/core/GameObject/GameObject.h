@@ -113,6 +113,8 @@ namespace vg::core
         void                                            OnTriggerStay               (IGameObject * _other) final override;
         void                                            OnTriggerExit               (IGameObject * _other) final override;
 
+        void                                            OpenAncestors               () final override;
+
         void                                            OnLocalMatrixChanged        (bool _recomputeParents = false, bool _recomputeChildren = false) final override;
 
         void                                            addComponent                (Component * _component, uint _index = -1);

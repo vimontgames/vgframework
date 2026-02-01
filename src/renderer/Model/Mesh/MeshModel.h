@@ -2,7 +2,7 @@
 
 #include "core/IResource.h"
 #include "renderer/IMeshModel.h"
-#include "shaders/system/vertex.hlsli"
+#include "Shaders/system/vertex.hlsli"
 
 namespace vg::gfx
 {

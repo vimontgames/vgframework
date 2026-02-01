@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImGuiAdapter.h"
+#include "imguiAdapter.h"
 
 namespace vg::renderer::dx12
 {

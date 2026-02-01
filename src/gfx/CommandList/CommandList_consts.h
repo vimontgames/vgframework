@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shaders/system/shared_consts.hlsli"
+#include "Shaders/system/shared_consts.hlsli"
 
 namespace vg::gfx
 {

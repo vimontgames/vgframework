@@ -90,7 +90,7 @@ namespace vg::core
 
         void                    Swap                (IObject * _other) override;
 
-        bool                    CanChangeCurveCount () const { return true; }
+        bool                    CanChangeCurveCount () const override { return true; }
         core::uint              GetCurveCount       () const final override { return (core::uint)m_data.size(); }
 
         float                   getCurveValue       (float _time, uint _curveIndex) const;

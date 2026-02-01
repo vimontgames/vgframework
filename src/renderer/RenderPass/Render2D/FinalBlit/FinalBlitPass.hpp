@@ -1,5 +1,5 @@
 #include "FinalBlitPass.h"
-#include "shaders/system/rootConstants2D.hlsli"
+#include "Shaders/system/rootConstants2D.hlsli"
 #include "renderer/UI/UIRenderer.h"
 #include "shaders/driver/driver.hlsl.h"
 

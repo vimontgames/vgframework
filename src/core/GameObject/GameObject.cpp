@@ -1201,4 +1201,17 @@ namespace vg::core
                 m_children[i]->OnLocalMatrixChanged(false, true);
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OpenAncestors()
+    {
+        if (IGameObject * parent = dynamic_cast<IGameObject *>(GetParent()))
+        {
+            do
+            {
+                parent->SetObjectFlags(ObjectFlags::Opened, true);
+                parent = dynamic_cast<IGameObject *>(parent->GetParent());
+            } while (parent);
+        }
+    }
 }

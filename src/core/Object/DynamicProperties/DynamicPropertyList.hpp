@@ -10,8 +10,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         registerPropertyObjectPtrVector(DynamicPropertyList, m_properties, "Properties");
-        //setPropertyFlag(DynamicPropertyList, m_uid, PropertyFlags::Hidden | PropertyFlags::Debug, false);
-        //setPropertyFlag(DynamicPropertyList, m_originalUID, PropertyFlags::Hidden | PropertyFlags::Debug, false);
+        //setPropertyFlag(DynamicPropertyList, m_uid, PropertyFlags::Hidden | PropertyFlags::DebugUID, false);
+        setPropertyFlag(DynamicPropertyList, m_originalUID, PropertyFlags::DebugUID, false);
 
         setPropertyFlag(DynamicPropertyList, m_originalUID, PropertyFlags::Transient, false);
 

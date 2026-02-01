@@ -27,9 +27,5 @@ namespace vg::renderer
 
     private:
         static const vg::engine::IEngine * getEngine();
-        
-    private:
-        bool m_isEngineWindowVisible = false;
-        bool m_isRendererWindowVisible = false;
     };
 }

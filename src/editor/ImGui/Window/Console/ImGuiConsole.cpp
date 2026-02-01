@@ -1,10 +1,23 @@
+#include "editor/Precomp.h"
 #include "ImGuiConsole.h"
-#include "editor/ImGui/Toolbar/ImGuiToolbar.h"
 #include "ImGuiConsoleOptions.h"
+#include "core/Kernel.h"
+#include "core/IFactory.h"
+#include "core/ISelection.h"
+#include "core/IGameObject.h"
+#include "core/Math/Math.h"
+#include "renderer/IRenderer.h"
+#include "editor/ImGui/ImGui.h"
+#include "editor/ImGui/Extensions/imGuiExtensions.h"
+#include "editor/Editor_Consts.h"
+#include "editor/Options/EditorOptions.h"
+#include "editor/Editor.h"
+
+using namespace vg::core;
+using namespace ImGui;
 
 namespace vg::editor
 {
-
     //--------------------------------------------------------------------------------------
     ImGuiConsole::ImGuiConsole() :
         ImGuiWindow(style::icon::Console, "", "Console", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
@@ -17,7 +30,7 @@ namespace vg::editor
     {
         deinit();
     }
-
+    
     //--------------------------------------------------------------------------------------
     ImGuiConsoleOptions & ImGuiConsole::getConsoleOptions()
     {
@@ -32,6 +45,9 @@ namespace vg::editor
         if (IconBegin(style::icon::Console, "Console", &m_isVisible))
         {
             auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+            auto * editor = Editor::get();
+            const auto * factory = Kernel::getFactory();
+            auto selection = Kernel::getSelection();
 
             const auto warningColor = adapter->GetWarningColor(); 
             const auto errorColor = adapter->GetErrorColor();
@@ -243,7 +259,6 @@ namespace vg::editor
                 if (copyToClipboard)
                     ImGui::LogToClipboard();
             
-                //const auto count = logger->GetLogCount();
                 for (uint i = 0; i < count; i++)
                 {
                     const auto & item = logger->GetLog(i);
@@ -304,7 +319,26 @@ namespace vg::editor
 
                     if (has_color)
                         ImGui::PushStyleColor(ImGuiCol_Text, color);
-                    ImGui::TextUnformatted(fullmsg);
+
+                    if (item.uid != (UID)0x0)
+                    {
+                        if (ImGui::Selectable(fullmsg, false, ImGuiSelectableFlags_None, ImVec2(0, 0)))
+                        {
+                            if (IObject * object = factory->FindByUID(item.uid))
+                            {
+                                if (IGameObject * gameObject = dynamic_cast<IGameObject *>(object))
+                                {
+                                    selection->SetSelectedObject(gameObject);
+                                    gameObject->OpenAncestors();
+                                    editor->focus(gameObject);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ImGui::TextUnformatted(fullmsg);
+                    }
                     if (has_color)
                         ImGui::PopStyleColor();
                 }

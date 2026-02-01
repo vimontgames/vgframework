@@ -68,6 +68,8 @@ namespace vg::core
         virtual void                            OnTriggerStay                   (IGameObject * _other) = 0;
         virtual void                            OnTriggerExit                   (IGameObject * _other) = 0;
 
+        virtual void                            OpenAncestors                   () = 0;
+
         template <class T> T *                  AddComponentT                   (const string & _name);
         template <class T> T *                  GetComponentT                   () const;
         template <class T> T *                  GetComponentInParentsT          () const;

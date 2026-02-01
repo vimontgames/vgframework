@@ -164,7 +164,8 @@ void CharacterBehaviour::initAnimations()
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::initSounds()
 {
-    if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+    const IGameObject * gameObject = GetGameObject();
+    if (ISoundComponent * sound = gameObject->GetComponentT<ISoundComponent>())
     {
         for (uint i = 0; i < enumCount<SoundState>(); ++i)
         {
@@ -181,7 +182,7 @@ void CharacterBehaviour::initSounds()
     }
     else
     {
-        VG_WARNING("[Sound] Character \"%s\" has no Sound component", GetGameObject()->GetName().c_str());
+        VG_WARNING("[Sound] Character \"%s\" has no Sound component", gameObject->GetFullName().c_str());
     }
 }
 

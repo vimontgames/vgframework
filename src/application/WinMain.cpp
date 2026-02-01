@@ -80,8 +80,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     if (g_engine && g_engine->WndProc(hWnd, message, wParam, lParam))
         return true;
 
-	int wmId, wmEvent;
-
     switch (message)
     {
         case WM_SYSCHAR:
@@ -89,8 +87,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case WM_COMMAND:
         {
-            wmId = LOWORD(wParam);
-            wmEvent = HIWORD(wParam);
+            int wmId = LOWORD(wParam);
+            int wmEvent = HIWORD(wParam);
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
 

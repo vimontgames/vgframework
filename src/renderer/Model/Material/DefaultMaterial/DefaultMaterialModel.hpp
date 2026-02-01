@@ -4,7 +4,7 @@
 #include "renderer/Model/Material/MaterialManager.h"
 #include "renderer/Options/RendererOptions.h"
 
-#include "shaders/system/rootConstants3D.hlsli"
+#include "Shaders/system/rootConstants3D.hlsli"
 
 namespace vg::renderer
 {

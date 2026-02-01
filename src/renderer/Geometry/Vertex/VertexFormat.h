@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Shaders/system/vertex.hlsli"
-#include "shaders/system/packing.hlsli"
+#include "Shaders/system/packing.hlsli"
 
 namespace vg::renderer
 {

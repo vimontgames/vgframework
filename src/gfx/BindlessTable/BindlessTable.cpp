@@ -6,7 +6,7 @@
 #include "gfx/Resource/Buffer.h"
 #include "core/Math/Math.h"
 
-#include "shaders/system/cubemap.hlsli"
+#include "Shaders/system/cubemap.hlsli"
 
 #ifdef VG_DX12
 #include "dx12/BindlessTable_dx12.hpp"

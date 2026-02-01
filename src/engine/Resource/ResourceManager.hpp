@@ -814,7 +814,8 @@ namespace vg::engine
                     }
                     else
                     {
-                        VG_WARNING("[Loading] Could not find resource info for resource \"%s\" (\"%s\")", res->GetName().c_str(), path.c_str());
+                        if (!path.empty())
+                            VG_WARNING("[Loading] Could not find resource info for resource \"%s\" (\"%s\")", res->GetName().c_str(), path.c_str());
                     }
                 }
             }
