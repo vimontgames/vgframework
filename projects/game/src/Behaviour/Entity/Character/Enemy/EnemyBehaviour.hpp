@@ -184,7 +184,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                             translation.xy = dir.xy * m_currentSpeed;
 
                         const float Yx = dir.x;
-                        const float Xx = dir.y * (-1.0f);   // Do *NOT* write -dir.y because there's an issue with CLang and hlsl++ if you do so
+                        const float Xx = -dir.y;
                         const float alpha = atan2(Yx, Xx);
 
                         m_targetRotation = radiansToDegrees(alpha);

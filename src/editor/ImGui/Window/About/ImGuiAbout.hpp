@@ -95,7 +95,7 @@ namespace vg::editor
                 { "Font-Awesome",           "6.x",              "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
                 { "fmt",                    "10.1.1",           "https://github.com/fmtlib/fmt/releases/tag/10.1.1" },
                 { "FXAA",                   "3.11",             "https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h" },
-                { "hlsl++",                 "3.7",              "https://github.com/redorav/hlslpp/releases/tag/3.7" },
+                { "hlsl++",                 "3.8",              "https://github.com/redorav/hlslpp/releases/tag/3.8" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGuiFileDialog",        "0.6.7",            "https://github.com/aiekick/ImGuiFileDialog" },
                 { "ImGuizmo",               "1.83",             "https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83" },
