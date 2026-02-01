@@ -164,7 +164,7 @@ namespace vg
             if (target.Compiler == Compiler.ClangCL)
             {
                 conf.Options.Add(Options.Vc.General.PlatformToolset.ClangCL);
-                conf.AdditionalCompilerOptions.Add("-mlzcnt -mfma -mf16c -mavx ");
+                conf.AdditionalCompilerOptions.Add("-mlzcnt -mfma -mf16c -mavx -Wno-microsoft-include");
             }
 
             conf.Options.Add(Options.Vc.General.WarningLevel.Level3);
