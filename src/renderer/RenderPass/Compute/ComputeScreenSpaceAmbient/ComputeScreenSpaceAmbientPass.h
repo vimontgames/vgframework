@@ -16,9 +16,6 @@ namespace vg::renderer
         void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        ScreenSpaceAmbient getScreenSpaceAmbient(const IView * _view) const;
-
-    private:
         gfx::RootSignatureHandle    m_computeScreenSpaceAmbientRootSignature;
         gfx::ComputeShaderKey       m_computeScreenSpaceAmbientShaderKey;
     };

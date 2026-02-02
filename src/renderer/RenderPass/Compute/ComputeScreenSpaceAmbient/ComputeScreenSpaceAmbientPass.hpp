@@ -23,16 +23,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     ComputeScreenSpaceAmbientPass::~ComputeScreenSpaceAmbientPass()
     {
-
-    }
-
-    //--------------------------------------------------------------------------------------
-    ScreenSpaceAmbient ComputeScreenSpaceAmbientPass::getScreenSpaceAmbient(const IView * _view) const
-    {
-        const auto * camSettings = _view->GetCameraSettings();
-        if (nullptr != camSettings)
-            return camSettings->GetScreenSpaceAmbient();
-        return ScreenSpaceAmbient::None;
+        auto * device = Device::get();
+        device->removeRootSignature(m_computeScreenSpaceAmbientRootSignature);
     }
 
     //--------------------------------------------------------------------------------------
@@ -41,18 +33,18 @@ namespace vg::renderer
         const auto normalGBufferID = _renderPassContext.getFrameGraphID("NormalGBuffer");
         readRenderTarget(normalGBufferID);
 
-        const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
-        readDepthStencil(depthStencilID);
+        const auto linearDepthID = _renderPassContext.getFrameGraphID("LinearDepth");
+        readRenderTarget(linearDepthID);
 
-        const FrameGraphTextureResourceDesc * depthStencilDesc = getTextureResourceDesc(depthStencilID);
+        const FrameGraphTextureResourceDesc * linearDepthDesc = getTextureResourceDesc(linearDepthID);
 
-        const uint width = depthStencilDesc->width;
-        const uint height = depthStencilDesc->height;
+        const uint width = linearDepthDesc->width;
+        const uint height = linearDepthDesc->height;
 
-        FrameGraphTextureResourceDesc screenSpaceAmbientDesc = *depthStencilDesc;
+        FrameGraphTextureResourceDesc screenSpaceAmbientDesc = *linearDepthDesc;
         screenSpaceAmbientDesc.type = TextureType::Texture2D;
-        screenSpaceAmbientDesc.width = width;
-        screenSpaceAmbientDesc.height = height;
+        screenSpaceAmbientDesc.width = width >> 1;
+        screenSpaceAmbientDesc.height = height >> 1;
         screenSpaceAmbientDesc.msaa = MSAA::None;
         screenSpaceAmbientDesc.format = Renderer::get()->getLightingBufferFormat();
 
@@ -64,6 +56,39 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputeScreenSpaceAmbientPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
+        const auto options = RendererOptions::get();
+        const auto msaa = options->GetMSAA();
+        const auto * view = (IView *)_renderPassContext.getView();
+        auto size = view->GetSize() / 2;
+        auto threadGroupSize = uint2(SCREEN_SPACE_AMBIENT_THREADGROUP_SIZE_X, SCREEN_SPACE_AMBIENT_THREADGROUP_SIZE_Y);
+        auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
+        ComputeShaderKey shaderKey = m_computeScreenSpaceAmbientShaderKey;
+
+        if (view->IsToolmode())
+            shaderKey.setFlag(ScreenSpaceAmbientHLSLDesc::Flags::Toolmode, true);
+
+        //if (view->IsUsingRayTracing())
+        //    shaderKey.setFlag(ScreenSpaceAmbientHLSLDesc::Flags::RayTracing, true);
+
+        _cmdList->setComputeRootSignature(m_computeScreenSpaceAmbientRootSignature);
+        _cmdList->setComputeShader(shaderKey);
+
+        const auto linearDepth = getRWTexture(_renderPassContext.getFrameGraphID("LinearDepth"))->getTextureHandle();;
+        const auto normal = getRenderTarget(_renderPassContext.getFrameGraphID("NormalGBuffer"))->getTextureHandle();
+
+        Texture * dstTex = getRWTexture(_renderPassContext.getFrameGraphID("ScreenSpaceAmbient"));
+        
+        ScreenSpaceAmbientConstants screenSpaceAmbientConstants;
+        screenSpaceAmbientConstants.setScreenSize(size.xy);
+        screenSpaceAmbientConstants.setLinearDepthBuffer(linearDepth);
+        screenSpaceAmbientConstants.setNormalGBuffer(normal);
+        screenSpaceAmbientConstants.setRWBufferOut(dstTex->getRWTextureHandle());
+
+        _cmdList->setComputeRootConstants(0, (u32 *)&screenSpaceAmbientConstants, ScreenSpaceAmbientConstantsCount);
+
+        _cmdList->dispatch(threadGroupCount);
+
+        _cmdList->addRWTextureBarrier(dstTex);
     }
 }

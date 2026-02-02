@@ -380,7 +380,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         #endif
 
         // Outline
-        if (0 != postProcessConstants.getOutlineMask())
+        if ((uint)ReservedSlot::DefaultBlackTexSrv != postProcessConstants.getOutlineMask())
         {
             Texture2D<uint2> outlineTex = getTexture2D_UInt2(postProcessConstants.getOutlineMask());
             uint2 s[5][5];
@@ -490,6 +490,13 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             }
             break;
 
+            case DisplayMode::PostProcess_ViewPos:
+            {
+                float3 viewPos = viewConstants.getViewPos(uv, depth);
+                color.rgb = depth < 1.0f ? frac(viewPos.xyz) : 0.0f;
+            }
+            break;
+            
             case DisplayMode::PostProcess_WorldPos:
             {
                 float3 worldPos = viewConstants.getWorldPos(uv, depth);

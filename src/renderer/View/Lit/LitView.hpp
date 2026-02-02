@@ -116,31 +116,41 @@ namespace vg::renderer
         if (options->isZPrepassEnabled())
             _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
 
+        const bool outline = view->IsOutlinePassNeeded();
+
         switch (options->getLightingMode())
         {
             case LightingMode::Forward:
+            {
                 // Write directly to "Color"
                 _frameGraph.addUserPass(_renderPassContext, m_forwardOpaquePass, "ForwardOpaque");
-                break;
+
+                // Min/Max non-MSAA linear depth buffer
+                if (outline || options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
+                    _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
+            }
+            break;
 
             case LightingMode::Deferred:
+            {
                 // Write to GBuffers ...
                 _frameGraph.addUserPass(_renderPassContext, m_deferredOpaquePass, "DeferredOpaque");
+
+                // Linear depth buffer
+                _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
+
+                // Compute SSAO before deferred shading
+                if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
+                    _frameGraph.addUserPass(_renderPassContext, m_screenSpaceAmbientPass, "Screen-Space Ambient");
 
                 // Then compute deferred shading to "Color" ("Color" must be an UAV *and* RenderTarget)
                 _frameGraph.addUserPass(_renderPassContext, m_deferredLightingPass, "Deferred Lighting");
 
                 if (options->GetMSAA() != MSAA::None)
                     _frameGraph.addUserPass(_renderPassContext, m_resolveDeferredMSAAPass, "Resolve Deferred MSAA");
-
-                break;
+            }
+            break;
         }    
-
-        const bool outline = view->IsOutlinePassNeeded();
-
-        // Resolve/copy linear depth just before transparent pass because even in case of forward rendering we might want to add other passes writing Z (e.g., Skin, Water ...)
-        if (outline || options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
-            _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
 
         if (options->isTransparencyEnabled())
             _frameGraph.addUserPass(_renderPassContext, m_forwardTransparentPass, "ForwardTransparent");

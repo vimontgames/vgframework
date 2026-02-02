@@ -1,7 +1,7 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
+    VG_INLINE gfx::Texture * Renderer::getDefaultTexture(DefaultTextureType _type) const
     {
         VG_ASSERT(asInteger(_type) < countof(m_defaultTextures));
         return m_defaultTextures[core::asInteger(_type)];

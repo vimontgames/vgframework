@@ -33,6 +33,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputeDeferredLightingPass::Setup(const RenderPassContext & _renderPassContext)
     {
+        const RendererOptions * options = RendererOptions::get();
+
         const auto albedoGBufferID = _renderPassContext.getFrameGraphID("AlbedoGBuffer");
         readRenderTarget(albedoGBufferID);
 
@@ -51,7 +53,12 @@ namespace vg::renderer
         const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
 
-        const RendererOptions * options = RendererOptions::get();
+        if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
+        {
+            const auto screenSpaceAmbientID = _renderPassContext.getFrameGraphID("ScreenSpaceAmbient");
+            readRWTexture(screenSpaceAmbientID);
+        }
+       
         const MSAA msaa = options->GetMSAA();
         if (MSAA::None != msaa)
         {
@@ -83,6 +90,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputeDeferredLightingPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto * renderer = Renderer::get();
         const auto options = RendererOptions::get();
         const auto msaa = options->GetMSAA();
         const auto * view = (IView *)_renderPassContext.getView();
@@ -126,14 +134,14 @@ namespace vg::renderer
         _cmdList->setComputeRootSignature(m_computeDeferredLightingRootSignature);
         _cmdList->setComputeShader(shaderKey);
         
-        auto albedoID = getRenderTarget(_renderPassContext.getFrameGraphID("AlbedoGBuffer"))->getTextureHandle();
-        auto normalID = getRenderTarget(_renderPassContext.getFrameGraphID("NormalGBuffer"))->getTextureHandle();
-        auto pbrID = getRenderTarget(_renderPassContext.getFrameGraphID("PBRGBuffer"))->getTextureHandle();
-        auto emissiveID = getRenderTarget(_renderPassContext.getFrameGraphID("EmissiveGBuffer"))->getTextureHandle();
+        auto albedo = getRenderTarget(_renderPassContext.getFrameGraphID("AlbedoGBuffer"))->getTextureHandle();
+        auto normal = getRenderTarget(_renderPassContext.getFrameGraphID("NormalGBuffer"))->getTextureHandle();
+        auto pbr = getRenderTarget(_renderPassContext.getFrameGraphID("PBRGBuffer"))->getTextureHandle();
+        auto emissive = getRenderTarget(_renderPassContext.getFrameGraphID("EmissiveGBuffer"))->getTextureHandle();
 
         auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-        auto depthID = depthstencilTex->getDepthTextureHandle();
-        auto stencilID = depthstencilTex->getStencilTextureHandle();
+        auto depth = depthstencilTex->getDepthTextureHandle();
+        auto stencil = depthstencilTex->getStencilTextureHandle();
 
         Texture * dstTex = nullptr;
         BindlessRWTextureHandle dstHandle;
@@ -155,13 +163,25 @@ namespace vg::renderer
         
         DeferredLightingConstants deferredLighting;
         deferredLighting.setScreenSize(size.xy);
-        deferredLighting.setAlbedoGBuffer(albedoID);
-        deferredLighting.setNormalGBuffer(normalID);
-        deferredLighting.setPBRGBuffer(pbrID);
-        deferredLighting.setEmissiveGBuffer(emissiveID);
-        deferredLighting.setDepth(depthID);
-        deferredLighting.setStencil(stencilID);
+        deferredLighting.setAlbedoGBuffer(albedo);
+        deferredLighting.setNormalGBuffer(normal);
+        deferredLighting.setPBRGBuffer(pbr);
+        deferredLighting.setEmissiveGBuffer(emissive);
+        deferredLighting.setDepth(depth);
+        deferredLighting.setStencil(stencil);
         deferredLighting.setRWBufferOut(dstTex->getRWTextureHandle());
+
+        if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
+        {
+            const auto screenSpaceAmbientID = _renderPassContext.getFrameGraphID("ScreenSpaceAmbient");
+            auto screenSpaceAmbient= getRWTexture(screenSpaceAmbientID)->getTextureHandle();
+            deferredLighting.setScreenSpaceAmbient(screenSpaceAmbient);
+        }
+        else
+        {
+            deferredLighting.setScreenSpaceAmbient(renderer->getDefaultTexture(DefaultTextureType::White)->getTextureHandle());
+        }
+
         _cmdList->setComputeRootConstants(0, (u32 *)&deferredLighting, DeferredLightingConstantsCount);
         
         _cmdList->dispatch(threadGroupCount);

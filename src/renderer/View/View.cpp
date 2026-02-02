@@ -700,6 +700,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    ScreenSpaceAmbient View::GetScreenSpaceAmbient() const
+    {
+        const auto * camSettings = GetCameraSettings();
+        if (nullptr != camSettings)
+            return camSettings->GetScreenSpaceAmbient();
+        return ScreenSpaceAmbient::None;
+    }
+
+    //--------------------------------------------------------------------------------------
     void View::setTLAS(gfx::TLAS * _tlas, TLASMode _mode)
     {
         VG_ASSERT(!_tlas || _mode != (TLASMode)-1, "You must specify TLAS mode when assigning TLAS to view");

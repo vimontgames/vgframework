@@ -100,6 +100,7 @@ namespace vg::renderer
         bool                                IsLit                               () const override;
         bool                                IsComputePostProcessNeeded          () const override;
         bool                                IsOutlinePassNeeded                 () const override;
+        ScreenSpaceAmbient                  GetScreenSpaceAmbient               () const override;
 
         void                                setTLAS                             (gfx::TLAS * _tlas, TLASMode _mode = (TLASMode) - 1);
         gfx::TLAS *                         getTLAS                             () const;

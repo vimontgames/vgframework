@@ -2,7 +2,6 @@
     <Object class="EditorOptions">
         <Property type="String" name="m_name" value="Editor Options"/>
         <Property type="Uint32" name="m_uid" value="3465924071"/>
-        <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>
         <Property type="EnumU8" name="m_gizmo.m_type" value="Translate"/>
@@ -17,7 +16,6 @@
             <Object class="CameraSettings">
                 <Property type="String" name="m_name" value="CameraSettings #0"/>
                 <Property type="Uint32" name="m_uid" value="2211450374"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="Float" name="m_near" value="0.1"/>
                 <Property type="Float" name="m_far" value="1000"/>
@@ -25,7 +23,6 @@
                     <Object class="LensResource">
                         <Property type="String" name="m_name" value="LensResource #0"/>
                         <Property type="Uint32" name="m_uid" value="2572224046"/>
-                        <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
                         <Property type="ObjectPtr" name="m_cameraLens"/>
@@ -35,8 +32,11 @@
                 <Property type="Float" name="m_focusDistance" value="14"/>
                 <Property type="Float" name="m_aperture" value="2.5999999"/>
                 <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
+                <Property type="EnumU8" name="m_screenSpaceAmbient" value="SSAO"/>
+                <Property type="Bool" name="m_outlines" value="false"/>
                 <Property type="Bool" name="m_depthOfField" value="false"/>
-                <Property type="Bool" name="m_motionBlur" value="false"/>
+                <Property type="Bool" name="m_fade" value="false"/>
+                <Property type="Float4" name="m_fadeColor" x="0" y="0" z="0" w="1"/>
             </Object>
         </Property>
         <Property type="EnumFlagsU32" name="m_consoleOptions.m_levels" value="Warning|Error"/>

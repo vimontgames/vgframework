@@ -122,7 +122,7 @@ namespace vg::renderer
 
         void                                    ReleaseAsync                    (core::IObject * _object) final override;
 
-        VG_INLINE gfx::Texture *                getDefaultTexture               (MaterialTextureType _type) const;
+        VG_INLINE gfx::Texture *                getDefaultTexture               (DefaultTextureType _type) const;
         VG_INLINE MaterialModel *               getDefaultMaterial              (DefaultMaterialType _type) const;
         VG_INLINE MaterialModel *               getInvisibleMaterial            () const;
         DebugDraw *                             getDebugDraw                    () const;
@@ -216,7 +216,7 @@ namespace vg::renderer
         IPicking *                              m_picking                       = nullptr;
  
         MaterialModel *                         m_defaultMaterials[core::enumCount<DefaultMaterialType>()];
-        gfx::Texture *                          m_defaultTextures[core::enumCount<MaterialTextureType>()];
+        gfx::Texture *                          m_defaultTextures[core::enumCount<DefaultTextureType>()];
 
         bool                                    m_gameMode                      = false;
         SharedWorldCullingJobOutput *           m_sharedWorldCullingJobOutput   = nullptr;

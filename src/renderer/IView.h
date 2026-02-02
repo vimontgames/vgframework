@@ -77,6 +77,8 @@ namespace vg::renderer
         View_15 = 0x00008000
     );
 
+    enum class ScreenSpaceAmbient : core::u8;
+
     class IViewport;
     class IUIRenderer;
     class ICameraSettings;
@@ -140,6 +142,7 @@ namespace vg::renderer
         virtual bool                    IsUsingRayTracing                   () const = 0;
         virtual bool                    IsComputePostProcessNeeded          () const = 0;
         virtual bool                    IsOutlinePassNeeded                 () const = 0;
+        virtual ScreenSpaceAmbient      GetScreenSpaceAmbient               () const = 0;
       
         virtual void                    SetPickingData                      (const PickingData & _pickingData) = 0;
         virtual const PickingHit &      GetPickingHit                       (core::uint _index) const = 0;

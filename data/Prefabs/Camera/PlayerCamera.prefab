@@ -87,9 +87,9 @@
                                         <Property type="Float" name="m_focusDistance" value="23"/>
                                         <Property type="Float" name="m_aperture" value="2.8"/>
                                         <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
+                                        <Property type="EnumU8" name="m_screenSpaceAmbient" value="SSAO"/>
                                         <Property type="Bool" name="m_outlines" value="true"/>
                                         <Property type="Bool" name="m_depthOfField" value="true"/>
-                                        <Property type="Bool" name="m_motionBlur" value="false"/>
                                         <Property type="Bool" name="m_fade" value="false"/>
                                         <Property type="Float4" name="m_fadeColor" x="0" y="0" z="0" w="1"/>
                                     </Object>

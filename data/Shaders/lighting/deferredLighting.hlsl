@@ -6,6 +6,7 @@
 #include "system/msaa.hlsli"
 #include "system/environment.hlsli"
 #include "system/depthstencil.hlsli"
+#include "system/compute.hlsli"
 #include "lighting/GBuffer.hlsli"
 
 struct DepthStencilSample
@@ -39,9 +40,15 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
     if (_depthStencil.depth >= 1.0f)
         return getEnvironmentBackgroundColor(_uv, _viewConstants);  
     #endif  
-
+    
+    float4 screenSpaceAmbient = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).Sample(linearClamp, _uv).rgba;
+    
     float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
     float3 camPos = _viewConstants.getCameraPos();
+    
+    float ao = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).SampleLevel(linearClamp, _uv, 0).x;
+    
+    _gbuffer.pbr.r = min(_gbuffer.pbr.r, ao);
                         
     LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr, _gbuffer.emissive.rgb);
             
@@ -104,6 +111,10 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Deferred_Emissive:
             color = _gbuffer.emissive.rgb;
             break;
+    
+        case DisplayMode::Deferred_ScreenSpaceAmbient:
+            color = screenSpaceAmbient.rgb;
+            break;
                         
         case DisplayMode::Deferred_MSAAEdges:
             // Handled in CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
@@ -124,7 +135,8 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
     uint2 screenSize = deferredLightingConstants.getScreenSize();    
 
     int2 coords = dispatchThreadID;
-    float2 uv = dispatchThreadID.xy / (float2)screenSize;
+    
+    float2 uv = GetScreenUVFromCoords(dispatchThreadID.xy, screenSize);
 
     if (all(dispatchThreadID.xy < screenSize))
     {
@@ -137,14 +149,19 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
             depthStencilSamples[i].Load(coords, i);
 
-        // TODO: early out if all depth samples >= 1.0f or keep early-out per-sample?
-        //if (depthStencilSamples[0].depth >= 1.0f)
-        //    return;
+        // MSAA: Early out if all depth samples >= 1.0f and write environment sky
+        // Non-MSAA: Discard sky pixels
+        bool allSamplesAreSky = true;
 
         GBufferSample gbufferSamples[SAMPLE_COUNT];
         [unroll]
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
+        {
             gbufferSamples[i] = LoadGBufferSample(coords, i);
+            #if SAMPLE_COUNT > 1
+            allSamplesAreSky &= (depthStencilSamples[i].depth >= 1.0f);
+            #endif
+        }
 
         // Deferred shading result
         float3 color[SAMPLE_COUNT];
@@ -152,7 +169,16 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         #if SAMPLE_COUNT == 1
         if (depthStencilSamples[0].depth >= 1.0f)
             return;  
-        #endif  
+        #else
+        if (allSamplesAreSky)
+        {
+           float3 enviro = getEnvironmentBackgroundColor(uv, viewConstants);  
+           [unroll]
+            for (uint i = 0; i < SAMPLE_COUNT; ++i)
+                getRWTexture2D(deferredLightingConstants.getRWBufferOut())[coords * getMSAASampleScale(SAMPLE_COUNT) + getMSAASampleOffset(SAMPLE_COUNT, i)] = float4(enviro.rgb,1);
+            return;
+        }
+        #endif
 
         // Shade sample 0
         color[0] = shadeSample(gbufferSamples[0], depthStencilSamples[0], uv, viewConstants);

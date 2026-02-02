@@ -119,6 +119,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto * renderer = Renderer::get();
         const auto * options = RendererOptions::get();
         const auto * view = (IView *)_renderPassContext.getView();
         auto size = view->GetSize();
@@ -319,7 +320,7 @@ namespace vg::renderer
             }
             else
             {
-                postProcess.setOutlineMask(0);
+                postProcess.setOutlineMask(renderer->getDefaultTexture(DefaultTextureType::Black)->getTextureHandle());
             }
 
             _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);

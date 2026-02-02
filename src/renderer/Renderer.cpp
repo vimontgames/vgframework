@@ -1290,7 +1290,7 @@ namespace vg::renderer
     {
         for (uint t = 0; t < countof(m_defaultTextures); ++t)
         {
-            const auto type = (MaterialTextureType)t;
+            const auto type = (DefaultTextureType)t;
             u32 data;
             ReservedSlot reservedSlot = ReservedSlot::None;
             switch (type)
@@ -1299,22 +1299,32 @@ namespace vg::renderer
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                case MaterialTextureType::Albedo:
+                case DefaultTextureType::Black:
+                    data = 0xFF000000;
+                    reservedSlot = ReservedSlot::DefaultBlackTexSrv;
+                    break;
+
+                case DefaultTextureType::White:
+                    data = 0xFFFFFFFF;
+                    reservedSlot = ReservedSlot::DefaultWhiteTexSrv;
+                    break;
+
+                case DefaultTextureType::Albedo:
                     data = 0xFFBBBBBB;
                     reservedSlot = ReservedSlot::DefaultAlbedoTexSrv;
                     break;
 
-                case MaterialTextureType::Normal:
+                case DefaultTextureType::Normal:
                     data = 0x00FF7F7F;
                     reservedSlot = ReservedSlot::DefaultNormalTexSrv;
                     break;
 
-                case MaterialTextureType::PBR:
+                case DefaultTextureType::PBR:
                     data = 0x00007FFF;    // Blue: Metalness Green: Roughness Red: Occlusion 
                     reservedSlot = ReservedSlot::DefaultPBRTexSrv;
                     break;
 
-                case MaterialTextureType::Emissive:
+                case DefaultTextureType::Emissive:
                     data = 0x00000000;    
                     reservedSlot = ReservedSlot::DefaultEmissiveTexSrv;
                     break;

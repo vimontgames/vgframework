@@ -147,13 +147,63 @@ struct ViewConstants
     void            setProjInv              (float4x4 _projInv)                 { m_projInv = _projInv; }
     float4x4        getProjInv              ()                                  { return m_projInv; }
     
-    float           getLinearDepth          (float _zBuffer)                    { float n = getCameraNearFar().x; float f = getCameraNearFar().y; return (n*f) / (f - _zBuffer * (f - n)); /*return (2.0f * n) / (f + n - _zBuffer * (f - n));*/ }
-    float3          getViewPos              (float2 _screenPos, float _zBuffer) { float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); float4 viewPos = mul(clipPos, getProjInv()); return viewPos.xyz / viewPos.w; }
-    float3          getWorldPos             (float2 _screenPos, float _zBuffer) { float3 viewPos = getViewPos(_screenPos, _zBuffer); return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; }
     float3          getCameraRight          ()                                  {  return -m_viewInv[0].xyz; }
     float3          getCameraUp             ()                                  { return -m_viewInv[1].xyz; }
     float3          getCameraForward        ()                                  { return -m_viewInv[2].xyz; }
     float3          getCameraPos            ()                                  { return m_viewInv[3].xyz; }
+    
+    //--------------------------------------------------------------------------------------
+    float getLinearDepth(float _zBuffer)
+    {
+        float n = getCameraNearFar().x; 
+        float f = getCameraNearFar().y; 
+        return (n*f) / (f - _zBuffer * (f - n)); 
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float3 getViewPos(float2 _screenPos, float _zBuffer) 
+    {
+        float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); 
+        float4 viewPos = mul(clipPos, getProjInv()); 
+        return viewPos.xyz / viewPos.w; 
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float3 getWorldPos(float2 _screenPos, float _zBuffer) 
+    { 
+        float3 viewPos = getViewPos(_screenPos, _zBuffer); 
+        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; 
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float3 getViewPosFromLinearDepth(float2 _screenPos, float _linearDepth)
+    {
+        float2 ndc = float2(_screenPos.x * 2.0f - 1.0f, (1-_screenPos.y) * 2 - 1);
+        float4x4 proj = getProj();
+        
+        float3 viewPos;
+        viewPos.x = ndc.x * _linearDepth / proj._m00;
+        viewPos.y = ndc.y * _linearDepth / proj._m11;
+        viewPos.z = -_linearDepth;
+
+        return viewPos;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float3 getWorldPosFromViewPos(float3 viewPos)
+    {
+        float4x4 view = getViewInv();
+        float3 worldPos = mul(float4(viewPos.xyz,1.0f), view).xyz;
+        return worldPos;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float3 getWorldPosFromLinearDepth(float2 _screenPos, float _linearDepth)
+    {
+        float3 viewPos = getViewPosFromLinearDepth(_screenPos, _linearDepth).xyz;
+        float3 worldPos = getWorldPosFromViewPos(viewPos.xyz);
+        return worldPos;
+    }
 
     // Raytracing constants
     void            setTLASHandle           (uint _value)                       { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
