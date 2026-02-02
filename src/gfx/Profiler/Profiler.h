@@ -24,16 +24,17 @@ inline const char * getGpuEventString(const vg::core::string & _value)
     return _value.c_str();
 }
 
-#define VG_PROFILE_CATEGORY(name, cat)  OPTICK_CATEGORY(name, Optick::Category::cat)
-#define VG_PROFILE_GPU(name)            { const char * staticName = getGpuEventString(name); OPTICK_GPU_EVENT_DYNAMIC(staticName); vg::gfx::ScopedGPUEvent scopedGPUEvent##__COUNTER__(staticName); }
-#define VG_PROFILE_SAVE()               Profiler::save();
+#define VG_PROFILE_CATEGORY(name, cat)          OPTICK_CATEGORY(name, Optick::Category::cat)
+#define VG_PROFILE_GPU_INTERNAL(name, counter)  const char * gpuEventName##counter = name; OPTICK_GPU_EVENT_DYNAMIC(gpuEventName##counter); vg::gfx::ScopedGPUEvent scopedGPUEvent##counter(gpuEventName##counter);
+#define VG_PROFILE_GPU(name)                    VG_PROFILE_GPU_INTERNAL(getGpuEventString(name), __COUNTER__)
+#define VG_PROFILE_SAVE()                       Profiler::save();
 
 #ifdef VG_DX12
-#define VG_PROFILE_GPU_SWAP(dev)        OPTICK_GPU_FLIP(dev->getd3d12SwapChain())
-#define VG_PROFILE_GPU_CONTEXT(cmd)     OPTICK_GPU_CONTEXT(cmd->getd3d12CommandList()) Profiler::setCommandList(cmd)
+#define VG_PROFILE_GPU_SWAP(dev)                OPTICK_GPU_FLIP(dev->getd3d12SwapChain())
+#define VG_PROFILE_GPU_CONTEXT(cmd)             OPTICK_GPU_CONTEXT(cmd->getd3d12CommandList()) Profiler::setCommandList(cmd)
 #elif VG_VULKAN
-#define VG_PROFILE_GPU_SWAP(dev)        OPTICK_GPU_FLIP(dev->getVulkanSwapchain());
-#define VG_PROFILE_GPU_CONTEXT(cmd)     OPTICK_GPU_CONTEXT(cmd->getVulkanCommandBuffer()) Profiler::setCommandList(cmd)
+#define VG_PROFILE_GPU_SWAP(dev)                OPTICK_GPU_FLIP(dev->getVulkanSwapchain());
+#define VG_PROFILE_GPU_CONTEXT(cmd)             OPTICK_GPU_CONTEXT(cmd->getVulkanCommandBuffer()) Profiler::setCommandList(cmd)
 #endif
 
 namespace vg::gfx
