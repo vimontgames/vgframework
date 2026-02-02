@@ -71,6 +71,7 @@
 #include "shaders/preview/preview.hlsl.h"
 #include "shaders/lighting/PrecomputeIBL.hlsl.h"
 #include "shaders/lighting/gbuffer.hlsli"
+#include "shaders/lighting/screenSpaceAmbient.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -323,6 +324,7 @@ namespace vg::renderer
         shaderManager->registerHLSL(DeferredLightingHLSLDesc());
         shaderManager->registerHLSL(PreviewHLSLDesc());
         shaderManager->registerHLSL(PrecomputeIBLHLSLDesc());
+        shaderManager->registerHLSL(ScreenSpaceAmbientHLSLDesc());
 
         // Register callback for after shader updates
         shaderManager->setOnShadersUpdatedCallback(onShadersUpdated);

@@ -2,6 +2,7 @@
 
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
 #include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
+#include "Compute/ComputeScreenSpaceAmbient/ComputeScreenSpaceAmbientPass.hpp"
 #include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
 #include "Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.hpp"
 #include "Compute/ComputeIBLCubemaps/ComputeIBLCubemapsPass.hpp"

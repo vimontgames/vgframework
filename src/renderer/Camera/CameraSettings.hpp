@@ -73,10 +73,12 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(CameraSettings, "Post-processing");
         {
+            registerPropertyEnum(CameraSettings, ScreenSpaceAmbient, m_screenSpaceAmbient, "Ambient");
+            setPropertyDescription(CameraSettings, m_screenSpaceAmbient, "Screen-Space Ambient Occlusion technique")
+
             registerProperty(CameraSettings, m_outlines, "Outlines");
             registerProperty(CameraSettings, m_depthOfField, "Depth-of-field");
-            registerPropertyEx(CameraSettings, m_motionBlur, "Motion blur", PropertyFlags::ReadOnly);
-
+            //registerPropertyEx(CameraSettings, m_motionBlur, "Motion blur", PropertyFlags::ReadOnly); 
             registerOptionalPropertyEx(CameraSettings, m_fade, m_fadeColor, "Fade", PropertyFlags::Color);            
         }
         registerPropertyGroupEnd(CameraComponent);
@@ -157,6 +159,13 @@ namespace vg::renderer
     float CameraSettings::GetFar() const
     {
         return m_far;
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    ScreenSpaceAmbient CameraSettings::GetScreenSpaceAmbient() const
+    {
+        return m_screenSpaceAmbient;
     }
 
     //--------------------------------------------------------------------------------------

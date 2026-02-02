@@ -10,6 +10,11 @@ namespace vg::renderer
         Vertical
     );
 
+    vg_enum_class(vg::renderer, ScreenSpaceAmbient, core::u8,
+        None,
+        SSAO
+    );
+
     class ICameraLens;
 
     class ICameraSettings : public core::Object
@@ -27,6 +32,7 @@ namespace vg::renderer
         virtual float               GetNear                 () const = 0;
         virtual float               GetFar                  () const = 0;
 
+        virtual ScreenSpaceAmbient  GetScreenSpaceAmbient   () const = 0;
         virtual bool                IsOutlinesEnabled       () const = 0;
         virtual bool                IsDepthOfFieldEnabled   () const = 0;
         virtual bool                IsMotionBlurEnabled     () const = 0;

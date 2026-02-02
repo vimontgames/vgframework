@@ -8,6 +8,7 @@ namespace vg::renderer
     class DepthPrePass;
     class ForwardOpaquePass;
     class ForwardTransparentPass;
+    class ComputeScreenSpaceAmbientPass;
     class DeferredOpaquePass;
     class ComputeDeferredLightingPass;
     class ResolveDeferredMSAAPass;
@@ -40,6 +41,7 @@ namespace vg::renderer
         ForwardOpaquePass *             m_forwardOpaquePass         = nullptr;
         ForwardTransparentPass *        m_forwardTransparentPass    = nullptr;
         DeferredOpaquePass *            m_deferredOpaquePass        = nullptr;
+        ComputeScreenSpaceAmbientPass * m_screenSpaceAmbientPass    = nullptr;
         ComputeDeferredLightingPass *   m_deferredLightingPass      = nullptr;
         ResolveDeferredMSAAPass *       m_resolveDeferredMSAAPass   = nullptr;
         LinearizeDepthPass *            m_linearizeDepthPass        = nullptr;

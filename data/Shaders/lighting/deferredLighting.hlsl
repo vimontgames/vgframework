@@ -138,7 +138,7 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
             depthStencilSamples[i].Load(coords, i);
 
         // TODO: early out if all depth samples >= 1.0f or keep early-out per-sample?
-        //if (depth >= 1.0f)
+        //if (depthStencilSamples[0].depth >= 1.0f)
         //    return;
 
         GBufferSample gbufferSamples[SAMPLE_COUNT];

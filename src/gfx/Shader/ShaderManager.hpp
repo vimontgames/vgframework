@@ -172,7 +172,7 @@ namespace vg::gfx
             }
         }
 
-        VG_ASSERT(false, "File \"%s\" not found", _file.c_str());
+        VG_ASSERT(false, "File \"%s\" not found. Please check the corresponding HLSLDesc is declared in 'Renderer::registerShaders()'", _file.c_str());
         return false;
     }
 

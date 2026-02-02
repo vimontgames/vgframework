@@ -7,6 +7,7 @@
 #include "renderer/RenderPass/RenderObjects/Deferred/DeferredOpaquePass.h"
 #include "renderer/RenderPass/RenderObjects/Misc/Outline/OutlineMaskPass.h"
 #include "renderer/RenderPass/RenderObjects/Editor/EditorPass.h"
+#include "renderer/RenderPass/Compute/ComputeScreenSpaceAmbient/ComputeScreenSpaceAmbientPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
 #include "renderer/RenderPass/Render2D/ResolveDeferredMSAA/ResolveDeferredMSAAPass.h"
 #include "renderer/RenderPass/Render2D/LinearizeDepth/LinearizeDepthPass.h"
@@ -30,6 +31,7 @@ namespace vg::renderer
         m_backgroundPass = new BackgroundPass();
         m_forwardOpaquePass = new ForwardOpaquePass();
         m_forwardTransparentPass = new ForwardTransparentPass();
+        m_screenSpaceAmbientPass = new ComputeScreenSpaceAmbientPass();
         m_deferredOpaquePass = new DeferredOpaquePass();
         m_deferredLightingPass = new ComputeDeferredLightingPass();
         m_resolveDeferredMSAAPass = new ResolveDeferredMSAAPass();
@@ -48,6 +50,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_backgroundPass);
         VG_SAFE_RELEASE(m_forwardOpaquePass);
         VG_SAFE_RELEASE(m_forwardTransparentPass);
+        VG_SAFE_RELEASE(m_screenSpaceAmbientPass);
         VG_SAFE_RELEASE(m_deferredOpaquePass);
         VG_SAFE_RELEASE(m_deferredLightingPass);
         VG_SAFE_RELEASE(m_resolveDeferredMSAAPass);
