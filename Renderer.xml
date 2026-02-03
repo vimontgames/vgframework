@@ -36,6 +36,14 @@
                 <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
             </Object>
         </Property>
+        <Property type="ObjectPtr" name="m_blueNoiseTextures">
+            <Object class="TextureResourceList">
+                <Property type="String" name="m_name" value="TextureResourceList #0"/>
+                <Property type="Uint32" name="m_uid" value="1256327462"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="ResourceVector" name="m_resources"/>
+            </Object>
+        </Property>
         <Property type="Bool" name="m_rayTracing" value="false"/>
         <Property type="EnumU8" name="m_rayTracingTLASMode" value="PerWorld"/>
         <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>

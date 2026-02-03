@@ -17,6 +17,7 @@
 #include "SMAA.hlsli"
 #endif
 
+//--------------------------------------------------------------------------------------   
 [numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
 void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -38,6 +39,7 @@ void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
     }
 }
 
+//--------------------------------------------------------------------------------------   
 float ComputeCOC(float linearDepth, ViewConstants viewConstants) 
 {
     float focallength = viewConstants.getFocalLength(); 
@@ -48,6 +50,7 @@ float ComputeCOC(float linearDepth, ViewConstants viewConstants)
     return coc * viewConstants.getDOFScale();
 }
 
+//--------------------------------------------------------------------------------------   
 [numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
 void CS_DepthOfField(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -136,19 +139,9 @@ void CS_DepthOfField(int2 dispatchThreadID : SV_DispatchThreadID)
     }
 }
 
+//--------------------------------------------------------------------------------------   
 void outlineEdgeSample(uint2 _center, uint2 _sample, inout bool _visibleOutline, inout bool _hiddenOutline)
-{
-    //if ((_sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (_center.a & ~(uint)OutlineMaskFlags::DepthFail))
-    //{
-    //    if (0 != _sample.a)
-    //    {
-    //        if (_sample.a & (uint)OutlineMaskFlags::DepthFail)
-    //            _hiddenOutline = true;
-    //        else
-    //            _visibleOutline = true;
-    //    }
-    //}
-    
+{    
     if (0 != _sample.x)
     {
         if (_center.x != _sample.x)
@@ -161,6 +154,7 @@ void outlineEdgeSample(uint2 _center, uint2 _sample, inout bool _visibleOutline,
     }
 }
 
+//--------------------------------------------------------------------------------------   
 void outlineEdge(uint2 s00, uint2 s01, uint2 s02,
                  uint2 s10, uint2 s11, uint2 s12,
                  uint2 s20, uint2 s21, uint2 s22, inout float _visible, inout float _hidden)
@@ -225,6 +219,7 @@ float4 getOutlineColor( uint2 s00, uint2 s01, uint2 s02,
 
 #if _TOOLMODE
 #if _RAYTRACING
+//--------------------------------------------------------------------------------------   
 float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants viewConstants)
 {
     DisplayMode mode = viewConstants.getDisplayMode();
@@ -289,6 +284,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 #endif // _RAYTRACING
 #endif // _TOOLMODE
 
+//--------------------------------------------------------------------------------------   
 void outlineEdgeColor(
     uint2 s00, uint2 s01, uint2 s02,
     uint2 s10, uint2 s11, uint2 s12,
@@ -333,10 +329,10 @@ void outlineEdgeColor(
     }
 }
 
+//--------------------------------------------------------------------------------------   
 #if SAMPLE_COUNT > 1
 groupshared float4 localData[POSTPROCESS_THREADGROUP_SIZE_X*POSTPROCESS_THREADGROUP_SIZE_Y];
-#endif
-
+#endif 
 [numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
 void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -380,7 +376,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         #endif
 
         // Outline
-        if ((uint)ReservedSlot::DefaultBlackTexSrv != postProcessConstants.getOutlineMask())
+        if (RESERVEDSLOT_TEXSRV_DEFAULT_BLACK != postProcessConstants.getOutlineMask())
         {
             Texture2D<uint2> outlineTex = getTexture2D_UInt2(postProcessConstants.getOutlineMask());
             uint2 s[5][5];
@@ -559,9 +555,9 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             }
             break;
             
-            case DisplayMode::PostProcess_PixelChecker:
+            case DisplayMode::Misc_PixelChecker:
             {
-                 switch (coords.x & 0x3)
+                switch (coords.x & 0x3)
                 {
                     case 0 : color.rgb = float3(1,0,0); break;
                     case 1 : color.rgb = float3(0,1,0); break;
@@ -573,6 +569,21 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
                 {
                     color.rgb *= 0.25;
                 }
+            }
+            break;
+            
+            case DisplayMode::Misc_BlueNoise:
+            {
+                float time = viewConstants.getRealTimeSinceStart();
+                float frame = time % 31.0f;
+                uint indexA = floor(frame);
+                uint indexB = ceil(frame);
+                float blend = frac(frame);
+                
+                float3 A = getTexture2D(RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST + indexA).SampleLevel(nearestRepeat, uv * screenSize / 128.0f, 0).rgb;
+                float3 B = getTexture2D(RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST + indexB).SampleLevel(nearestRepeat, uv * screenSize / 128.0f, 0).rgb;
+                
+                 color.rgb = lerp(A, B, blend);
             }
             break;
         }

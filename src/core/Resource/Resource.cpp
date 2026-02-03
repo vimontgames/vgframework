@@ -107,7 +107,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::Setup(IObject * _owner, const string & _path, UserData _userData)
+    void Resource::Setup(IObject * _owner, const string & _path, ResourceUserData _userData)
     {
         SetObject(nullptr);
         SetParent(_owner);
@@ -184,13 +184,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::SetUserData(UserData _userData)
+    void Resource::SetUserData(ResourceUserData _userData)
     {
         m_userData = _userData;
     }
 
     //--------------------------------------------------------------------------------------
-    IResource::UserData Resource::GetUserData() const
+    ResourceUserData Resource::GetUserData() const
     {
         return m_userData;
     }    

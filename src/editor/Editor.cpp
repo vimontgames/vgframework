@@ -5,7 +5,7 @@
 #include "core/IResource.h"
 #include "core/IGameObject.h"
 #include "core/File/File.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 #include "core/UndoRedo/UndoRedo.h"
 #include "renderer/IUIRenderer.h"
 #include "renderer/IRenderer.h"

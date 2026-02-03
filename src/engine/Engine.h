@@ -4,6 +4,7 @@
 #include "core/IScheduler.h"
 #include "core/Singleton/Singleton.h"
 #include "core/Resource/Resource.h"
+#include "core/Time/Time.h"
 
 namespace vg::core
 {
@@ -53,7 +54,7 @@ namespace vg::engine
 										        Engine		            (const core::string & _name, core::IObject * _parent);
 										        ~Engine		            ();
 
-        const Time &                            GetTime                 () const final override;
+        const core::Time &                      GetTime                 () const final override;
 
         const char *                            GetClassName            () const final { return "Engine"; }
         bool                                    RegisterClasses         () override;
@@ -126,7 +127,7 @@ namespace vg::engine
         audio::IAudioOptions *                  getAudioOptions         () const;
         vg::IGameOptions *                      getGameOptions          () const;
 
-        VG_INLINE const Time &                  getTime                 () const;
+        VG_INLINE const core::Time &            getTime                 () const;
 
         void                                    registerWorld           (World * _world);
         void                                    unregisterWorld         (World * _world);
@@ -188,7 +189,7 @@ namespace vg::engine
             float m_gpuWaitSum;
         };
 
-        Time                                    m_time;
+        core::Time                              m_time;
         TimeInternal                            m_timeInternal;
 	};
 }

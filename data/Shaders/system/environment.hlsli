@@ -5,7 +5,7 @@ float3 getEnvironmentBackgroundColor(float2 _uv, ViewConstants _viewConstants)
 {
     uint envCubemapHandle = _viewConstants.getEnvironmentCubemap();
     
-    if (ReservedSlot::InvalidTextureCube != (ReservedSlot)envCubemapHandle)
+    if (RESERVEDSLOT_TEXSRV_INVALID_TEXTURE_CUBE != envCubemapHandle)
     {
         float4 clipPos = float4(_uv*2-1, 1,1);
         float4 viewPos = mul(clipPos, _viewConstants.getProjInv());

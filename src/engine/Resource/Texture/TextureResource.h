@@ -2,6 +2,8 @@
 
 #include "core/Resource/Resource.h"
 
+enum class ReservedSlot : vg::core::u32;
+
 namespace vg::gfx
 {
     class ITexture;
@@ -25,5 +27,6 @@ namespace vg::engine
         core::IResourceMeta *               CreateResourceMeta      (const core::string & _path) const final override;
 
         gfx::ITexture *                     getTexture              () const { return (gfx::ITexture*)m_shared; }
+        ReservedSlot                        getReservedSlot         () const;
     };
 }

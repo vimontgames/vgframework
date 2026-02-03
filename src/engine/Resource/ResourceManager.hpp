@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 #include "core/Resource/Resource.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/string/string.h"

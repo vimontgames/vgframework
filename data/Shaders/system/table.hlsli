@@ -34,10 +34,14 @@
 #define  BINDLESS_TLAS_INVALID      (BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1)
 #define  BINDLESS_TLAS_BINDING      4
 
+//--------------------------------------------------------------------------------------
 // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
-
+// Using an enum to ensure unique values across all resource types.
+//-------------------------------------------------------------------------------------- 
 vg_enum_class_global(ReservedSlot, u32,
     // Texture
+    BlurNoiseTexSrv_First   = BINDLESS_TEXTURE_INVALID - 40,
+    BlueNoiseTexSrc_Last    = BINDLESS_TEXTURE_INVALID - 9,
     ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 8,
     DefaultEmissiveTexSrv   = BINDLESS_TEXTURE_INVALID - 7,
     DefaultPBRTexSrv        = BINDLESS_TEXTURE_INVALID - 6,
@@ -48,7 +52,7 @@ vg_enum_class_global(ReservedSlot, u32,
     InvalidTextureCube      = BINDLESS_TEXTURE_INVALID - 1,
     InvalidTexture2D        = BINDLESS_TEXTURE_INVALID,
 
-    FirstTexture            = ImGuiFontTexSrv,
+    FirstTexture            = BlurNoiseTexSrv_First,
     LastTexture             = InvalidTexture2D,
 
     // Buffer
@@ -82,25 +86,31 @@ vg_enum_class_global(ReservedSlot, u32,
 );
 
 // Texture SRV
-#define RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE    (BINDLESS_TEXTURE_INVALID - 7)
-#define RESERVEDSLOT_TEXSRV_DEFAULT_PBR         (BINDLESS_TEXTURE_INVALID - 6)
-#define RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL      (BINDLESS_TEXTURE_INVALID - 5)
-#define RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO      (BINDLESS_TEXTURE_INVALID - 4)
-#define RESERVEDSLOT_TEXSRV_DEFAULT_WHITE       (BINDLESS_TEXTURE_INVALID - 3)
-#define RESERVEDSLOT_TEXSRV_DEFAULT_BLACK       (BINDLESS_TEXTURE_INVALID - 2)
-#define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX        (BINDLESS_TEXTURE_INVALID - 1)
+#define RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST        (uint)(ReservedSlot::BlurNoiseTexSrv_First)
+#define RESERVEDSLOT_TEXSRV_BLUE_NOISE_LAST         (uint)(ReservedSlot::BlueNoiseTexSrc_Last)
+#define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX            (uint)(ReservedSlot::ImGuiFontTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE        (uint)(ReservedSlot::DefaultEmissiveTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_PBR             (uint)(ReservedSlot::DefaultPBRTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL          (uint)(ReservedSlot::DefaultNormalTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO          (uint)(ReservedSlot::DefaultAlbedoTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_WHITE           (uint)(ReservedSlot::DefaultWhiteTexSrv)
+#define RESERVEDSLOT_TEXSRV_DEFAULT_BLACK           (uint)(ReservedSlot::DefaultBlackTexSrv)
+#define RESERVEDSLOT_TEXSRV_INVALID_TEXTURE_CUBE    (uint)(ReservedSlot::InvalidTextureCube)
+#define RESERVEDSLOT_TEXSRV_INVALID_TEXTURE_2D      (uint)(ReservedSlot::InvalidTexture2D)
 
 // Buffer SRV
-#define RESERVEDSLOT_BUFSRV_TRANSPARENTPASS     (BINDLESS_BUFFER_INVALID - 6)
-#define RESERVEDSLOT_BUFSRV_MATERIALDATA        (BINDLESS_BUFFER_INVALID - 5)
-#define RESERVEDSLOT_BUFSRV_INSTANCEDATA        (BINDLESS_BUFFER_INVALID - 4)
-#define RESERVEDSLOT_BUFSRV_SKINNINGMATRICES    (BINDLESS_BUFFER_INVALID - 3)
-#define RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS     (BINDLESS_BUFFER_INVALID - 2)
-#define RESERVEDSLOT_BUFSRV_VIEWCONSTANTS       (BINDLESS_BUFFER_INVALID - 1)
+#define RESERVEDSLOT_BUFSRV_EDITORPASS              (uint)(ReservedSlot::EditorPassBufSrv)      
+#define RESERVEDSLOT_BUFSRV_TRANSPARENTPASS         (uint)(ReservedSlot::TransparentPassBufSrv) 
+#define RESERVEDSLOT_BUFSRV_MATERIALDATA            (uint)(ReservedSlot::MaterialDataBufSrv)    
+#define RESERVEDSLOT_BUFSRV_INSTANCEDATA            (uint)(ReservedSlot::InstanceDataBufSrv)    
+#define RESERVEDSLOT_BUFSRV_SKINNINGMATRICES        (uint)(ReservedSlot::SkinningMatricesBufSrv)
+#define RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS         (uint)(ReservedSlot::LightsConstantBufSrv)  
+#define RESERVEDSLOT_BUFSRV_VIEWCONSTANTS           (uint)(ReservedSlot::ViewConstantsBufSrv)   
+#define RESERVEDSLOT_BUFSRV_INVALID                 (uint)(ReservedSlot::InvalidBuffer)        
 
 // RWBuffer
-#define RESERVEDSLOT_RWBUFFER_GPUDEBUG          (BINDLESS_RWBUFFER_INVALID - 1)
-
+#define RESERVEDSLOT_RWBUFFER_GPUDEBUG              (uint)(ReservedSlot::GPUDebugBufRW)
+#define RESERVEDSLOT_RWBUFFER_INVALID               (uint)(ReservedSlot::InvalidRWBuffer) 
 #ifdef _DX12
 
 // DX12 requires aliasing texture types to use different spaces

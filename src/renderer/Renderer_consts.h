@@ -5,6 +5,15 @@
 
 namespace vg::renderer
 {
+    vg_enum_class(vg::renderer, DefaultTextureType, core::u8,
+        Black = 0,
+        White,
+        Albedo,
+        Normal,
+        PBR,
+        Emissive
+    );
+
     vg_enum_class(vg::renderer, OutlineCategory, core::u8,
         None = 0,
         SelectedObject,

@@ -1,4 +1,3 @@
-#include "core/Precomp.h"
 #include "Timer.h"
 
 #ifdef VG_WINDOWS

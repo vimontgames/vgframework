@@ -1,6 +1,6 @@
 #include "gfx/Precomp.h"
 #include "Device.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 #include "core/Memory/MemoryInfo.h"
 #include "gfx/CommandQueue/CommandQueue.h"
 #include "gfx/CommandPool/CommandPool.h"
@@ -619,7 +619,7 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    LoadStatus Device::createResourceTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture)
+    LoadStatus Device::createResourceTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture, ReservedSlot _reservedSlot)
     {
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
@@ -632,7 +632,7 @@ namespace vg::gfx
         {
             auto requiredUploadSize = streamingBuffer->getAlignedSize(size, alignment);
             streamingBuffer->setNextAllocSize(requiredUploadSize);
-            _texture = createTexture(_texDesc, _name, _initData);
+            _texture = createTexture(_texDesc, _name, _initData, _reservedSlot);
 
             return LoadStatus::Success;
         }

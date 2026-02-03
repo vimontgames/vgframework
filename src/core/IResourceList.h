@@ -4,16 +4,26 @@
 
 namespace vg::core
 {
+    using ResourceUserData = core::u64;
+
     class IResourceList : public Object
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IResourceList, Object)
 
-        virtual bool    Add         (const string & _name) = 0;
+        virtual bool    Add         (const string & _name, const string & _path = "", ResourceUserData _userData = 0x0000000000000000) = 0;
         virtual bool    Pop         () = 0;
         virtual bool    MoveUp      (size_t _index) = 0;
         virtual bool    MoveDown    (size_t _index) = 0;
         virtual bool    Remove      (size_t _index) = 0;
         virtual size_t  Size        () const = 0;
+
+        virtual bool    CanAdd      () const = 0;
+        virtual bool    CanRemove   () const = 0;
+
+        virtual void    SetMinSize  (size_t _count) = 0;
+        virtual size_t  GetMinSize  () const = 0;
+        virtual void    SetMaxSize  (size_t _count) = 0;
+        virtual size_t  GetMaxSize  () const = 0;
     };
 }

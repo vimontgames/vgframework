@@ -10,6 +10,7 @@ namespace vg
     namespace core
     {
         struct Singletons;
+        struct Time;
         class IWorld;
         class ISelection;
     }
@@ -44,25 +45,6 @@ namespace vg
         class IWorldResource;
         class IEngineOptions;
 
-        struct Time
-        {
-            float m_realDeltaTime = 0.0f;
-            float m_scaledDeltaTime = 0.0f;
-            float m_enlapsedTimeSinceStartReal = 0.0f;
-            float m_enlapsedTimeSinceStartScaled = 0.0f;
-            float m_fps = 0.0f;
-            float m_gpu = 0.0f;
-            float m_gpuWait = 0.0f;
-            
-            struct
-            {
-                float m_dt = 0.0f;
-                float m_fps = 0.0f;
-                float m_gpu = 0.0f;
-                float m_gpuWait = 0.0f;
-            } smoothed;
-        };
-
 	    class IEngine : public core::IPlugin
 	    {
 	    public:
@@ -88,7 +70,7 @@ namespace vg
             virtual void                                Quit                () = 0;
             virtual bool                                IsQuitting          () const = 0;
 
-            virtual const Time &                        GetTime             () const = 0;
+            virtual const core::Time &                  GetTime             () const = 0;
 
             virtual bool                                LoadGame            (const core::string & _path) = 0;
             virtual bool                                UnloadGame          () = 0;

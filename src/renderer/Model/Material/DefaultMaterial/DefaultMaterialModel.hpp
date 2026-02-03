@@ -129,21 +129,21 @@ namespace vg::renderer
 
         // Albedo
         const bool enableAlbedo = (SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
-        _data->setAlbedoTextureHandle(enableAlbedo && m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
+        _data->setAlbedoTextureHandle(enableAlbedo && m_albedoMap ? m_albedoMap->getTextureHandle() : ReservedSlot::DefaultAlbedoTexSrv);
         _data->setAlbedoColor(m_albedoColor);
 
         // Normal
-        _data->setNormalTextureHandle(m_enableNormal && m_normalMap ? m_normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        _data->setNormalTextureHandle(m_enableNormal && m_normalMap ? m_normalMap->getTextureHandle() : ReservedSlot::DefaultNormalTexSrv);
         _data->setNormalStrength(m_normalStrength);
 
         // PBR
-        _data->setPBRTextureHandle(m_enablePbr && m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+        _data->setPBRTextureHandle(m_enablePbr && m_pbrMap ? m_pbrMap->getTextureHandle() : ReservedSlot::DefaultPBRTexSrv);
         _data->setOcclusion(m_occlusion);
         _data->setRoughness(m_roughness);
         _data->setMetalness(m_metalness);
 
         // Emissive
-        _data->setEmissiveTextureHandle(m_enableEmissive && m_emissiveMap ? m_emissiveMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE);
+        _data->setEmissiveTextureHandle(m_enableEmissive && m_emissiveMap ? m_emissiveMap->getTextureHandle() : ReservedSlot::DefaultEmissiveTexSrv);
         _data->setEmissiveColor(m_emissiveColor);
         _data->setEmissiveIntensity(m_emissiveIntensity);
     }

@@ -310,7 +310,7 @@ The following models have been modified for engine-compatible materials and/or g
 | [Garage Door]( https://www.sharetextures.com/textures/wood/garage-door ) | [Tolga Arslan](https://www.sharetextures.com/author/mtolgaarslan)      | [CC0 1.0](https://www.sharetextures.com/p/terms)   
 | [Tiling 23](   https://www.sharetextures.com/textures/wood/garage-door ) | [Tolga Arslan](https://www.sharetextures.com/textures/floor/tiling_23) | [CC0 1.0](https://www.sharetextures.com/p/terms)  
 
-
+Blue noise textures were generated using [FastNoise](https://github.com/electronicarts/fastnoise) and [importance-sampled-FAST-noise](https://github.com/electronicarts/importance-sampled-FAST-noise)
            
 ### Sounds
 

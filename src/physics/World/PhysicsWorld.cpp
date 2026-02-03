@@ -4,7 +4,7 @@
 #include "physics/Options/PhysicsOptions.h"
 #include "physics/Contact/ContactListener.h"
 #include "physics/DebugRenderer/DebugRenderer.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 
 #if !VG_ENABLE_INLINE
 #include "PhysicsWorld.inl"

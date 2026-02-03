@@ -365,7 +365,7 @@ LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, flo
 
 	// environment diffuse
 	uint irrandianceCubemapHandle = _viewConstants.getIrradianceCubemap();
-	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)irrandianceCubemapHandle)
+	if (RESERVEDSLOT_TEXSRV_INVALID_TEXTURE_CUBE != irrandianceCubemapHandle)
 	{
 		TextureCube irradianceCubemap = getTextureCube(irrandianceCubemapHandle);
 		{
@@ -390,7 +390,7 @@ LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, flo
 	#endif
 	
 	uint specularReflectionCubemapHandle = _viewConstants.getSpecularReflectionCubemap();
-	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)specularReflectionCubemapHandle)
+	if (RESERVEDSLOT_TEXSRV_INVALID_TEXTURE_CUBE != specularReflectionCubemapHandle)
 	{
 		TextureCube specularReflectionCubemap = getTextureCube(specularReflectionCubemapHandle);
 		uint width, height, mipLevels;

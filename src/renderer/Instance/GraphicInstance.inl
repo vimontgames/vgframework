@@ -29,7 +29,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    // Offset in Buffer 'RESERVEDSLOT_BUFSRV_INSTANCEDATA' with Instance and its material data
+    // Offset in Buffer 'ReservedSlot::MaterialDataBufSrv' with Instance and its material data
     // Filled once during InstanceDataUpdatePass. 
     //--------------------------------------------------------------------------------------
     VG_INLINE void GraphicInstance::setGPUInstanceDataOffset(core::uint _offset)

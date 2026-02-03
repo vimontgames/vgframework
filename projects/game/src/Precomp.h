@@ -9,6 +9,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Math/Math.h"
 #include "core/string/string.h"
+#include "core/Time/Time.h"
 
 #include "engine/IEngine.h"
 #include "engine/IAnimationComponent.h"

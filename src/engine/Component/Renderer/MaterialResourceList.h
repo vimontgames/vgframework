@@ -5,7 +5,7 @@
 
 namespace vg::engine
 {
-    class MaterialResourceList : public ResourceList<MaterialResource>
+    class MaterialResourceList : public core::ResourceList<MaterialResource>
     {
     public:
         VG_CLASS_DECL(MaterialResourceList, ResourceList<MaterialResource>);

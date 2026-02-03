@@ -42,7 +42,7 @@ vg_enum_class_global(DisplayMode, u32,
     Deferred_Normal,
     Deferred_PBR,
     Deferred_Emissive,
-    Deferred_ScreenSpaceAmbient,
+    Deferred_AmbientOcclusion,
     Deferred_MSAAEdges,
 
     Lighting_Diffuse,
@@ -79,7 +79,9 @@ vg_enum_class_global(DisplayMode, u32,
     PostProcess_FXAAEdges,
     PostProcess_ViewPos,
     PostProcess_WorldPos,
-    PostProcess_PixelChecker 
+
+    Misc_PixelChecker,
+    Misc_BlueNoise
 );
 
 vg_enum_global(DisplayFlags, u32,

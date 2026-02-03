@@ -1,7 +1,7 @@
 #include "TextureResource.h"
 #include "gfx/ITexture.h"
 #include "core/File/File.h"
-
+#include "Shaders/system/table.hlsli"
 #include "TextureResourceMeta.hpp"
 
 using namespace vg::core;
@@ -10,10 +10,14 @@ namespace vg::engine
 {
     VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture", ResourcePriority::Texture);
 
+    declareResizeVectorDefaultFunc(TextureResource);
+
     //--------------------------------------------------------------------------------------
     bool TextureResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+        registerResizeVectorDefaultFunc(TextureResource);
 
         return true;
     }
@@ -22,7 +26,7 @@ namespace vg::engine
     TextureResource::TextureResource(const string & _name, IObject * _parent) :
         Resource(_name, _parent)
     {
-
+        SetUserData((ResourceUserData)ReservedSlot::None);
     }
 
     //--------------------------------------------------------------------------------------
@@ -55,10 +59,18 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    ReservedSlot TextureResource::getReservedSlot() const
+    {
+        const ResourceUserData data = GetUserData();
+        VG_ASSERT(0 != data);
+        return (ReservedSlot)data;
+    }
+
+    //--------------------------------------------------------------------------------------
     LoadStatus TextureResource::Load(const core::string & _file, core::IObject *& _object)
     {
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
-        return Engine::get()->GetRenderer()->LoadTexture(_file, (gfx::ITexture*&)_object);
+        return Engine::get()->GetRenderer()->LoadTexture(_file, (gfx::ITexture*&)_object, getReservedSlot());
     }
 
     //--------------------------------------------------------------------------------------

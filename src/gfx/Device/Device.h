@@ -198,7 +198,7 @@ namespace vg::gfx
 		Texture *	            createTexture	            (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
         Buffer *                createBuffer                (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
 
-        core::LoadStatus	    createResourceTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture);
+        core::LoadStatus	    createResourceTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
         core::LoadStatus        createResourceBuffer        (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, Buffer *& _buffer);
 
         RootSignatureHandle     addRootSignature            (const RootSignatureDesc & _desc);

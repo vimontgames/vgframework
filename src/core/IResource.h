@@ -16,6 +16,8 @@ namespace vg::core
         NotImplemented
     );
 
+    using ResourceUserData = core::u64;
+
     //--------------------------------------------------------------------------------------
     // An IResource is an object that will from an external file with dependencies. 
     // e.g., a TextureResource used to reference a Texture in a MaterialResource used to reference a MaterialModel
@@ -24,7 +26,6 @@ namespace vg::core
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IResource, Object);
-        using UserData = core::u64;
 
         IResource(const IResource & _other) : Object(_other) { }
         virtual ~IResource() = default;
@@ -32,15 +33,15 @@ namespace vg::core
         virtual bool                    CreateFile              (const string & _path, IObject * _data = nullptr) = 0;
         virtual bool                    SaveFile                (const string & _path) const = 0;
 
-        virtual void                    Setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) = 0;
+        virtual void                    Setup                   (IObject * _owner, const string & _path, ResourceUserData _userData = 0x0) = 0;
 
         virtual bool                    SetObject               (core::IObject * _object) = 0;
         virtual bool                    Instanciate             () = 0;
         virtual IObject *               GetSharedObject         () const = 0;
         virtual IObject *               GetObject               () const = 0;
 
-        virtual void                    SetUserData             (UserData _userData) = 0;
-        virtual UserData                GetUserData             () const = 0;
+        virtual void                    SetUserData             (ResourceUserData _userData) = 0;
+        virtual ResourceUserData                GetUserData             () const = 0;
 
         virtual bool                    ClearResourcePath       () = 0;
         virtual bool                    SetResourcePath         (const string & _path) = 0;

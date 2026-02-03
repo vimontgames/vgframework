@@ -22,15 +22,6 @@ namespace vg::renderer
         Emissive
     );
 
-    vg_enum_class(vg::renderer, DefaultTextureType, core::u8,
-        Black = 0,
-        White,
-        Albedo,
-        Normal,
-        PBR,
-        Emissive
-    );
-
     vg_enum_class(vg::renderer, MaterialColorType, core::u8,
         BaseColor = 0,
         EmissiveColor

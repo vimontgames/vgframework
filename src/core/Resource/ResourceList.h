@@ -23,14 +23,18 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool Add(const string & _name) override
+        bool Add(const string & _name, const string & _path, ResourceUserData _userData) override
         {
             T & res = m_resources.emplace_back();
             res.SetName(_name);
             res.RegisterUID();
+            res.SetUserData(_userData);
 
             for (auto & res : m_resources)
                 res.SetParent(this);
+
+            if (!_path.empty())
+                res.SetResourcePath(_path);
 
             return true;
         }
@@ -98,6 +102,42 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
+        bool CanAdd() const override
+        {
+            return m_resources.size() < m_maxSize;
+        }
+
+        //--------------------------------------------------------------------------------------
+        bool CanRemove() const override
+        {
+            return m_resources.size() > m_minSize;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void SetMinSize(size_t _count) override
+        {
+            m_minSize = _count;
+        }
+
+        //--------------------------------------------------------------------------------------
+        size_t GetMinSize() const override
+        {
+            return m_minSize;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void SetMaxSize(size_t _count) override
+        {
+            m_maxSize = _count;
+        }
+
+        //--------------------------------------------------------------------------------------
+        size_t GetMaxSize() const override
+        {
+            return m_maxSize;
+        }
+
+        //--------------------------------------------------------------------------------------
         void OnEnable() override
         {
             super::OnEnable();
@@ -115,6 +155,8 @@ namespace vg::core
 
     protected:
         core::vector<T> m_resources;
+        size_t m_minSize = 0;
+        size_t m_maxSize = (size_t)-1;
     };
 
     //--------------------------------------------------------------------------------------

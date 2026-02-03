@@ -9,6 +9,7 @@
 #include "system/compute.hlsli"
 #include "lighting/GBuffer.hlsli"
 
+//--------------------------------------------------------------------------------------
 struct DepthStencilSample
 {
     float depth;
@@ -27,6 +28,7 @@ struct DepthStencilSample
     }
 };
 
+//--------------------------------------------------------------------------------------
 GBufferSample LoadGBufferSample(int2 _coords, uint _sampleIndex)
 {
     GBufferSample sample;
@@ -34,6 +36,7 @@ GBufferSample LoadGBufferSample(int2 _coords, uint _sampleIndex)
     return sample;
 }
 
+//--------------------------------------------------------------------------------------   
 float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, float2 _uv, ViewConstants _viewConstants)
 {
     #if SAMPLE_COUNT > 1
@@ -41,13 +44,14 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         return getEnvironmentBackgroundColor(_uv, _viewConstants);  
     #endif  
     
-    float4 screenSpaceAmbient = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).Sample(linearClamp, _uv).rgba;
+    float4 screenSpaceAmbient = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).SampleLevel(linearClamp, _uv, 0).rgba;
     
     float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
     float3 camPos = _viewConstants.getCameraPos();
     
     float ao = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).SampleLevel(linearClamp, _uv, 0).x;
     
+    float3 pbr = _gbuffer.pbr;
     _gbuffer.pbr.r = min(_gbuffer.pbr.r, ao);
                         
     LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr, _gbuffer.emissive.rgb);
@@ -105,15 +109,15 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
             break;
                         
         case DisplayMode::Deferred_PBR:
-            color = _gbuffer.pbr.rgb;
+            color = pbr;
             break;
                             
         case DisplayMode::Deferred_Emissive:
             color = _gbuffer.emissive.rgb;
             break;
     
-        case DisplayMode::Deferred_ScreenSpaceAmbient:
-            color = screenSpaceAmbient.rgb;
+        case DisplayMode::Deferred_AmbientOcclusion:
+            color = _gbuffer.pbr.r; //screenSpaceAmbient.rgb;
             break;
                         
         case DisplayMode::Deferred_MSAAEdges:
@@ -129,6 +133,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
     return color;
 }
 
+//--------------------------------------------------------------------------------------
 [numthreads(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y, 1)]
 void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 {   

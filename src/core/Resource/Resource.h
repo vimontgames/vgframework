@@ -24,15 +24,15 @@ namespace vg::core
         bool                        CreateFile              (const string & _path, IObject * _data) override;
         bool                        SaveFile                (const string & _path) const override;
 
-        void                        Setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) final override;
+        void                        Setup                   (IObject * _owner, const string & _path, ResourceUserData _userData = 0x0) final override;
 
         bool                        SetObject               (core::IObject * _object) final override;
         bool                        Instanciate             () override;
         IObject *                   GetSharedObject         () const final override;
         IObject *                   GetObject               () const final override;
     
-        void                        SetUserData             (UserData _userData) final override;
-        UserData                    GetUserData             () const final override;
+        void                        SetUserData             (ResourceUserData _userData) final override;
+        ResourceUserData                    GetUserData             () const final override;
 
         bool                        ClearResourcePath       () final override;
         bool                        SetResourcePath         (const string & _path) final override;
@@ -66,6 +66,6 @@ namespace vg::core
         bool                        m_instanciate = false;
         IObject *                   m_shared = nullptr;
         IObject *                   m_instance = nullptr;
-        UserData                    m_userData = 0x0;
+        ResourceUserData                    m_userData = 0x0;
     };
 }

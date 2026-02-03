@@ -3,7 +3,7 @@
 #include "application/IGame.h"
 #include "core/Singleton/Singleton.h"
 #include "Game_consts.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 
 namespace vg::core
 {

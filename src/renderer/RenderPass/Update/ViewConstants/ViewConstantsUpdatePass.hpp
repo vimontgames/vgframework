@@ -138,6 +138,10 @@ namespace vg::renderer
             constants->setIrradianceIntensity(world->GetIrradianceIntensity());
             constants->setSpecularReflectionIntensity(world->GetSpecularReflectionIntensity());
 
+            const core::Time & time = Renderer::get()->getTime();
+            constants->setRealTimeSinceStart(time.m_enlapsedTimeSinceStartReal);
+            constants->setScaledTimeSinceStart(time.m_enlapsedTimeSinceStartScaled);
+
             const auto * camSettings = view->GetCameraSettings();
             if (camSettings)
             {

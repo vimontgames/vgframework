@@ -6,12 +6,15 @@
 #include "renderer/IView.h"      
 #include "renderer/IViewport.h"
 
+enum class ReservedSlot : vg::core::u32;
+
 namespace vg::core
 {
     class IProfiler;
     struct Singletons;
     struct JobSync;
     struct GPUMemoryInfo;
+    struct Time;
 }
 
 namespace vg::gfx
@@ -122,7 +125,7 @@ namespace vg::renderer
         virtual core::LoadStatus                    LoadMeshModel           (const core::string & _file, IMeshModel *& _meshModel) = 0;
 
         virtual bool                                CookTexture             (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) = 0;
-        virtual core::LoadStatus                    LoadTexture             (const core::string & _file, gfx::ITexture *& _texture) = 0;
+        virtual core::LoadStatus                    LoadTexture             (const core::string & _file, gfx::ITexture *& _texture, ReservedSlot _reservedSlot) = 0;
 
         virtual bool                                CookAnimation           (const core::string & _file) = 0;
         virtual core::LoadStatus                    LoadAnimation           (const core::string & _file, IAnimation *& _animation) = 0;
@@ -152,5 +155,7 @@ namespace vg::renderer
         virtual bool                                GetGpuMemoryInfo        (core::GPUMemoryInfo & _gpuMem) const = 0;
         virtual core::u64                           GetAvailableUploadSize  () const = 0;
         virtual core::u64                           GetTotalUploadSize      () const = 0;
+
+        virtual void                                SetTime                 (const core::Time & _time) = 0;
     };
 }

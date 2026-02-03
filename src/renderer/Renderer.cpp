@@ -4,7 +4,7 @@
 #include "Renderer.h"
 
 #include "core/Kernel.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
@@ -1223,13 +1223,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    LoadStatus Renderer::LoadTexture(const core::string & _file, gfx::ITexture *& _texture)
+    LoadStatus Renderer::LoadTexture(const core::string & _file, gfx::ITexture *& _texture, ReservedSlot _reservedSlot)
     {
         TextureImporterData textureData;
 
         LoadStatus status = textureData.load(io::getCookedPath(_file));
         if (status == LoadStatus::Success)
-            return m_device.createResourceTexture(textureData.desc, textureData.name, textureData.texels.data(), (gfx::Texture * &)_texture);
+            return m_device.createResourceTexture(textureData.desc, textureData.name, textureData.texels.data(), (gfx::Texture * &)_texture, _reservedSlot);
 
         _texture = nullptr;
         return status;
@@ -1627,5 +1627,11 @@ namespace vg::renderer
     IGraphicScene * Renderer::CreateSceneRenderData(const core::string & _name, core::IObject * _parent)
     {
         return new SceneRenderData(_name, _parent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetTime(const core::Time & _time)
+    {
+        m_rendererTime = _time;
     }
 }

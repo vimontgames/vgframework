@@ -1,5 +1,6 @@
 #include "ImguiFPS.h"
 #include "editor/Editor_Consts.h"
+#include "core/Time/Time.h"
 
 namespace vg::editor
 {

@@ -3,6 +3,7 @@
 #include "renderer/IRenderer.h"
 #include "core/Singleton/Singleton.h"
 #include "core/IScheduler.h"
+#include "core/Time/Time.h"
 #include "renderer/Model/Material/Material_Consts.h"
 
 enum class GBuffer : vg::core::u8;
@@ -115,7 +116,7 @@ namespace vg::renderer
         core::LoadStatus                        LoadMeshModel                   (const core::string & _file, IMeshModel *& _meshModel) final override;
 
         bool                                    CookTexture                     (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) final override;
-        core::LoadStatus                        LoadTexture                     (const core::string & _file, gfx::ITexture *& _texture) final override;
+        core::LoadStatus                        LoadTexture                     (const core::string & _file, gfx::ITexture *& _texture, ReservedSlot _reservedSlot) final override;
 
         bool                                    CookAnimation                   (const core::string & _file) final override;
         core::LoadStatus                        LoadAnimation                   (const core::string & _file, IAnimation *& _animation) final override;
@@ -154,6 +155,9 @@ namespace vg::renderer
 
         core::u64                               GetAvailableUploadSize          () const final override;
         core::u64                               GetTotalUploadSize              () const final override;
+
+        void                                    SetTime                         (const core::Time & _time) final override;
+        VG_INLINE const core::Time &            getTime                         () const;
 
         const gfx::DeviceCaps &                 getDeviceCaps                   () const;
 
@@ -238,6 +242,8 @@ namespace vg::renderer
         MaterialManager *                       m_materialManager               = nullptr;
         ParticleManager *                       m_particleManager               = nullptr;
         ICameraLens *                           m_defaultCameraLens             = nullptr;
+
+        core::Time                              m_rendererTime;
 	};
 }
 

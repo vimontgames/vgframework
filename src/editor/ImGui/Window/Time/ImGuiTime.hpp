@@ -37,15 +37,33 @@ namespace vg::editor
                
                 ImGui::Separator();
 
+                ImGui::Text("Delta Time");
+
                 ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
                 {
-                    ImGui::Text("Real DeltaTime");
-                    ImGui::Text("Scaled DeltaTime");                    
+                    ImGui::Text("Real");
+                    ImGui::Text("Scaled");     
                 }
                 ImGui::NextColumn();
                 {
                     ImGui::Text("%.3f ms", engine->GetTime().m_realDeltaTime * 1000.0f);
                     ImGui::Text("%.3f ms", engine->GetTime().m_scaledDeltaTime * 1000.0f);
+                }
+                ImGui::Columns(1);
+
+                ImGui::Separator();
+
+                ImGui::Text("Enlapsed Time");
+
+                ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+                {
+                    ImGui::Text("Real");
+                    ImGui::Text("Scaled");
+                }
+                ImGui::NextColumn();
+                {
+                    ImGui::Text("%.3f ms", engine->GetTime().m_enlapsedTimeSinceStartReal * 1000.0f);
+                    ImGui::Text("%.3f ms", engine->GetTime().m_enlapsedTimeSinceStartScaled * 1000.0f);
                 }
                 ImGui::Columns(1);
 

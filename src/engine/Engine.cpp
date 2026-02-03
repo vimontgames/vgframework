@@ -4,7 +4,7 @@
 #include "engine/EngineOptions.h"
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
-#include "core/Timer/Timer.h"
+#include "core/Time/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Logger/Logger.h"
 #include "core/File/File.h"
@@ -782,6 +782,9 @@ namespace vg::engine
 
             m_timeInternal.reset();
         }
+
+        if (m_renderer)
+            m_renderer->SetTime(m_time);
     }
 
     //--------------------------------------------------------------------------------------

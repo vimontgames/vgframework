@@ -43,4 +43,10 @@ namespace vg::renderer
     {
         return m_particleManager;
     }
+    
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::Time & Renderer::getTime() const
+    {
+        return m_rendererTime;
+    }
 }

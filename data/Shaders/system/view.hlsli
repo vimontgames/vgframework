@@ -41,6 +41,8 @@ struct ViewConstants
         m_environmentColor      = (float4)0.0f;
         m_pbr                   = (float4)0.0f;
         m_textures              = (uint4)0;
+        m_lens                  = (float4)0.0f;
+        m_time                  = (float4)0.0f;
     
         for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
         {
@@ -82,7 +84,9 @@ struct ViewConstants
         m_textures                = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
         m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 384
         
-        // Better use 'LoadOutlineColors' method to save VGPRs
+        m_time                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);  // 400
+        
+        // Better use 'LoadOutlineColors' method to save VGPRs, must start at OUTLINE_START_OFFSET
         #if !LOAD_OUTLINE_COLORS
         for (uint i = 0; i < OUTLINE_MASK_CATEGORIES_MAX; ++i)
         {
@@ -93,6 +97,8 @@ struct ViewConstants
         #endif
     }
     #endif
+    
+    #define OUTLINE_START_OFFSET 400
 
     uint4                       m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
     uint4                       m_debugDisplay;             // 0xFFFFFFFF 0x00000000 0x0000FFFF 0x00000000
@@ -106,185 +112,204 @@ struct ViewConstants
     float4                      m_pbr;
     uint4                       m_textures;                 // .x: EnvMap (low) + specularBRDF (high) | .y: IrradianceEnvmap (low) + SpecularReflectionMap (hight)
     float4                      m_lens;                     // .x: focal length, .y:aperture, .z:focus distance
+    float4                      m_time;
     OutlineCategoryConstants    m_outlineCategory[OUTLINE_MASK_CATEGORIES_MAX];
     
     // Screen and mouse constants
-    void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
-    uint2           getScreenSize           ()                                  { return m_screenSizeAndMousePos.xy; }
+    void            setScreenSize                   (uint2 _screenSize)                         { m_screenSizeAndMousePos.xy = _screenSize; }
+    uint2           getScreenSize                   ()                                          { return m_screenSizeAndMousePos.xy; }
     
-    void            setMousePos             (uint2 _mousePos)                   { m_screenSizeAndMousePos.zw = _mousePos; }
-    uint2           getMousePos             ()                                  { return m_screenSizeAndMousePos.zw; }
+    void            setMousePos                     (uint2 _mousePos)                           { m_screenSizeAndMousePos.zw = _mousePos; }
+    uint2           getMousePos                     ()                                          { return m_screenSizeAndMousePos.zw; }
     
     // Debug display constants
-    void            setDisplayMode          (DisplayMode _mode)                 { m_debugDisplay.x = packUint16low(m_debugDisplay.x, (uint)_mode); }
-    DisplayMode     getDisplayMode          ()                                  { return (DisplayMode)unpackUint16low(m_debugDisplay.x); }
+    void            setDisplayMode                  (DisplayMode _mode)                         { m_debugDisplay.x = packUint16low(m_debugDisplay.x, (uint)_mode); }
+    DisplayMode     getDisplayMode                  ()                                          { return (DisplayMode)unpackUint16low(m_debugDisplay.x); }
     
-    void            setDisplayFlags         (DisplayFlags _flags)               { m_debugDisplay.x = packUint16high(m_debugDisplay.x, (uint)_flags); }
-    DisplayFlags    getDisplayFlags         ()                                  { return (DisplayFlags)unpackUint16high(m_debugDisplay.x); }
+    void            setDisplayFlags                 (DisplayFlags _flags)                       { m_debugDisplay.x = packUint16high(m_debugDisplay.x, (uint)_flags); }
+    DisplayFlags    getDisplayFlags                 ()                                          { return (DisplayFlags)unpackUint16high(m_debugDisplay.x); }
     
-    void            setToolmodeRWBufferID   (uint _id)                          { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
-    uint            getToolmodeRWBufferID   ()                                  { return m_debugDisplay.z & 0x0000FFFF; }
+    void            setToolmodeRWBufferID           (uint _id)                                  { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
+    uint            getToolmodeRWBufferID           ()                                          { return m_debugDisplay.z & 0x0000FFFF; }
 
     // Camera constants
-    void            setCameraNearFar        (float2 _nearFar)                   { m_camera.xy = _nearFar; }
-    void            setCameraFieldOfView    (float _fov)                        { m_camera.z = _fov; }
-    void            setCameraAspectRatio    (float _ar)                         { m_camera.w = _ar; }
+    void            setCameraNearFar                (float2 _nearFar)                           { m_camera.xy = _nearFar; }
+    void            setCameraFieldOfView            (float _fov)                                { m_camera.z = _fov; }
+    void            setCameraAspectRatio            (float _ar)                                 { m_camera.w = _ar; }
 
-    float2          getCameraNearFar        ()                                  { return m_camera.xy; }
-    float           getCameraDepthRange     ()                                  { return m_camera.y - 0 * m_camera.x; }
-    float           getCameraFieldOfView    ()                                  { return m_camera.z; }
-    float           getCameraAspectRatio    ()                                  { return m_camera.w; }
+    float2          getCameraNearFar                ()                                          { return m_camera.xy; }
+    float           getCameraDepthRange             ()                                          { return m_camera.y - 0 * m_camera.x; }
+    float           getCameraFieldOfView            ()                                          { return m_camera.z; }
+    float           getCameraAspectRatio            ()                                          { return m_camera.w; }
     
-    void            setView                 (float4x4 _view)                    { m_view = _view; }
-    float4x4        getView                 ()                                  { return m_view; }
+    void            setView                         (float4x4 _view)                            { m_view = _view; }
+    float4x4        getView                         ()                                          { return m_view; }
 
-    void            setViewInv              (float4x4 _viewInv)                 { m_viewInv = _viewInv; }
-    float4x4        getViewInv              ()                                  { return m_viewInv; }
+    void            setViewInv                      (float4x4 _viewInv)                         { m_viewInv = _viewInv; }
+    float4x4        getViewInv                      ()                                          { return m_viewInv; }
     
-    void            setProj                 (float4x4 _proj)                    { m_proj = _proj; }
-    float4x4        getProj                 ()                                  { return m_proj; }
+    void            setProj                         (float4x4 _proj)                            { m_proj = _proj; }
+    float4x4        getProj                         ()                                          { return m_proj; }
 
-    void            setProjInv              (float4x4 _projInv)                 { m_projInv = _projInv; }
-    float4x4        getProjInv              ()                                  { return m_projInv; }
+    void            setProjInv                      (float4x4 _projInv)                         { m_projInv = _projInv; }
+    float4x4        getProjInv                      ()                                          { return m_projInv; }
     
-    float3          getCameraRight          ()                                  { return -m_viewInv[0].xyz; }
-    float3          getCameraUp             ()                                  { return -m_viewInv[1].xyz; }
-    float3          getCameraForward        ()                                  { return -m_viewInv[2].xyz; }
-    float3          getCameraPos            ()                                  { return m_viewInv[3].xyz; }
+    float3          getCameraRight                  ()                                          { return -m_viewInv[0].xyz; }
+    float3          getCameraUp                     ()                                          { return -m_viewInv[1].xyz; }
+    float3          getCameraForward                ()                                          { return -m_viewInv[2].xyz; }
+    float3          getCameraPos                    ()                                          { return m_viewInv[3].xyz; }
     
-    //--------------------------------------------------------------------------------------
-    float getLinearDepth(float _zBuffer)
-    {
-        float n = getCameraNearFar().x; 
-        float f = getCameraNearFar().y; 
-        return (n*f) / (f - _zBuffer * (f - n)); 
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float3 getViewPos(float2 _screenPos, float _zBuffer) 
-    {
-        float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); 
-        float4 viewPos = mul(clipPos, getProjInv()); 
-        return viewPos.xyz / viewPos.w; 
-    }
-        
-    //--------------------------------------------------------------------------------------
-    float3 getViewPosFromLinearDepth(float2 _screenPos, float _linearDepth)
-    {
-        float2 ndc = float2(_screenPos.x * 2.0f - 1.0f, (1-_screenPos.y) * 2 - 1);
-        float4x4 proj = getProj();
-        
-        float3 viewPos;
-        viewPos.x = ndc.x * _linearDepth / proj._m00;
-        viewPos.y = ndc.y * _linearDepth / proj._m11;
-        viewPos.z = -_linearDepth;
-
-        return viewPos;
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float3 getWorldPos(float2 _screenPos, float _zBuffer) 
-    { 
-        float3 viewPos = getViewPos(_screenPos, _zBuffer); 
-        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; 
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float3 getWorldPosFromLinearDepth(float2 _screenPos, float _linearDepth)
-    {
-        float3 viewPos = getViewPosFromLinearDepth(_screenPos, _linearDepth).xyz;
-        float3 worldPos = getWorldPosFromViewPos(viewPos.xyz);
-        return worldPos;
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float3 getWorldPosFromViewPos(float3 viewPos)
-    {
-        float4x4 view = getViewInv();
-        float3 worldPos = mul(float4(viewPos.xyz,1.0f), view).xyz;
-        return worldPos;
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float2 getScreenPosFromViewPos(float3 viewPos)
-    {
-        float4 clip = mul(float4(viewPos, 1.0f), getProj());
-        float2 ndc = clip.xy / clip.w;
-
-        float2 uv;
-        uv.x = ndc.x * 0.5f + 0.5f;
-        uv.y = 1.0f - (ndc.y * 0.5f + 0.5f); 
-
-        return uv;
-    }
-    
-    //--------------------------------------------------------------------------------------
-    float2 getScreenPosFromWorldPos(float3 worldPos)
-    {
-        float4 viewPos = mul(float4(worldPos, 1.0f), getView());
-        float4 clip = mul(viewPos, getProj());
-        float2 ndc = clip.xy / clip.w; 
-        return float2(
-            ndc.x * 0.5f + 0.5f,
-            ndc.y * 0.5f + 0.5f
-        );
-    }
+    float           getLinearDepth                  (float _zBuffer);
+    float3          getViewPos                      (float2 _screenPos, float _zBuffer) ;
+    float3          getViewPosFromLinearDepth       (float2 _screenPos, float _linearDepth);
+    float3          getWorldPos                     (float2 _screenPos, float _zBuffer) ;
+    float3          getWorldPosFromLinearDepth      (float2 _screenPos, float _linearDepth);
+    float3          getWorldPosFromViewPos          (float3 viewPos);
+    float2          getScreenPosFromViewPos         (float3 viewPos);
+    float2          getScreenPosFromWorldPos        (float3 worldPos);
     
     // Raytracing constants
-    void            setTLASHandle           (uint _value)                       { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint            getTLASHandle           ()                                  { return 0xFFFF & m_rayTracing.x; }
+    void            setTLASHandle                   (uint _value)                               { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint            getTLASHandle                   ()                                          { return 0xFFFF & m_rayTracing.x; }
 
     // Environment constants
-    void            setEnvironmentColor     (float3 _environmentColor)          { m_environmentColor.rgb = _environmentColor; } 
-    float3          getEnvironmentColor     ()                                  { return m_environmentColor.rgb; }
+    void            setEnvironmentColor             (float3 _environmentColor)                  { m_environmentColor.rgb = _environmentColor; } 
+    float3          getEnvironmentColor             ()                                          { return m_environmentColor.rgb; }
 
-    void            setEnvironmentCubemap   (uint _texCubeHandle)               { m_textures.x = packUint16low(m_textures.x, _texCubeHandle); }
-    uint            getEnvironmentCubemap   ()                                  { return unpackUint16low(m_textures.x); }
+    void            setEnvironmentCubemap           (uint _texCubeHandle)                       { m_textures.x = packUint16low(m_textures.x, _texCubeHandle); }
+    uint            getEnvironmentCubemap           ()                                          { return unpackUint16low(m_textures.x); }
 
-    void            setSpecularBRDF         (uint _tex2DHandle)                 { m_textures.x = packUint16high(m_textures.x, _tex2DHandle); }
-    uint            getSpecularBRDF         ()                                  { return unpackUint16high(m_textures.x); }
+    void            setSpecularBRDF                 (uint _tex2DHandle)                         { m_textures.x = packUint16high(m_textures.x, _tex2DHandle); }
+    uint            getSpecularBRDF                 ()                                          { return unpackUint16high(m_textures.x); }
 
-    void            setIrradianceCubemap    (uint _texCubeHandle)               { m_textures.y = packUint16low(m_textures.y, _texCubeHandle); }
-    uint            getIrradianceCubemap    ()                                  { return unpackUint16low(m_textures.y); }
+    void            setIrradianceCubemap            (uint _texCubeHandle)                       { m_textures.y = packUint16low(m_textures.y, _texCubeHandle); }
+    uint            getIrradianceCubemap            ()                                          { return unpackUint16low(m_textures.y); }
 
-    void            setSpecularReflectionCubemap(uint _texCubeHandle)           { m_textures.y = packUint16high(m_textures.y, _texCubeHandle); }
-    uint            getSpecularReflectionCubemap()                              { return unpackUint16high(m_textures.y); }
+    void            setSpecularReflectionCubemap    (uint _texCubeHandle)                       { m_textures.y = packUint16high(m_textures.y, _texCubeHandle); }
+    uint            getSpecularReflectionCubemap    ()                                          { return unpackUint16high(m_textures.y); }
 
-    void            setIrradianceIntensity  (float _intensity)                  { m_pbr.x = _intensity; }
-    float           getIrradianceIntensity  ()                                  { return m_pbr.x; }
+    void            setIrradianceIntensity          (float _intensity)                          { m_pbr.x = _intensity; }
+    float           getIrradianceIntensity          ()                                          { return m_pbr.x; }
 
-    void            setSpecularReflectionIntensity(float _intensity)            { m_pbr.y = _intensity; }
-    float           getSpecularReflectionIntensity()                            { return m_pbr.y; }
+    void            setSpecularReflectionIntensity  (float _intensity)                          { m_pbr.y = _intensity; }
+    float           getSpecularReflectionIntensity  ()                                          { return m_pbr.y; }
 
     // Lens constants
-    void            setFocalLength          (float _focalLength)                { m_lens.x = _focalLength; }
-    float           getFocalLength          ()                                  { return m_lens.x; }
+    void            setFocalLength                  (float _focalLength)                        { m_lens.x = _focalLength; }
+    float           getFocalLength                  ()                                          { return m_lens.x; }
 
-    void            setAperture             (float _aperture)                   { m_lens.y = _aperture; }
-    float           getAperture             ()                                  { return m_lens.y; }
+    void            setAperture                     (float _aperture)                           { m_lens.y = _aperture; }
+    float           getAperture                     ()                                          { return m_lens.y; }
 
-    void            setFocusDistance        (float _focusDistance)              { m_lens.z = _focusDistance; }
-    float           getFocusDistance        ()                                  { return m_lens.z; }
+    void            setFocusDistance                (float _focusDistance)                      { m_lens.z = _focusDistance; }
+    float           getFocusDistance                ()                                          { return m_lens.z; }
 
-    void            setDOFScale             (float _dofScale)                   { m_lens.w = _dofScale; }
-    float           getDOFScale             ()                                  { return m_lens.w; }
+    void            setDOFScale                     (float _dofScale)                           { m_lens.w = _dofScale; }
+    float           getDOFScale                     ()                                          { return m_lens.w; }
       
+    // Time
+    void            setRealTimeSinceStart           (float _time)                               { m_time.x = _time; }
+    float           getRealTimeSinceStart           ()                                          { return m_time.x; }
+    void            setScaledTimeSinceStart         (float _time)                               { m_time.y = _time; }
+    float           getScaledTimeSinceStart         ()                                          { return m_time.y; }
+
     #ifndef __cplusplus
-    float4          getZPassOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zPassOutlineColor; }
-    float4          getZFailOutlineColor    (uint _index)                       { return m_outlineCategory[_index].zFailOutlineColor; }
-    float4          getZFailFillColor       (uint _index)                       { return m_outlineCategory[_index].zFailFillColor; }
+    float4          getZPassOutlineColor            (uint _index)                               { return m_outlineCategory[_index].zPassOutlineColor; }
+    float4          getZFailOutlineColor            (uint _index)                               { return m_outlineCategory[_index].zFailOutlineColor; }
+    float4          getZFailFillColor               (uint _index)                               { return m_outlineCategory[_index].zFailFillColor; }
     
-    float4          loadZPassOutlineColor   (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 0 * sizeof(float4)); }
-    float4          loadZFailOutlineColor   (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 1 * sizeof(float4)); }
-    float4          loadZFailFillColor      (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(384 + _index * 3 * sizeof(float4) + 2 * sizeof(float4)); }
+    float4          loadZPassOutlineColor           (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(OUTLINE_START_OFFSET + _index * 3 * sizeof(float4) + 0 * sizeof(float4)); }
+    float4          loadZFailOutlineColor           (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(OUTLINE_START_OFFSET + _index * 3 * sizeof(float4) + 1 * sizeof(float4)); }
+    float4          loadZFailFillColor              (ByteAddressBuffer _buffer, uint _index)    { return _buffer.Load<float4>(OUTLINE_START_OFFSET + _index * 3 * sizeof(float4) + 2 * sizeof(float4)); }
     #endif
     
-    void setOutlineColors(uint _index, float4 _zPassOutline, float4 _zFailOutline, float4 _zFailFill) 
-    { 
-        m_outlineCategory[_index].zPassOutlineColor = _zPassOutline; 
-        m_outlineCategory[_index].zFailOutlineColor = _zFailOutline;
-        m_outlineCategory[_index].zFailFillColor = _zFailFill;
-    }   
+    void            setOutlineColors                (uint _index, float4 _zPassOutline, float4 _zFailOutline, float4 _zFailFill);  
 };
+
+//--------------------------------------------------------------------------------------   
+inline void ViewConstants::setOutlineColors(uint _index, float4 _zPassOutline, float4 _zFailOutline, float4 _zFailFill) 
+{ 
+    m_outlineCategory[_index].zPassOutlineColor = _zPassOutline; 
+    m_outlineCategory[_index].zFailOutlineColor = _zFailOutline;
+    m_outlineCategory[_index].zFailFillColor = _zFailFill;
+}   
+
+//--------------------------------------------------------------------------------------
+inline float ViewConstants::getLinearDepth(float _zBuffer)
+{
+    float n = getCameraNearFar().x; 
+    float f = getCameraNearFar().y; 
+    return (n*f) / (f - _zBuffer * (f - n)); 
+}
+    
+//--------------------------------------------------------------------------------------
+inline float3 ViewConstants::getViewPos(float2 _screenPos, float _zBuffer) 
+{
+    float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); 
+    float4 viewPos = mul(clipPos, getProjInv()); 
+    return viewPos.xyz / viewPos.w; 
+}
+        
+//--------------------------------------------------------------------------------------
+inline float3 ViewConstants::getViewPosFromLinearDepth(float2 _screenPos, float _linearDepth)
+{
+    float2 ndc = float2(_screenPos.x * 2.0f - 1.0f, (1-_screenPos.y) * 2 - 1);
+    float4x4 proj = getProj();
+        
+    float3 viewPos;
+    viewPos.x = ndc.x * _linearDepth / proj._m00;
+    viewPos.y = ndc.y * _linearDepth / proj._m11;
+    viewPos.z = -_linearDepth;
+
+    return viewPos;
+}
+    
+//--------------------------------------------------------------------------------------
+inline float3 ViewConstants::getWorldPos(float2 _screenPos, float _zBuffer) 
+{ 
+    float3 viewPos = getViewPos(_screenPos, _zBuffer); 
+    return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; 
+}
+    
+//--------------------------------------------------------------------------------------
+inline float3 ViewConstants::getWorldPosFromLinearDepth(float2 _screenPos, float _linearDepth)
+{
+    float3 viewPos = getViewPosFromLinearDepth(_screenPos, _linearDepth).xyz;
+    float3 worldPos = getWorldPosFromViewPos(viewPos.xyz);
+    return worldPos;
+}
+    
+//--------------------------------------------------------------------------------------
+inline float3 ViewConstants::getWorldPosFromViewPos(float3 viewPos)
+{
+    float4x4 view = getViewInv();
+    float3 worldPos = mul(float4(viewPos.xyz,1.0f), view).xyz;
+    return worldPos;
+}
+    
+//--------------------------------------------------------------------------------------
+inline float2 ViewConstants::getScreenPosFromViewPos(float3 viewPos)
+{
+    float4 clip = mul(float4(viewPos, 1.0f), getProj());
+    float2 ndc = clip.xy / clip.w;
+
+    float2 uv;
+    uv.x = ndc.x * 0.5f + 0.5f;
+    uv.y = 1.0f - (ndc.y * 0.5f + 0.5f); 
+
+    return uv;
+}
+    
+//--------------------------------------------------------------------------------------
+inline float2 ViewConstants::getScreenPosFromWorldPos(float3 worldPos)
+{
+    float4 viewPos = mul(float4(worldPos, 1.0f), getView());
+    float4 clip = mul(viewPos, getProj());
+    float2 ndc = clip.xy / clip.w; 
+    return float2(
+        ndc.x * 0.5f + 0.5f,
+        ndc.y * 0.5f + 0.5f
+    );
+}
 
 #endif // _VIEW__HLSLI_

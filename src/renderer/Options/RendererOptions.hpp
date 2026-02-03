@@ -8,6 +8,7 @@
 #include "core/Object/EnumHelper.h"
 #include "core/string/string.h"
 #include "core/IResource.h"
+#include "core/IResourceList.h"
 #include "gfx/ITexture.h"
 #include "gfx/Device/Device.h"
 #include "gfx/Device/DeviceCaps.h"
@@ -190,6 +191,12 @@ namespace vg::renderer
 
                 registerPropertyResourcePtr(RendererOptions, m_pbrBakedBRDFTexture, "Baked BRDF");
                 setPropertyDescription(RendererOptions, m_pbrBakedBRDFTexture, "Baked specular BRDF texture used when \"Generate specular BRDF\" is not selected.")
+            }
+            registerPropertyGroupEnd(RendererOptions);
+
+            registerPropertyGroupBegin(RendererOptions, "Blue Noise");
+            {
+                registerPropertyObjectPtrEx(RendererOptions, m_blueNoiseTextures, "Slices", PropertyFlags::Flatten);
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -428,7 +435,8 @@ namespace vg::renderer
         m_VSync = _other.m_VSync;
         m_lightingMode = _other.m_lightingMode;
         m_pbrFlags = _other.m_pbrFlags;
-        m_pbrBakedBRDFTexture = _other.m_pbrBakedBRDFTexture;
+        m_pbrBakedBRDFTexture = _other.m_pbrBakedBRDFTexture;   // ptr copy is not safe, copy resource object instead??? 
+        m_blueNoiseTextures = _other.m_blueNoiseTextures;       // also not safe
         m_debugDisplayMode = _other.m_debugDisplayMode;
         m_displayFlags = _other.m_displayFlags;
         m_renderPassFlags = _other.m_renderPassFlags;
@@ -517,13 +525,27 @@ namespace vg::renderer
         m_defaultEnvironmentCubemap->RegisterUID();
 
         m_pbrBakedBRDFTexture = (core::IResource *)factory->CreateObject("TextureResource");
+        m_pbrBakedBRDFTexture->SetName("PBRBakedBRDFTexture");
         m_pbrBakedBRDFTexture->SetParent(this);
-        m_pbrBakedBRDFTexture->RegisterUID();        
+        m_pbrBakedBRDFTexture->RegisterUID();   
+
+        m_blueNoiseTextures = (core::IResourceList *)factory->CreateObject("TextureResourceList");
+        m_blueNoiseTextures->SetMaxSize(32);
 
         Load(false);
 
         if (m_pbrBakedBRDFTexture->GetResourcePath().empty())
             m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png");
+
+        if (m_blueNoiseTextures->Size() == 0)
+        {
+            for (uint i = 0; i < 32; ++i)
+            {
+                string name = fmt::sprintf("%02u", i);
+                string path = fmt::sprintf("data/Textures/PBR/Noise/Blue/BlueNoise_FAST_%02u.png", i);
+                m_blueNoiseTextures->Add(name, path, (ResourceUserData)(RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST + i)); // In case of texture resources, the user data is the bindless slot if fixed or ReservedSlot::None (0x80000000) otherwise
+            }
+        }
 
         if (!m_useCustomQualityLevel)
             m_customQualityLevel = autodetectQualityLevel();
@@ -580,6 +602,7 @@ namespace vg::renderer
     {
         VG_SAFE_RELEASE(m_defaultEnvironmentCubemap);
         VG_SAFE_RELEASE(m_pbrBakedBRDFTexture);
+        VG_SAFE_RELEASE(m_blueNoiseTextures);
     }
 
     //--------------------------------------------------------------------------------------
