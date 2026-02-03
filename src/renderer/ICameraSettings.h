@@ -12,7 +12,7 @@ namespace vg::renderer
 
     vg_enum_class(vg::renderer, ScreenSpaceAmbient, core::u8,
         None,
-        SSAO
+        GTAO
     );
 
     class ICameraLens;

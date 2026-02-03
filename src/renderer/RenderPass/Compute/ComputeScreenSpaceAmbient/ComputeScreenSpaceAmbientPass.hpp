@@ -43,8 +43,8 @@ namespace vg::renderer
 
         FrameGraphTextureResourceDesc screenSpaceAmbientDesc = *linearDepthDesc;
         screenSpaceAmbientDesc.type = TextureType::Texture2D;
-        screenSpaceAmbientDesc.width = width >> 1;
-        screenSpaceAmbientDesc.height = height >> 1;
+        screenSpaceAmbientDesc.width = width / 2;
+        screenSpaceAmbientDesc.height = height / 2;
         screenSpaceAmbientDesc.msaa = MSAA::None;
         screenSpaceAmbientDesc.format = Renderer::get()->getLightingBufferFormat();
 

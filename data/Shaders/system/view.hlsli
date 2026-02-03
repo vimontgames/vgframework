@@ -147,7 +147,7 @@ struct ViewConstants
     void            setProjInv              (float4x4 _projInv)                 { m_projInv = _projInv; }
     float4x4        getProjInv              ()                                  { return m_projInv; }
     
-    float3          getCameraRight          ()                                  {  return -m_viewInv[0].xyz; }
+    float3          getCameraRight          ()                                  { return -m_viewInv[0].xyz; }
     float3          getCameraUp             ()                                  { return -m_viewInv[1].xyz; }
     float3          getCameraForward        ()                                  { return -m_viewInv[2].xyz; }
     float3          getCameraPos            ()                                  { return m_viewInv[3].xyz; }
@@ -167,14 +167,7 @@ struct ViewConstants
         float4 viewPos = mul(clipPos, getProjInv()); 
         return viewPos.xyz / viewPos.w; 
     }
-    
-    //--------------------------------------------------------------------------------------
-    float3 getWorldPos(float2 _screenPos, float _zBuffer) 
-    { 
-        float3 viewPos = getViewPos(_screenPos, _zBuffer); 
-        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; 
-    }
-    
+        
     //--------------------------------------------------------------------------------------
     float3 getViewPosFromLinearDepth(float2 _screenPos, float _linearDepth)
     {
@@ -188,15 +181,14 @@ struct ViewConstants
 
         return viewPos;
     }
-
+    
     //--------------------------------------------------------------------------------------
-    float3 getWorldPosFromViewPos(float3 viewPos)
-    {
-        float4x4 view = getViewInv();
-        float3 worldPos = mul(float4(viewPos.xyz,1.0f), view).xyz;
-        return worldPos;
+    float3 getWorldPos(float2 _screenPos, float _zBuffer) 
+    { 
+        float3 viewPos = getViewPos(_screenPos, _zBuffer); 
+        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; 
     }
-
+    
     //--------------------------------------------------------------------------------------
     float3 getWorldPosFromLinearDepth(float2 _screenPos, float _linearDepth)
     {
@@ -204,7 +196,40 @@ struct ViewConstants
         float3 worldPos = getWorldPosFromViewPos(viewPos.xyz);
         return worldPos;
     }
+    
+    //--------------------------------------------------------------------------------------
+    float3 getWorldPosFromViewPos(float3 viewPos)
+    {
+        float4x4 view = getViewInv();
+        float3 worldPos = mul(float4(viewPos.xyz,1.0f), view).xyz;
+        return worldPos;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float2 getScreenPosFromViewPos(float3 viewPos)
+    {
+        float4 clip = mul(float4(viewPos, 1.0f), getProj());
+        float2 ndc = clip.xy / clip.w;
 
+        float2 uv;
+        uv.x = ndc.x * 0.5f + 0.5f;
+        uv.y = 1.0f - (ndc.y * 0.5f + 0.5f); 
+
+        return uv;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float2 getScreenPosFromWorldPos(float3 worldPos)
+    {
+        float4 viewPos = mul(float4(worldPos, 1.0f), getView());
+        float4 clip = mul(viewPos, getProj());
+        float2 ndc = clip.xy / clip.w; 
+        return float2(
+            ndc.x * 0.5f + 0.5f,
+            ndc.y * 0.5f + 0.5f
+        );
+    }
+    
     // Raytracing constants
     void            setTLASHandle           (uint _value)                       { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
     uint            getTLASHandle           ()                                  { return 0xFFFF & m_rayTracing.x; }

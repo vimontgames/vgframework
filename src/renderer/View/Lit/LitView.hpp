@@ -139,7 +139,7 @@ namespace vg::renderer
                 // Linear depth buffer
                 _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
 
-                // Compute SSAO before deferred shading
+                // Compute screen-space ambient before deferred shading
                 if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
                     _frameGraph.addUserPass(_renderPassContext, m_screenSpaceAmbientPass, "Screen-Space Ambient");
 
