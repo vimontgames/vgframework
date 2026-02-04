@@ -1,7 +1,7 @@
 namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE const Time & Engine::getTime() const
+    VG_INLINE const core::Time & Engine::getTime() const
     {
         return m_time;
     }

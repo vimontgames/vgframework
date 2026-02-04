@@ -574,7 +574,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             
             case DisplayMode::Misc_BlueNoise:
             {
-                float time = viewConstants.getRealTimeSinceStart();
+                float time = viewConstants.getRealTimeSinceStart() * 60.0f;
                 float frame = time % 31.0f;
                 uint indexA = floor(frame);
                 uint indexB = ceil(frame);
