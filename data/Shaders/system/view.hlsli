@@ -212,6 +212,8 @@ struct ViewConstants
     float           getRealTimeSinceStart           ()                                          { return m_time.x; }
     void            setScaledTimeSinceStart         (float _time)                               { m_time.y = _time; }
     float           getScaledTimeSinceStart         ()                                          { return m_time.y; }
+    void            setFrameCounter                 (uint _frame)                               { m_time.z = asfloat(_frame); }
+    uint            getFrameCounter                 ()                                          { return asuint((float)m_time.z); }
 
     #ifndef __cplusplus
     float4          getZPassOutlineColor            (uint _index)                               { return m_outlineCategory[_index].zPassOutlineColor; }

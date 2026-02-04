@@ -141,6 +141,7 @@ namespace vg::renderer
             const core::Time & time = Renderer::get()->getTime();
             constants->setRealTimeSinceStart(time.m_enlapsedTimeSinceStartReal);
             constants->setScaledTimeSinceStart(time.m_enlapsedTimeSinceStartScaled);
+            constants->setFrameCounter((uint)renderer->getFrameCounter());
 
             const auto * camSettings = view->GetCameraSettings();
             if (camSettings)

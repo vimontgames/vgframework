@@ -52,7 +52,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
     float ao = getTexture2D(deferredLightingConstants.getScreenSpaceAmbient()).SampleLevel(linearClamp, _uv, 0).x;
     
     float3 pbr = _gbuffer.pbr;
-    _gbuffer.pbr.r = min(_gbuffer.pbr.r, ao);
+    _gbuffer.pbr.r = _gbuffer.pbr.r * ao;
                         
     LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr, _gbuffer.emissive.rgb);
             

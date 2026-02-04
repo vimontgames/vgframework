@@ -10,6 +10,7 @@
 #include "system/debugdisplay.hlsli"
 #include "raytracing/raytracing.hlsli"
 #include "system/lighting.hlsli"
+#include "system/noise.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -574,16 +575,9 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             
             case DisplayMode::Misc_BlueNoise:
             {
-                float time = viewConstants.getRealTimeSinceStart() * 60.0f;
-                float frame = time % 31.0f;
-                uint indexA = floor(frame);
-                uint indexB = ceil(frame);
-                float blend = frac(frame);
-                
-                float3 A = getTexture2D(RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST + indexA).SampleLevel(nearestRepeat, uv * screenSize / 128.0f, 0).rgb;
-                float3 B = getTexture2D(RESERVEDSLOT_TEXSRV_BLUE_NOISE_FIRST + indexB).SampleLevel(nearestRepeat, uv * screenSize / 128.0f, 0).rgb;
-                
-                 color.rgb = lerp(A, B, blend);
+                //float time = viewConstants.getRealTimeSinceStart() * 60.0f;
+                uint frame = viewConstants.getFrameCounter();
+                color.rgb = float3(getBlueNoise(uv * screenSize, frame).rg * 0.5f + 0.5f, 0);
             }
             break;
         }

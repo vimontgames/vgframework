@@ -4,29 +4,20 @@
 #include "lighting/GBuffer.hlsli"
 #include "system/compute.hlsli"
 #include "system/view.hlsli"
+#include "system/noise.hlsli"
 
 #define GTAO_DIRECTIONS 8
 #define GTAO_STEPS      5
-#define GTAO_RADIUS     16.0f
+#define GTAO_RADIUS     24.0f
 #define GTAO_BIAS       0.04f
 #define GTAO_POWER      2.0f
 #define PI              3.14159265f
 
 //--------------------------------------------------------------------------------------
-// TODO: use blue noise instead
-//--------------------------------------------------------------------------------------
-float Hash12(uint2 p)
-{
-    uint h = p.x * 1664525u + p.y * 1013904223u;
-    return frac(h * 0.0000001192092896f);
-}
-
-//--------------------------------------------------------------------------------------
-float ComputeGTAO(uint2 pixel, float2 uv, float3 P, float3 N,
-                   ViewConstants vc, Texture2D linearDepthTex)
+float ComputeGTAO(uint2 pixel, float2 uv, float3 P, float3 N, ViewConstants vc, Texture2D linearDepthTex)
 {
     float ao = 0.0f;
-    float rand = Hash12(pixel); // jitter 
+    float rand = getBlueNoise(pixel, vc.getFrameCounter()).x; // jitter 
     float2 invScreenSize = 1.0f / (float2)screenSpaceAmbientConstants.getScreenSize();
 
     for (int d = 0; d < GTAO_DIRECTIONS; ++d)
