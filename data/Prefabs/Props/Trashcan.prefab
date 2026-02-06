@@ -23,12 +23,29 @@
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                         <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="PhysicsShapeComponent">
+                                <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                <Property type="Uint32" name="m_uid" value="2262667501"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc">
+                                    <Object class="BoxShapeDesc">
+                                        <Property type="String" name="m_name" value="BoxShapeDesc #4741"/>
+                                        <Property type="Uint32" name="m_uid" value="2609079403"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.69999999"/>
+                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_size" x="0.80323374" y="0.65072119" z="1.35"/>
+                                    </Object>
+                                </Property>
+                            </Object>
                             <Object class="PhysicsBodyComponent">
                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2035790266"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="EnumU8" name="m_category" value="Category_0"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
                                 <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
                                 <Property type="ObjectPtr" name="m_bodyDesc">
@@ -51,28 +68,12 @@
                                     </Object>
                                 </Property>
                             </Object>
-                            <Object class="PhysicsShapeComponent">
-                                <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
-                                <Property type="Uint32" name="m_uid" value="2262667501"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
-                                <Property type="ObjectPtr" name="m_shapeDesc">
-                                    <Object class="BoxShapeDesc">
-                                        <Property type="String" name="m_name" value="BoxShapeDesc #4741"/>
-                                        <Property type="Uint32" name="m_uid" value="2609079403"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.69999999"/>
-                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="0.80323374" y="0.65072119" z="1.283"/>
-                                    </Object>
-                                </Property>
-                            </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="68412358"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_outlineCategory" value="None"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
@@ -98,76 +99,17 @@
                                     </Object>
                                 </Property>
                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
-                            </Object>
-                            <Object class="VehicleComponent">
-                                <Property type="String" name="m_name" value="New VehicleComponent"/>
-                                <Property type="Uint32" name="m_uid" value="3377640956"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="Object" name="m_slots">
-                                    <Object class="VehicleSlotList">
-                                        <Property type="String" name="m_name" value=""/>
-                                        <Property type="Uint32" name="m_uid" value="2743036121"/>
+                                <Property type="Object" name="m_stencil">
+                                    <Object class="StencilState">
+                                        <Property type="String" name="m_name" value="Trashcan"/>
+                                        <Property type="Uint32" name="m_uid" value="1718778999"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="ObjectVector" name="m_objects"/>
-                                    </Object>
-                                </Property>
-                                <Property type="EnumU8" name="m_vehicleType" value="FourWheels"/>
-                                <Property type="ObjectPtr" name="m_vehicleConstraintDesc">
-                                    <Object class="FourWheelsVehicleConstraintDesc">
-                                        <Property type="String" name="m_name" value="FourWheelsVehicleConstraintDesc #19"/>
-                                        <Property type="Uint32" name="m_uid" value="808150560"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="Float" name="m_maxEngineTorque" value="0"/>
-                                        <Property type="Float" name="m_minRPM" value="1000"/>
-                                        <Property type="Float" name="m_maxRPM" value="6000"/>
-                                        <Property type="Float" name="m_clutchStrength" value="10"/>
-                                        <Property type="Object" name="m_front">
-                                            <Object class="VehicleAxleDesc">
-                                                <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" value="4291958906"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="ObjectHandle" name="m_leftWheel" value="3729188453"/>
-                                                <Property type="ObjectHandle" name="m_rightWheel" value="2665326313"/>
-                                                <Property type="Float" name="m_radius" value="0.1"/>
-                                                <Property type="Float" name="m_width" value="0.050000001"/>
-                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="0"/>
-                                                <Property type="Float" name="m_inertia" value="0.89999998"/>
-                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
-                                                <Property type="Float" name="m_suspensionMinLength" value="0.1"/>
-                                                <Property type="Float" name="m_suspensionMaxLength" value="0.15000001"/>
-                                                <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>
-                                                <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
-                                                <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
-                                                <Property type="Float" name="m_suspensionDamping" value="0.5"/>
-                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
-                                                <Property type="Float" name="m_maxHandBrakeTorque" value="0"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="Object" name="m_rear">
-                                            <Object class="VehicleAxleDesc">
-                                                <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" value="1569202500"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="ObjectHandle" name="m_leftWheel" value="791098547"/>
-                                                <Property type="ObjectHandle" name="m_rightWheel" value="531040222"/>
-                                                <Property type="Float" name="m_radius" value="0.15000001"/>
-                                                <Property type="Float" name="m_width" value="0.050000001"/>
-                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="0"/>
-                                                <Property type="Float" name="m_inertia" value="0.89999998"/>
-                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
-                                                <Property type="Float" name="m_suspensionMinLength" value="0.1"/>
-                                                <Property type="Float" name="m_suspensionMaxLength" value="0.15000001"/>
-                                                <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>
-                                                <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
-                                                <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
-                                                <Property type="Float" name="m_suspensionDamping" value="0.5"/>
-                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
-                                                <Property type="Float" name="m_maxHandBrakeTorque" value="4000"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="Bool" name="m_fourWheelDrive" value="false"/>
-                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="180"/>
+                                        <Property type="Bool" name="m_enable" value="false"/>
+                                        <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                        <Property type="EnumU16" name="m_func" value="Always"/>
+                                        <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                        <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                        <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -185,8 +127,9 @@
                                     <Object class="MeshComponent">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3664608401"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_outlineCategory" value="None"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
@@ -212,6 +155,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="Top"/>
+                                                <Property type="Uint32" name="m_uid" value="1049408115"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -230,6 +186,7 @@
                                         <Property type="Uint32" name="m_uid" value="166343707"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_outlineCategory" value="None"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
@@ -262,6 +219,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="LeftWheel"/>
+                                                <Property type="Uint32" name="m_uid" value="2222872951"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -280,6 +250,7 @@
                                         <Property type="Uint32" name="m_uid" value="3886031843"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_outlineCategory" value="None"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
@@ -297,44 +268,19 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                            </Object>
-                            <Object class="GameObject">
-                                <Property type="String" name="m_name" value="FrontLeftWheel"/>
-                                <Property type="Uint32" name="m_uid" value="3729188453"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.099915296" Iy="0" Iz="-0.0041150684" Iw="0" Jx="0" Jy="0.1" Jz="0" Jw="0" Kx="0.0041150684" Ky="0" Kz="0.099915296" Kw="0" Tx="0.29345322" Ty="0.28920794" Tz="0.17302105" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components">
-                                    <Object class="DummyComponent">
-                                        <Property type="String" name="m_name" value="New DummyComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="2330581620"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
-                                        <Property type="EnumU32" name="m_dummyType" value="Sphere"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                            </Object>
-                            <Object class="GameObject">
-                                <Property type="String" name="m_name" value="FrontRightWheel"/>
-                                <Property type="Uint32" name="m_uid" value="2665326313"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="-0.099915273" Iy="-5.9741331e-05" Iz="-0.0041150688" Iw="0" Jx="5.9806905e-05" Jy="-0.099999987" Jz="0" Jw="0" Kx="-0.0041150674" Ky="-2.4609014e-06" Kz="0.099915296" Kw="0" Tx="0.29345322" Ty="-0.28900003" Tz="0.17302105" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components">
-                                    <Object class="DummyComponent">
-                                        <Property type="String" name="m_name" value="New DummyComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="3718926476"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
-                                        <Property type="EnumU32" name="m_dummyType" value="Sphere"/>
+                                        <Property type="Object" name="m_stencil">
+                                            <Object class="StencilState">
+                                                <Property type="String" name="m_name" value="RightWheel"/>
+                                                <Property type="Uint32" name="m_uid" value="929346233"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>

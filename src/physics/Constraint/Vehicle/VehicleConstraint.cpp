@@ -77,9 +77,9 @@ namespace vg::physics
             }
             break;
 
-            case VehicleType::FourWheels:
+            case VehicleType::Car:
             {
-                FourWheelsVehicleConstraintDesc * desc = (FourWheelsVehicleConstraintDesc *)_vehicleConstraintDesc;
+                CarConstraintDesc * desc = (CarConstraintDesc *)_vehicleConstraintDesc;
 
                 // Suspension 
                 float3 frontSuspensionDir = normalize(float3(tan(degreesToRadians(desc->m_front.m_suspensionSidewaysAngleInDegree)), tan(degreesToRadians(desc->m_front.m_suspensionForwardAngleInDegree)), -1.0f));
@@ -179,9 +179,9 @@ namespace vg::physics
             }
             break;
 
-            case VehicleType::FourWheels:
+            case VehicleType::Car:
             {
-                FourWheelsVehicleConstraintDesc * desc = (FourWheelsVehicleConstraintDesc *)_vehicleConstraintDesc;
+                CarConstraintDesc * desc = (CarConstraintDesc *)_vehicleConstraintDesc;
 
                 if (desc->m_fourWheelDrive)
                 {
@@ -299,9 +299,9 @@ namespace vg::physics
                 }
                 break;
 
-                case VehicleType::FourWheels:
+                case VehicleType::Car:
                 {
-                    FourWheelsVehicleConstraintDesc * desc = (FourWheelsVehicleConstraintDesc *)m_vehicleConstraintDesc;
+                    CarConstraintDesc * desc = (CarConstraintDesc *)m_vehicleConstraintDesc;
 
                     auto & engine = vehicleController->GetEngine();
                     engine.mMaxTorque = desc->m_maxEngineTorque;
@@ -341,9 +341,9 @@ namespace vg::physics
                 }
                 break;
 
-                case VehicleType::FourWheels:
+                case VehicleType::Car:
                 {
-                    FourWheelsVehicleConstraintDesc * desc = (FourWheelsVehicleConstraintDesc *)m_vehicleConstraintDesc;
+                    CarConstraintDesc * desc = (CarConstraintDesc *)m_vehicleConstraintDesc;
 
                     const uint wheelCount = desc->GetWheelCount();
 

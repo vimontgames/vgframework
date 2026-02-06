@@ -85,7 +85,7 @@ namespace vg::engine
         int                                 m_currentGear = 0;
 
         physics::IVehicleConstraintDesc *   m_vehicleConstraintDesc = nullptr;
-        physics::VehicleType                m_vehicleType = physics::VehicleType::FourWheels;
+        physics::VehicleType                m_vehicleType = physics::VehicleType::Car;
         physics::IVehicleConstraint *       m_vehicleConstraint = nullptr;
         VehicleSlotList                     m_slots;
         core::float4x4                      m_startPos = core::float4x4::identity();

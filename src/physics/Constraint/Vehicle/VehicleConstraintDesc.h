@@ -50,15 +50,15 @@ namespace vg::physics
     };
 
     //--------------------------------------------------------------------------------------
-    class FourWheelsVehicleConstraintDesc : public VehicleConstraintDesc
+    class CarConstraintDesc : public VehicleConstraintDesc
     {
     public:
-        VG_CLASS_DECL(FourWheelsVehicleConstraintDesc, VehicleConstraintDesc);
+        VG_CLASS_DECL(CarConstraintDesc, VehicleConstraintDesc);
 
-        FourWheelsVehicleConstraintDesc(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr);
-        ~FourWheelsVehicleConstraintDesc();
+        CarConstraintDesc(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr);
+        ~CarConstraintDesc();
 
-        virtual VehicleType GetVehicleType() const final override { return VehicleType::FourWheels; }
+        virtual VehicleType GetVehicleType() const final override { return VehicleType::Car; }
         core::uint GetWheelCount() const final override { return 4; }
 
         void OnLoad() final override;

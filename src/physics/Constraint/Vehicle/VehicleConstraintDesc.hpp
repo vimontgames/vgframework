@@ -7,7 +7,7 @@ namespace vg::physics
 {
     VG_REGISTER_CLASS(VehicleAxleDesc, "Vehicle Axle Settings");
     VG_REGISTER_ABSTRACT_CLASS(VehicleConstraintDesc);
-    VG_REGISTER_CLASS(FourWheelsVehicleConstraintDesc, "Vehicle Settings");
+    VG_REGISTER_CLASS(CarConstraintDesc, "Vehicle Settings");
 
     //--------------------------------------------------------------------------------------
     // VehicleAxleDesc
@@ -40,7 +40,7 @@ namespace vg::physics
         setPropertyRange(VehicleAxleDesc, m_angularDamping, float2(0, 1));
 
         // Suspension
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Suspension");
+        registerPropertyGroupBegin(CarConstraintDesc, "Suspension");
         {
             registerProperty(VehicleAxleDesc, m_suspensionMinLength, "Min Length");
             setPropertyDescription(VehicleAxleDesc, m_suspensionMinLength, "How long the suspension is in min raised position relative to the attachment point (m)")
@@ -66,9 +66,9 @@ namespace vg::physics
             setPropertyDescription(VehicleAxleDesc, m_suspensionDamping, "Damping ratio")
             setPropertyRange(VehicleAxleDesc, m_suspensionDamping, float2(0, 1));
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Brakes");
+        registerPropertyGroupBegin(CarConstraintDesc, "Brakes");
         {
             registerProperty(VehicleAxleDesc, m_maxBrakeTorque, "Brake");
             setPropertyDescription(VehicleAxleDesc, m_maxBrakeTorque, "How much torque (Nm) the brakes can apply to this wheel")
@@ -78,7 +78,7 @@ namespace vg::physics
             setPropertyDescription(VehicleAxleDesc, m_maxHandBrakeTorque, "How much torque (Nm) the hand brake can apply to this wheel (usually only applied to the rear wheels)")
             setPropertyRange(VehicleAxleDesc, m_maxHandBrakeTorque, float2(0, 10000));
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
         return true;
     }
@@ -107,62 +107,62 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    // FourWheelsVehicleConstraintDesc
+    // CarConstraintDesc
     //--------------------------------------------------------------------------------------
-    bool FourWheelsVehicleConstraintDesc::registerProperties(IClassDesc & _desc)
+    bool CarConstraintDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
         // Engine
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Engine");
+        registerPropertyGroupBegin(CarConstraintDesc, "Engine");
         {
-            registerProperty(FourWheelsVehicleConstraintDesc, m_maxEngineTorque, "Engine");
-            setPropertyDescription(FourWheelsVehicleConstraintDesc, m_maxEngineTorque, "Max amount of torque (Nm) that the engine can deliver.")
-            setPropertyRange(FourWheelsVehicleConstraintDesc, m_maxEngineTorque, float2(0, 2000));
+            registerProperty(CarConstraintDesc, m_maxEngineTorque, "Engine");
+            setPropertyDescription(CarConstraintDesc, m_maxEngineTorque, "Max amount of torque (Nm) that the engine can deliver.")
+            setPropertyRange(CarConstraintDesc, m_maxEngineTorque, float2(0, 2000));
 
-            registerProperty(FourWheelsVehicleConstraintDesc, m_minRPM, "Min RPM");
-            setPropertyDescription(FourWheelsVehicleConstraintDesc, m_minRPM, "Min amount of revolutions per minute (rpm) the engine can produce without stalling.")
-            setPropertyRange(FourWheelsVehicleConstraintDesc, m_minRPM, float2(1, 10000));
+            registerProperty(CarConstraintDesc, m_minRPM, "Min RPM");
+            setPropertyDescription(CarConstraintDesc, m_minRPM, "Min amount of revolutions per minute (rpm) the engine can produce without stalling.")
+            setPropertyRange(CarConstraintDesc, m_minRPM, float2(1, 10000));
 
-            registerProperty(FourWheelsVehicleConstraintDesc, m_maxRPM, "Max RPM");
-            setPropertyDescription(FourWheelsVehicleConstraintDesc, m_maxRPM, "Max amount of revolutions per minute (rpm) the engine can generate.")
-            setPropertyRange(FourWheelsVehicleConstraintDesc, m_maxRPM, float2(1, 10000));
+            registerProperty(CarConstraintDesc, m_maxRPM, "Max RPM");
+            setPropertyDescription(CarConstraintDesc, m_maxRPM, "Max amount of revolutions per minute (rpm) the engine can generate.")
+            setPropertyRange(CarConstraintDesc, m_maxRPM, float2(1, 10000));
 
-            registerProperty(FourWheelsVehicleConstraintDesc, m_clutchStrength, "Clutch");
-            setPropertyDescription(FourWheelsVehicleConstraintDesc, m_clutchStrength, "Strength of the clutch when fully engaged.")
-            setPropertyRange(FourWheelsVehicleConstraintDesc, m_clutchStrength, float2(0, 100));
+            registerProperty(CarConstraintDesc, m_clutchStrength, "Clutch");
+            setPropertyDescription(CarConstraintDesc, m_clutchStrength, "Strength of the clutch when fully engaged.")
+            setPropertyRange(CarConstraintDesc, m_clutchStrength, float2(0, 100));
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
         // Wheels
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Front Wheels");
+        registerPropertyGroupBegin(CarConstraintDesc, "Front Wheels");
         {
-            registerPropertyObject(FourWheelsVehicleConstraintDesc, m_front, "Front Wheels");
+            registerPropertyObject(CarConstraintDesc, m_front, "Front Wheels");
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Rear Wheels");
+        registerPropertyGroupBegin(CarConstraintDesc, "Rear Wheels");
         {
-            registerPropertyObject(FourWheelsVehicleConstraintDesc, m_rear, "Rear Wheels");
+            registerPropertyObject(CarConstraintDesc, m_rear, "Rear Wheels");
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
         // Misc
-        registerPropertyGroupBegin(FourWheelsVehicleConstraintDesc, "Misc");
+        registerPropertyGroupBegin(CarConstraintDesc, "Misc");
         {
-            registerProperty(FourWheelsVehicleConstraintDesc, m_fourWheelDrive, "Four-Wheel Drive");
+            registerProperty(CarConstraintDesc, m_fourWheelDrive, "Four-Wheel Drive");
 
-            registerProperty(FourWheelsVehicleConstraintDesc, m_maxPitchRollAngleInDegrees, "Max Pitch Roll");
-            setPropertyDescription(FourWheelsVehicleConstraintDesc, m_maxPitchRollAngleInDegrees, "Defines the maximum pitch/roll angle (rad), can be used to avoid the car from getting upside down. The vehicle up direction will stay within a cone centered around the up axis with half top angle mMaxPitchRollAngle.")
-            setPropertyRange(FourWheelsVehicleConstraintDesc, m_maxPitchRollAngleInDegrees, float2(0, 180));
+            registerProperty(CarConstraintDesc, m_maxPitchRollAngleInDegrees, "Max Pitch Roll");
+            setPropertyDescription(CarConstraintDesc, m_maxPitchRollAngleInDegrees, "Defines the maximum pitch/roll angle (rad), can be used to avoid the car from getting upside down. The vehicle up direction will stay within a cone centered around the up axis with half top angle mMaxPitchRollAngle.")
+            setPropertyRange(CarConstraintDesc, m_maxPitchRollAngleInDegrees, float2(0, 180));
         }
-        registerPropertyGroupEnd(FourWheelsVehicleConstraintDesc);
+        registerPropertyGroupEnd(CarConstraintDesc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    FourWheelsVehicleConstraintDesc::FourWheelsVehicleConstraintDesc(const vg::core::string & _name, vg::core::IObject * _parent) :
+    CarConstraintDesc::CarConstraintDesc(const vg::core::string & _name, vg::core::IObject * _parent) :
         super(_name, _parent)
     {
         m_front.m_maxHandBrakeTorque = 0.0f;
@@ -170,13 +170,13 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    FourWheelsVehicleConstraintDesc::~FourWheelsVehicleConstraintDesc()
+    CarConstraintDesc::~CarConstraintDesc()
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    void FourWheelsVehicleConstraintDesc::OnLoad()
+    void CarConstraintDesc::OnLoad()
     {
         super::OnLoad();
 

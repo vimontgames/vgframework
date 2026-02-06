@@ -168,8 +168,8 @@ namespace vg::engine
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_vehicleType);
                     break;
 
-                case physics::VehicleType::FourWheels:
-                    m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("FourWheelsVehicleConstraintDesc", "", this);
+                case physics::VehicleType::Car:
+                    m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("CarConstraintDesc", "", this);
                     break;
             }
 

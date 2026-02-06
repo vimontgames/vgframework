@@ -278,8 +278,8 @@
                                 </Property>
                                 <Property type="EnumU8" name="m_vehicleType" value="FourWheels"/>
                                 <Property type="ObjectPtr" name="m_vehicleConstraintDesc">
-                                    <Object class="FourWheelsVehicleConstraintDesc">
-                                        <Property type="String" name="m_name" value="FourWheelsVehicleConstraintDesc #8"/>
+                                    <Object class="CarConstraintDesc">
+                                        <Property type="String" name="m_name" value="CarConstraintDesc #8"/>
                                         <Property type="Uint32" name="m_uid" value="3407972309"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
