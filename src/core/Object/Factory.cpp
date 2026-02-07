@@ -1648,7 +1648,7 @@ namespace vg::core
     const IClassDesc * Factory::GetClassDescriptor(const char * _className, bool _mustExist) const
     {
         const ClassCRC classCRC = computeCRC64(_className);
-        if (const IClassDesc * classDesc = GetClassDescriptorFromCRC(classCRC, _mustExist))
+        if (const IClassDesc * classDesc = GetClassDescriptorFromCRC(classCRC, false))
             return classDesc;
         
         VG_ASSERT(!_mustExist, "Class \"%s\" has no class descriptor", _className);

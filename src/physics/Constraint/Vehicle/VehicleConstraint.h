@@ -28,14 +28,17 @@ namespace vg::physics
         VehicleConstraint(Body * _body, const VehicleConstraintDesc * _vehicleConstraintDesc, const core::string & _name, core::IObject * _parent);
         ~VehicleConstraint();
 
-        void            FixedUpdate     (DriveState _driveState) final override;
-        void            Update          (DriveState _driveState) final override;
+        void            FixedUpdate     (const DriveState & _driveState) final override;
 
         float           GetEngineRPM    () const final override;
         core::uint      GetCurrentGear  () const final override;
 
         core::float4x4  GetWheelMatrix  (core::uint _index) const final override;
         void            Reset           () final override;
+
+    private:
+        void            updateDrive     (const DriveState & _driveState);
+        void            updateVisuals   ();
 
     private:
         VehicleConstraintDesc *                 m_vehicleConstraintDesc         = nullptr;

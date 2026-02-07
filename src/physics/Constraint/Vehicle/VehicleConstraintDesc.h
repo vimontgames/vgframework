@@ -7,33 +7,53 @@
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    class VehicleAxleDesc : public core::Object
+    class AxleDesc : public core::Object
     {
     public:
-        VG_CLASS_DECL_PASSTHROUGH(VehicleAxleDesc, core::Object);
+        VG_CLASS_DECL_PASSTHROUGH(AxleDesc, core::Object);
+
+    public:
+        // Wheels
+        float               m_radius = 0.35f;
+        float               m_width = 0.2f;
+
+        // Suspension
+        float               m_suspensionForwardAngleInDegree = 0.0f;
+        float               m_suspensionSidewaysAngleInDegree = 0.0f;
+        float               m_suspensionMinLength = 0.3f;
+        float               m_suspensionMaxLength = 0.6f;
+        float               m_suspensionFrequency = 1.5f;
+        float               m_suspensionDamping = 0.5f;
+
+        // Brakes
+        float               m_maxBrakeTorque = 2000.0f;
+        float               m_maxHandBrakeTorque = 4000.0f;
+        float               m_maxSteerAngleInDegrees = 35.0f;
+
+        float               m_inertia = 0.9f;
+        float               m_angularDamping = 0.2f;
+    };
+
+    //--------------------------------------------------------------------------------------
+    class OneWheeledAxleDesc : public AxleDesc
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(OneWheeledAxleDesc, AxleDesc);
+
+    public:
+        core::ObjectHandle  m_wheel;
+    };
+
+    //--------------------------------------------------------------------------------------
+    class TwoWheeledAxleDesc : public AxleDesc
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(TwoWheeledAxleDesc, AxleDesc);
 
     public:
         // Wheels
         core::ObjectHandle  m_leftWheel;
         core::ObjectHandle  m_rightWheel;
-        float               m_radius                    = 0.35f;
-        float               m_width                     = 0.2f;
-        
-        // Suspension
-        float               m_suspensionForwardAngleInDegree    = 0.0f;
-        float               m_suspensionSidewaysAngleInDegree   = 0.0f;
-        float               m_suspensionMinLength               = 0.3f;
-        float               m_suspensionMaxLength               = 0.6f;
-        float               m_suspensionFrequency               = 1.5f;
-        float               m_suspensionDamping                 = 0.5f;
-
-        // Brakes
-        float               m_maxBrakeTorque            = 2000.0f;  
-        float               m_maxHandBrakeTorque        = 4000.0f;  
-        float               m_maxSteerAngleInDegrees    = 35.0f;   
-
-        float               m_inertia                   = 0.9f;     
-        float               m_angularDamping            = 0.2f;     
     };
 
     //--------------------------------------------------------------------------------------
@@ -47,35 +67,12 @@ namespace vg::physics
 
         virtual VehicleType GetVehicleType() const = 0;
         virtual core::uint GetWheelCount() const = 0;
-    };
-
-    //--------------------------------------------------------------------------------------
-    class CarConstraintDesc : public VehicleConstraintDesc
-    {
-    public:
-        VG_CLASS_DECL(CarConstraintDesc, VehicleConstraintDesc);
-
-        CarConstraintDesc(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr);
-        ~CarConstraintDesc();
-
-        virtual VehicleType GetVehicleType() const final override { return VehicleType::Car; }
-        core::uint GetWheelCount() const final override { return 4; }
-
-        void OnLoad() final override;
 
     public:
         // Engine
-        float           m_maxEngineTorque               = 500.0f;
-        float           m_minRPM                        = 1000.0f;
-        float           m_maxRPM                        = 6000.0f;
-        float           m_clutchStrength                = 10.0f;
-
-        // Wheels
-        bool            m_fourWheelDrive                = false;       
-        VehicleAxleDesc m_front;
-        VehicleAxleDesc m_rear;
-
-        // Misc
-        float           m_maxPitchRollAngleInDegrees    = 180.0f;
+        float           m_maxEngineTorque   = 500.0f;
+        float           m_minRPM            = 1000.0f;
+        float           m_maxRPM            = 6000.0f;
+        float           m_clutchStrength    = 10.0f;
     };
 }

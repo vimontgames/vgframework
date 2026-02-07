@@ -67,38 +67,38 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(VehicleComponent, m_driveState.m_forward, "Forward", PropertyFlags::Transient);
-        setPropertyDescription(VehicleComponent, m_driveState.m_forward, "Value between -1 and 1 indicating desired driving direction and amount the gas pedal is pressed");
-        setPropertyRange(VehicleComponent, m_driveState.m_forward, float2(-1, +1));
-
-        registerPropertyEx(VehicleComponent, m_driveState.m_right, "Steering", PropertyFlags::Transient);
-        setPropertyDescription(VehicleComponent, m_driveState.m_right, "Value between -1 and 1 indicating desired steering angle (-1= left, 0 = center, 1 = right)");
-        setPropertyRange(VehicleComponent, m_driveState.m_right, float2(-1, +1));
-
-        registerPropertyEx(VehicleComponent, m_driveState.m_brake, "Brake", PropertyFlags::Transient);
-        setPropertyDescription(VehicleComponent, m_driveState.m_brake, "Value between 0 and 1 indicating how strong the brake pedal is pressed");
-        setPropertyRange(VehicleComponent, m_driveState.m_brake, float2(0, +1));
-
-        registerPropertyEx(VehicleComponent, m_driveState.m_handBrake, "Handbrake", PropertyFlags::Transient);
-        setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
-        setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
-
-        registerPropertyEx(VehicleComponent, m_speedInKmPerHour, "Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
-        setPropertyDescription(VehicleComponent, m_speedInKmPerHour, "Current speed in km/h");
-
-        registerPropertyEx(VehicleComponent, m_localVelocity, "Local Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
-
-        registerPropertyEx(VehicleComponent, m_engineRPM, "RPM", PropertyFlags::Transient | PropertyFlags::ReadOnly);
-        setPropertyDescription(VehicleComponent, m_engineRPM, "Current engine Rotation Per Minute");
-
-        registerPropertyEx(VehicleComponent, m_currentGear, "Gear", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        registerPropertyEnum(VehicleComponent, physics::VehicleType, m_vehicleType, "Type");
+        registerPropertyObjectPtrEx(VehicleComponent, m_vehicleConstraintDesc, "Constraints", PropertyFlags::Flatten);
 
         registerPropertyObject(VehicleComponent, m_slots, "Slots");
 
-        registerPropertyGroupBegin(VehicleComponent, "Contraints");
+        registerPropertyGroupBegin(VehicleComponent, "Debug");
         {
-            registerPropertyEnum(VehicleComponent, physics::VehicleType, m_vehicleType, "Type");
-            registerPropertyObjectPtrEx(VehicleComponent, m_vehicleConstraintDesc, "Constraints", PropertyFlags::Flatten);
+            registerPropertyEx(VehicleComponent, m_driveState.m_forward, "Forward", PropertyFlags::Transient);
+            setPropertyDescription(VehicleComponent, m_driveState.m_forward, "Value between -1 and 1 indicating desired driving direction and amount the gas pedal is pressed");
+            setPropertyRange(VehicleComponent, m_driveState.m_forward, float2(-1, +1));
+
+            registerPropertyEx(VehicleComponent, m_driveState.m_right, "Steering", PropertyFlags::Transient);
+            setPropertyDescription(VehicleComponent, m_driveState.m_right, "Value between -1 and 1 indicating desired steering angle (-1= left, 0 = center, 1 = right)");
+            setPropertyRange(VehicleComponent, m_driveState.m_right, float2(-1, +1));
+
+            registerPropertyEx(VehicleComponent, m_driveState.m_brake, "Brake", PropertyFlags::Transient);
+            setPropertyDescription(VehicleComponent, m_driveState.m_brake, "Value between 0 and 1 indicating how strong the brake pedal is pressed");
+            setPropertyRange(VehicleComponent, m_driveState.m_brake, float2(0, +1));
+
+            registerPropertyEx(VehicleComponent, m_driveState.m_handBrake, "Handbrake", PropertyFlags::Transient);
+            setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
+            setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
+
+            registerPropertyEx(VehicleComponent, m_speedInKmPerHour, "Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+            setPropertyDescription(VehicleComponent, m_speedInKmPerHour, "Current speed in km/h");
+
+            registerPropertyEx(VehicleComponent, m_localVelocity, "Local Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+
+            registerPropertyEx(VehicleComponent, m_engineRPM, "RPM", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+            setPropertyDescription(VehicleComponent, m_engineRPM, "Current engine Rotation Per Minute");
+
+            registerPropertyEx(VehicleComponent, m_currentGear, "Gear", PropertyFlags::Transient | PropertyFlags::ReadOnly);
         }
         registerPropertyGroupEnd(VehicleComponent);
 
@@ -158,8 +158,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool VehicleComponent::createVehicleConstraintDesc()
     {
-        if (nullptr == m_vehicleConstraintDesc)
+        if (nullptr == m_vehicleConstraintDesc || m_vehicleConstraintDesc->GetVehicleType() != m_vehicleType)
         {
+            VG_SAFE_RELEASE(m_vehicleConstraintDesc);
+
             IFactory * factory = Kernel::getFactory();
 
             switch (m_vehicleType)
@@ -170,6 +172,10 @@ namespace vg::engine
 
                 case physics::VehicleType::Car:
                     m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("CarConstraintDesc", "", this);
+                    break;
+
+                case physics::VehicleType::Bike:
+                    m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("BikeConstraintDesc", "", this);
                     break;
             }
 
@@ -274,7 +280,7 @@ namespace vg::engine
     void VehicleComponent::FixedUpdate(const Context & _context)
     {
         if (m_vehicleConstraint)
-            m_vehicleConstraint->FixedUpdate(m_driveState);// SetDriverInput
+            m_vehicleConstraint->FixedUpdate(m_driveState);
     }
 
     //--------------------------------------------------------------------------------------
@@ -282,7 +288,6 @@ namespace vg::engine
     {
         if (m_vehicleConstraint)
         {
-            m_vehicleConstraint->Update(m_driveState);
             IGameObject * go = GetGameObject();
 
             // Update local velocity

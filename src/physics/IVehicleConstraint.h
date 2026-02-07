@@ -10,6 +10,8 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IVehicleConstraintDesc, core::Object)
 
+        virtual VehicleType GetVehicleType() const = 0;
+        virtual core::uint GetWheelCount() const = 0;
     };
 
     struct DriveState
@@ -25,8 +27,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IVehicleConstraint, core::Object)
 
-        virtual void            FixedUpdate     (DriveState _driveState) = 0;
-        virtual void            Update          (DriveState _driveState) = 0;
+        virtual void            FixedUpdate     (const DriveState & _driveState) = 0;
 
         virtual float           GetEngineRPM    () const = 0;
         virtual core::uint      GetCurrentGear  () const = 0;

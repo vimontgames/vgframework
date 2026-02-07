@@ -211,7 +211,7 @@
                                         </Property>
                                     </Object>
                                 </Property>
-                                <Property type="EnumU8" name="m_vehicleType" value="FourWheels"/>
+                                <Property type="EnumU8" name="m_vehicleType" value="Car"/>
                                 <Property type="ObjectPtr" name="m_vehicleConstraintDesc">
                                     <Object class="CarConstraintDesc">
                                         <Property type="String" name="m_name" value="CarConstraintDesc #4"/>
@@ -222,7 +222,7 @@
                                         <Property type="Float" name="m_maxRPM" value="10000"/>
                                         <Property type="Float" name="m_clutchStrength" value="50"/>
                                         <Property type="Object" name="m_front">
-                                            <Object class="VehicleAxleDesc">
+                                            <Object class="TwoWheeledAxleDesc">
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="619880216"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -244,7 +244,7 @@
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_rear">
-                                            <Object class="VehicleAxleDesc">
+                                            <Object class="TwoWheeledAxleDesc">
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="3830806768"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>

@@ -18,8 +18,9 @@
 #include "Jolt/Physics/Vehicle/VehicleConstraint.h"
 #include "Jolt/Physics/Vehicle/VehicleCollisionTester.h"
 
-
 #include "VehicleConstraintDesc.hpp"
+#include "Car/CarConstraintDesc.hpp"
+#include "Bike/BikeConstraintDesc.hpp"
 
 using namespace vg::core;
 
@@ -69,6 +70,7 @@ namespace vg::physics
 
         const uint wheelCount = _vehicleConstraintDesc->GetWheelCount();
 
+        // Wheel setup
         switch (_vehicleConstraintDesc->GetVehicleType())
         {
             default:
@@ -79,7 +81,7 @@ namespace vg::physics
 
             case VehicleType::Car:
             {
-                CarConstraintDesc * desc = (CarConstraintDesc *)_vehicleConstraintDesc;
+                const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, _vehicleConstraintDesc);
 
                 // Suspension 
                 float3 frontSuspensionDir = normalize(float3(tan(degreesToRadians(desc->m_front.m_suspensionSidewaysAngleInDegree)), tan(degreesToRadians(desc->m_front.m_suspensionForwardAngleInDegree)), -1.0f));
@@ -110,8 +112,8 @@ namespace vg::physics
 
                 for (uint i = 0; i < wheelCount; ++i)
                 {
-                    VehicleAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
-                    ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
+                    const TwoWheeledAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
+                    const ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
 
                     #pragma push_macro("new")
                     #undef new
@@ -162,6 +164,58 @@ namespace vg::physics
                 }
             }
             break;
+
+            case VehicleType::Bike:
+            {
+                const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, _vehicleConstraintDesc);
+
+                vehicle.mMaxPitchRollAngle = degreesToRadians(desc->m_maxPitchRollAngleInDegrees);
+
+                for (uint i = 0; i < 2; ++i)
+                {
+                    const bool isFront = (i == 0);
+                    const OneWheeledAxleDesc & axle = isFront ? desc->m_front : desc->m_rear;
+                    const ObjectHandle & handle = axle.m_wheel;
+
+                    #pragma push_macro("new")
+                    #undef new
+                    JPH::WheelSettingsWV * jphWheel = new JPH::WheelSettingsWV();
+                    #pragma pop_macro("new")
+
+                    IObject * obj = handle.getObject();
+                    if (IGameObject * go = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                    {
+                        float4x4 wheelWorldMat = go->GetGlobalMatrix();
+                        float4x4 wheelLocalMat = mul(wheelWorldMat, inverse(bodyMat));
+
+                        float3 wheelLocalPos = wheelLocalMat[3].xyz;
+                        wheelLocalPos.z += axle.m_suspensionMaxLength;
+
+                        jphWheel->mPosition = getJoltVec3(wheelLocalPos);
+
+                        jphWheel->mSuspensionDirection = JPH::Vec3(0, 0, -1);
+                        jphWheel->mWheelUp = JPH::Vec3(0, 0, 1);
+                        jphWheel->mWheelForward = JPH::Vec3(1, 0, 0);
+
+                        jphWheel->mSteeringAxis = JPH::Vec3(0, 0, 1);
+                        jphWheel->mMaxSteerAngle = isFront ? degreesToRadians(axle.m_maxSteerAngleInDegrees) : 0.0f;
+
+                        jphWheel->mRadius = axle.m_radius;
+                        jphWheel->mWidth = axle.m_width;
+
+                        jphWheel->mSuspensionMinLength = axle.m_suspensionMinLength;
+                        jphWheel->mSuspensionMaxLength = axle.m_suspensionMaxLength;
+                        jphWheel->mSuspensionSpring.mFrequency = axle.m_suspensionFrequency;
+                        jphWheel->mSuspensionSpring.mDamping = axle.m_suspensionDamping;
+
+                        jphWheel->mMaxBrakeTorque = axle.m_maxBrakeTorque;
+                        jphWheel->mMaxHandBrakeTorque = isFront ? 0.0f : axle.m_maxHandBrakeTorque;
+
+                        vehicle.mWheels.push_back(jphWheel);
+                    }
+                }
+            }
+            break;
         }
 
         #pragma push_macro("new")
@@ -179,9 +233,23 @@ namespace vg::physics
             }
             break;
 
+            case VehicleType::Bike:
+            {
+                const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, _vehicleConstraintDesc);
+
+                // One "fake" differential driving ONLY the rear wheel (index 1)
+                controller->mDifferentials.resize(1);
+                controller->mDifferentials[0].mLeftWheel = 1;
+                controller->mDifferentials[0].mRightWheel = 1;
+                controller->mDifferentials[0].mEngineTorqueRatio = 1.0f;
+
+                // No anti-roll bars for bikes (on purpose)
+            }
+            break;
+
             case VehicleType::Car:
             {
-                CarConstraintDesc * desc = (CarConstraintDesc *)_vehicleConstraintDesc;
+                const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, _vehicleConstraintDesc);
 
                 if (desc->m_fourWheelDrive)
                 {
@@ -280,53 +348,92 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void VehicleConstraint::FixedUpdate(DriveState _driveState)
+    void VehicleConstraint::FixedUpdate(const DriveState & _driveState)
     {
         if (m_joltVehicleConstraint)
         {
-            JPH::BodyInterface & bodyInterface = m_vehicleBody->getPhysicsWorld()->getBodyInterface();
-            bodyInterface.ActivateBody(m_vehicleBody->getBodyID());
-
-            // To get controller
-            JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
-
-            // Probably does not need to change every frame ...
-            switch (m_vehicleConstraintDesc->GetVehicleType())
-            {
-                default:
-                {
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_vehicleConstraintDesc->GetVehicleType());
-                }
-                break;
-
-                case VehicleType::Car:
-                {
-                    CarConstraintDesc * desc = (CarConstraintDesc *)m_vehicleConstraintDesc;
-
-                    auto & engine = vehicleController->GetEngine();
-                    engine.mMaxTorque = desc->m_maxEngineTorque;
-                    engine.mMinRPM = desc->m_minRPM;
-                    engine.mMaxRPM = desc->m_maxRPM;
-                    vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
-                }
-                break;
-            }
-
-            // Set slip ratios to the same for everything
-            float limited_slip_ratio = sLimitedSlipDifferentials ? 1.4f : FLT_MAX;
-            vehicleController->SetDifferentialLimitedSlipRatio(limited_slip_ratio);
-            for (JPH::VehicleDifferentialSettings & d : vehicleController->GetDifferentials())
-                d.mLimitedSlipRatio = limited_slip_ratio;
-
-            // Pass the input on to the constraint
-            vehicleController->SetDriverInput(_driveState.m_forward, _driveState.m_right, _driveState.m_brake, _driveState.m_handBrake);
-
-            m_joltVehicleConstraint->SetVehicleCollisionTester(m_joltVehicleCollisionTester);
+            updateDrive(_driveState);
+            updateVisuals();
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void VehicleConstraint::Update(DriveState _driveState)
+    void VehicleConstraint::updateDrive(const DriveState & _driveState)
+    {
+        VG_ASSERT(m_joltVehicleConstraint);
+
+        JPH::BodyInterface & bodyInterface = m_vehicleBody->getPhysicsWorld()->getBodyInterface();
+        bodyInterface.ActivateBody(m_vehicleBody->getBodyID());
+
+        // To get controller
+        JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
+
+        // Probably does not need to change every frame ...
+        switch (m_vehicleConstraintDesc->GetVehicleType())
+        {
+            default:
+            {
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_vehicleConstraintDesc->GetVehicleType());
+            }
+            break;
+
+            case VehicleType::Bike:
+            {
+                const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, m_vehicleConstraintDesc);
+
+                auto & engine = vehicleController->GetEngine();
+                engine.mMaxTorque = desc->m_maxEngineTorque;
+                engine.mMinRPM = desc->m_minRPM;
+                engine.mMaxRPM = desc->m_maxRPM;
+
+                vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
+
+                /*// --- Low-speed stabilization (VERY important for bikes) ---
+                const float speed = length(m_vehicleBody->GetLinearVelocity());
+
+                if (speed < desc->m_stabilizationSpeed)
+                {
+                    JPH::Vec3 angVel =m_vehicleBody->getPhysicsWorld()->getBodyInterface().GetAngularVelocity(m_vehicleBody->getBodyID());
+
+                    const float t = speed / desc->m_stabilizationSpeed; // 0..1
+                    const float damping = lerp(desc->m_lowSpeedAngularDamping, 1.0f, t);
+
+                    angVel *= damping;
+
+                    m_vehicleBody->getPhysicsWorld()->getBodyInterface().SetAngularVelocity(m_vehicleBody->getBodyID(), angVel);
+                }*/
+            }
+            break;
+
+            case VehicleType::Car:
+            {
+                const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, m_vehicleConstraintDesc);
+
+                auto & engine = vehicleController->GetEngine();
+                engine.mMaxTorque = desc->m_maxEngineTorque;
+                engine.mMinRPM = desc->m_minRPM;
+                engine.mMaxRPM = desc->m_maxRPM;
+                vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
+            }
+            break;
+        }
+
+        // Set slip ratios to the same for everything
+        float limited_slip_ratio = sLimitedSlipDifferentials ? 1.4f : FLT_MAX;
+        vehicleController->SetDifferentialLimitedSlipRatio(limited_slip_ratio);
+        for (JPH::VehicleDifferentialSettings & d : vehicleController->GetDifferentials())
+            d.mLimitedSlipRatio = limited_slip_ratio;
+
+        // Pass the input on to the constraint
+        vehicleController->SetDriverInput(_driveState.m_forward, _driveState.m_right, _driveState.m_brake, _driveState.m_handBrake);
+
+        m_joltVehicleConstraint->SetVehicleCollisionTester(m_joltVehicleCollisionTester);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // TODO: move debug display to tool update pass
+    //--------------------------------------------------------------------------------------
+    void VehicleConstraint::updateVisuals()
     {
         // debug
         renderer::IDebugDraw * debugDraw = Physics::get()->getDebugDraw();
@@ -343,7 +450,7 @@ namespace vg::physics
 
                 case VehicleType::Car:
                 {
-                    CarConstraintDesc * desc = (CarConstraintDesc *)m_vehicleConstraintDesc;
+                    const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, m_vehicleConstraintDesc);
 
                     const uint wheelCount = desc->GetWheelCount();
 
@@ -371,8 +478,44 @@ namespace vg::physics
                         }
 
                         // transform the wheel visual
-                        VehicleAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
-                        ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
+                        const TwoWheeledAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
+                        const ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
+
+                        IObject * obj = handle.getObject();
+                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                        {
+                            float4x4 wheelMat = GetWheelMatrix(i);
+                            wheelGameobject->SetGlobalMatrix(wheelMat);
+                        }
+                    }
+                }
+                break;
+
+                case VehicleType::Bike:
+                {
+                    const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, m_vehicleConstraintDesc);
+
+                    const uint wheelCount = desc->GetWheelCount();
+
+                    for (uint i = 0; i < wheelCount; ++i)
+                    {
+                        const JPH::Wheel * wheel = m_joltVehicleConstraint->GetWheel(i);
+                        const JPH::WheelSettings * wheelSettings = wheel->GetSettings();
+
+                        const float radius = wheelSettings->mRadius;
+                        const float width = wheelSettings->mWidth;
+
+                        // Move to ToolUpdate instead?
+                        if (PhysicsOptions::get()->IsConstraintVisible(ConstraintType::Vehicle))
+                        {
+                            // debug shapes
+                            float4x4 wheelMatDebug = fromJoltMatrix(m_joltVehicleConstraint->GetWheelWorldTransform(i, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()));
+                            debugDraw->AddWireframeCylinder(m_world, radius, width, 0xFF0000FF, wheelMatDebug);
+                        }
+
+                        // transform the wheel visual
+                        const OneWheeledAxleDesc & axle = (i == 0) ? desc->m_front : desc->m_rear;
+                        const ObjectHandle & handle = axle.m_wheel;
 
                         IObject * obj = handle.getObject();
                         if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))

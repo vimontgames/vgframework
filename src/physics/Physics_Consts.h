@@ -110,6 +110,7 @@ namespace vg::physics
     vg_generic_enum_bitfield_64(vg::physics, CategoryFlag);
 
     vg_enum_class(vg::physics, VehicleType, core::u8,
-        Car = 0
+        Car = 0,
+        Bike
     );
 }
