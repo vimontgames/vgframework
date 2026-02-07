@@ -267,7 +267,7 @@ This project uses character animations generated via [Mixamo](https://www.mixamo
 
 | Name<img width=140/>                                                   | Version<img width=200/> | License 															
 | ---------------------------------------------------------------------- | -------------           | ----------------------
-| [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x                     | [Font Awesome Free License / CC BY 4.0 / SIL OFL 1.1](https://github.com/FortAwesome/Font-Awesome/blob/7.x/LICENSE.txt)    
+| [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x                     | [Font Awesome Free License](https://github.com/FortAwesome/Font-Awesome/blob/7.x/LICENSE.txt)    
 | [Rowdies](      https://github.com/magictype/rowdy                   ) |                         | [SIL OFL 1.1](https://github.com/magictype/rowdies?tab=OFL-1.1-1-ov-file)
 | [RubikMonoOne]( https://fonts.google.com/specimen/Rubik+Mono+One     ) |                         | [SIL OFL 1.1](https://fonts.google.com/specimen/Rubik+Mono+One/license)
 | [UbuntuMono](   https://fonts.google.com/specimen/Ubuntu+Mono        ) | 1.0                     | [Ubuntu Font Licence](https://fonts.google.com/specimen/Ubuntu+Mono/license)
@@ -314,20 +314,23 @@ Blue noise textures were generated using [FastNoise](https://github.com/electron
            
 ### Sounds
 
-| Name<img width=140/>                                                                                      | Author<img width=200/>                                     | License 				 	            											
-| --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------
-| [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | [bolkmar](https://freesound.org/people/bolkmar/)           | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
-| [Chainsaw](             https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)               | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
-| [Retro Bonus Pickup](   https://freesound.org/people/suntemple/sounds/253172/                           ) | [suntemple](https://freesound.org/people/suntemple/)       | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) 
-| [Car door](             https://freesound.org/people/RutgerMuller/sounds/50888/                         ) | [RutgerMuller](https://freesound.org/people/RutgerMuller/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
-| [Industrial Air Horn](  https://freesound.org/people/mcpable/sounds/131930/                             ) | [mcpable](https://freesound.org/people/mcpable/)           | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
-| [boat ship barge](      https://freesound.org/people/kyles/sounds/637235/                               ) | [kyles](https://freesound.org/people/kyles/)               | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
-| [Car Horn Honk](        https://freesound.org/people/etcd_09/sounds/435497/                             ) | [etcd_09_](https://freesound.org/people/etcd_09/)          | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
-| [Car Breaking Skid](    https://freesound.org/people/Medartimus/sounds/217542/                          ) | [Medartimus](https://freesound.org/people/Medartimus/)     | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-| [Large sword swing](    https://freesound.org/people/Squirrel_404/sounds/737748/                        ) | [Squirrel_404](https://freesound.org/people/Squirrel_404/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-| [Broken mirror](        https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)             | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
-| [Rally Car Idle Loop](  https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)         | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
-  
+| Name<img width=140/>                                                                                      | Author<img width=200/>                                            | License 				 	            											
+| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------
+| [FX - Swoosh - normal](    https://freesound.org/people/bolkmar/sounds/451127/                             ) | [bolkmar](https://freesound.org/people/bolkmar/)               | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Chainsaw](                https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)                   | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Retro Bonus Pickup](      https://freesound.org/people/suntemple/sounds/253172/                           ) | [suntemple](https://freesound.org/people/suntemple/)           | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) 
+| [Car door](                https://freesound.org/people/RutgerMuller/sounds/50888/                         ) | [RutgerMuller](https://freesound.org/people/RutgerMuller/)     | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Industrial Air Horn](     https://freesound.org/people/mcpable/sounds/131930/                             ) | [mcpable](https://freesound.org/people/mcpable/)               | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [boat ship barge](         https://freesound.org/people/kyles/sounds/637235/                               ) | [kyles](https://freesound.org/people/kyles/)                   | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+| [honda motorcycle engine]( https://freesound.org/people/joao44/sounds/715247/                              ) | [joao44](https://freesound.org/people/joao44/)                 | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+| [09_horn](                 https://freesound.org/people/15HBradlerovaV/sounds/461493/                      ) | [15HBradlerovaV](https://freesound.org/people/15HBradlerovaV/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+| [Car Horn Honk](           https://freesound.org/people/etcd_09/sounds/435497/                             ) | [etcd_09_](https://freesound.org/people/etcd_09/)              | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+| [Car Breaking Skid](       https://freesound.org/people/Medartimus/sounds/217542/                          ) | [Medartimus](https://freesound.org/people/Medartimus/)         | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+| [Large sword swing](       https://freesound.org/people/Squirrel_404/sounds/737748/                        ) | [Squirrel_404](https://freesound.org/people/Squirrel_404/)     | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+| [Broken mirror](           https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)                 | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+| [Rally Car Idle Loop](     https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)             | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+
+
 
 
 # Misc
