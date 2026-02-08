@@ -1,0 +1,15 @@
+<Root>
+    <Object class="MaterialResourceData">
+        <Property type="Uint32" name="m_uid" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="Object" name="m_materialModelType">
+            <Object class="MaterialModelType">
+                <Property type="String" name="m_name" value=""/>
+                <Property type="Uint32" name="m_uid" value="0"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_shader" value=""/>
+            </Object>
+        </Property>
+        <Property type="ObjectPtr" name="m_data"/>
+    </Object>
+</Root>

@@ -1,0 +1,73 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="Giraphon"/>
+        <Property type="Uint32" name="m_uid" value="3329416225"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="3289636146"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components">
+                    <Object class="MeshComponent">
+                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                        <Property type="Uint32" name="m_uid" value="1931226690"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="EnumU8" name="m_outlineCategory" value="User_4"/>
+                        <Property type="Resource" name="m_meshResource">
+                            <Object class="MeshResource">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="2643256213"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="String" name="m_resourcePath" value="data/Meshes/Giraphon/Giraphon.fbx"/>
+                            </Object>
+                        </Property>
+                        <Property type="Object" name="m_meshMaterials">
+                            <Object class="MaterialResourceList">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="ResourceVector" name="m_resources">
+                                    <Object class="MaterialResource">
+                                        <Property type="String" name="m_name" value="Giraphon"/>
+                                        <Property type="Uint32" name="m_uid" value="86423564"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Materials/Giraphon/Giraphon.mat"/>
+                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                    </Object>
+                                    <Object class="MaterialResource">
+                                        <Property type="String" name="m_name" value="Giraphon_Body"/>
+                                        <Property type="Uint32" name="m_uid" value="60682736"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Materials/Giraphon/Giraphon_Body.mat"/>
+                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
+                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                        <Property type="Object" name="m_stencil">
+                            <Object class="StencilState">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="1427643633"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="Bool" name="m_enable" value="false"/>
+                                <Property type="BitMask" name="m_ref" BitCount="8" Value="0x0000000000000000"/>
+                                <Property type="EnumU16" name="m_func" value="Always"/>
+                                <Property type="EnumU16" name="m_passOp" value="Keep"/>
+                                <Property type="EnumU16" name="m_failOp" value="Keep"/>
+                                <Property type="EnumU16" name="m_depthFailOp" value="Keep"/>
+                            </Object>
+                        </Property>
+                    </Object>
+                </Property>
+                <Property type="ObjectPtrVector" name="m_children"/>
+            </Object>
+        </Property>
+    </Object>
+</Root>
