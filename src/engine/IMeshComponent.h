@@ -12,7 +12,9 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(IMeshComponent, GraphicInstanceComponent);
 
-        virtual MaterialIndex       GetMaterialIndex    (const core::string & _materialName) const = 0;
-        virtual IMaterialResource * GetMaterialResource (MaterialIndex _materialIndex) const = 0;
+        virtual MaterialIndex           GetMaterialIndex    (const core::string & _materialName) const = 0;
+        virtual IMaterialResource *     GetMaterialResource (MaterialIndex _materialIndex) const = 0;
+        virtual const core::BitMask &   GetBatchMask        () const = 0;
+        virtual void                    SetBatchMask        (const core::BitMask & _batchMask) = 0;
     };
 }

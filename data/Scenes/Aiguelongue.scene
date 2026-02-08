@@ -21309,7 +21309,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -24422,7 +24422,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Players"/>
                         <Property type="Uint32" name="m_uid" value="2277101686"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-17.75" Ty="5.5" Tz="-0.27965075" Tw="1"/>
@@ -24460,6 +24460,21 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="Bool" name="m_enable" value="true"/>
                                                 <Property type="ObjectHandle" name="m_value" value="1287416559"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" value="Helmet"/>
+                                        <Property type="Uint32" name="m_uid" value="728414669"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2338871938"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyFloat4">
+                                                <Property type="String" name="m_name" value="m_color"/>
+                                                <Property type="Uint32" name="m_uid" value="4124799700"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="Float4" name="m_value" x="0.10980392" y="0.0039215689" z="0.627451" w="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -24520,75 +24535,104 @@
                                                 <Property type="ObjectVector" name="m_values">
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3337725262"/>
+                                                        <Property type="Uint32" name="m_uid" value="580036524"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="350728409"/>
+                                                        <Property type="Uint32" name="m_uid" value="2613735865"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Mouth.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3428333098"/>
+                                                        <Property type="Uint32" name="m_uid" value="3116078606"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Iris.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="1671200724"/>
+                                                        <Property type="Uint32" name="m_uid" value="1600129624"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Trouser.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="4087214822"/>
+                                                        <Property type="Uint32" name="m_uid" value="3488235282"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Glove.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="789106987"/>
+                                                        <Property type="Uint32" name="m_uid" value="599292456"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Hair.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="472653071"/>
+                                                        <Property type="Uint32" name="m_uid" value="207698268"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Shoe.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3895368611"/>
+                                                        <Property type="Uint32" name="m_uid" value="3361271289"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Glove.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="1718640339"/>
+                                                        <Property type="Uint32" name="m_uid" value="3515795898"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Glove.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="756412667"/>
+                                                        <Property type="Uint32" name="m_uid" value="4232561779"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Romeo/Trouser.mat"/>
                                                     </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="1642170080"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
+                                                    </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="3138091717"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
+                                                    </Object>
                                                 </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" value="Helmet"/>
+                                        <Property type="Uint32" name="m_uid" value="3246843182"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2338871938"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyFloat4">
+                                                <Property type="String" name="m_name" value="m_color"/>
+                                                <Property type="Uint32" name="m_uid" value="997832520"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="Float4" name="m_value" x="0.05882353" y="0.05882353" z="0.05882353" w="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -24649,73 +24693,87 @@
                                                 <Property type="ObjectVector" name="m_values">
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="75303420"/>
+                                                        <Property type="Uint32" name="m_uid" value="4110571832"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3911037816"/>
+                                                        <Property type="Uint32" name="m_uid" value="179691211"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Mouth.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="317744435"/>
+                                                        <Property type="Uint32" name="m_uid" value="1149391624"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Iris.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="997021737"/>
+                                                        <Property type="Uint32" name="m_uid" value="3809148517"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Benualdo/Shirt.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3286130691"/>
+                                                        <Property type="Uint32" name="m_uid" value="4079302632"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3423352942"/>
+                                                        <Property type="Uint32" name="m_uid" value="1758632400"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Benualdo/Hair.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3254624109"/>
+                                                        <Property type="Uint32" name="m_uid" value="994291258"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Shoe.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3932409738"/>
+                                                        <Property type="Uint32" name="m_uid" value="450716925"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3680140860"/>
+                                                        <Property type="Uint32" name="m_uid" value="1289388582"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="62184667"/>
+                                                        <Property type="Uint32" name="m_uid" value="359644073"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Benualdo/Trouser.mat"/>
+                                                    </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="2517773777"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
+                                                    </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="827307673"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -24733,6 +24791,21 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="Bool" name="m_enable" value="true"/>
                                                 <Property type="BitMask" name="m_value" BitCount="11" Value="0x000000000000067F"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" value="Helmet"/>
+                                        <Property type="Uint32" name="m_uid" value="657167574"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2338871938"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyFloat4">
+                                                <Property type="String" name="m_name" value="m_color"/>
+                                                <Property type="Uint32" name="m_uid" value="2814981936"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="Float4" name="m_value" x="0.016736388" y="0.016736388" z="0.016736388" w="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -24793,73 +24866,87 @@
                                                 <Property type="ObjectVector" name="m_values">
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="69109559"/>
+                                                        <Property type="Uint32" name="m_uid" value="215379950"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="1050764533"/>
+                                                        <Property type="Uint32" name="m_uid" value="690609765"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Mouth.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="2362491077"/>
+                                                        <Property type="Uint32" name="m_uid" value="2314277074"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Iris.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="2103147353"/>
+                                                        <Property type="Uint32" name="m_uid" value="4276253619"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Tim/TimShirt.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="2613793430"/>
+                                                        <Property type="Uint32" name="m_uid" value="2035566426"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="3540682681"/>
+                                                        <Property type="Uint32" name="m_uid" value="84781136"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Tim/TimHair.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="2644062062"/>
+                                                        <Property type="Uint32" name="m_uid" value="2025058875"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="false"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Pablo/Shoe.mat"/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="1106868692"/>
+                                                        <Property type="Uint32" name="m_uid" value="86314710"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="2391545332"/>
+                                                        <Property type="Uint32" name="m_uid" value="1110165159"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="4097441846"/>
+                                                        <Property type="Uint32" name="m_uid" value="543206103"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="String" name="m_value" value="data/Materials/Benualdo/Trouser.mat"/>
+                                                    </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="4179720642"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
+                                                    </Object>
+                                                    <Object class="ResourceOverrideData">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="1461294389"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="false"/>
+                                                        <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -24877,6 +24964,21 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="Bool" name="m_enable" value="true"/>
                                                 <Property type="BitMask" name="m_value" BitCount="11" Value="0x000000000000067F"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" value="Helmet"/>
+                                        <Property type="Uint32" name="m_uid" value="372676824"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2338871938"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyFloat4">
+                                                <Property type="String" name="m_name" value="m_color"/>
+                                                <Property type="Uint32" name="m_uid" value="3098753294"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="Float4" name="m_value" x="0.53725493" y="0.39215687" z="0.050980393" w="1"/>
                                             </Object>
                                         </Property>
                                     </Object>

@@ -15,9 +15,12 @@ public:
     float GetDamage() const override;
     float GetPush() const override;
 
+    VG_INLINE bool useHelmet() const;
+
 private:
     VehicleType m_vehicleType = VehicleType::Default;
     float m_velocityThreshold = 2.0f; 
+    bool m_useHelmet = false;
 };
 
 #if VG_ENABLE_INLINE

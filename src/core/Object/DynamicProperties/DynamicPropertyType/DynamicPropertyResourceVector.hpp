@@ -8,7 +8,7 @@ namespace vg::core
     ResourceOverrideData::ResourceOverrideData(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-
+       
     }
 
     //--------------------------------------------------------------------------------------
@@ -61,14 +61,12 @@ namespace vg::core
     bool DynamicPropertyResourceVector::BackupOriginalValue(const IObject * _object, const IProperty * _prop)
     {
         const auto count = _prop->GetPropertyResourceVectorCount(_object);
-        m_values.resize(count);
+        resize(count);
 
         for (uint i = 0; i < count; ++i)
         {
             if (IResource * res = _prop->GetPropertyResourceVectorElement(_object, i))
-            {
                 m_values[i].m_original = res->GetResourcePath();
-            }
         }
         return true;
     }
@@ -77,14 +75,12 @@ namespace vg::core
     bool DynamicPropertyResourceVector::RestoreOriginalValue(IObject * _object, const IProperty * _prop)
     {
         const auto count = _prop->GetPropertyResourceVectorCount(_object);
-        m_values.resize(count);
+        resize(count);
 
         for (uint i = 0; i < count; ++i)
         {
             if (IResource * res = _prop->GetPropertyResourceVectorElement(_object, i))
-            {
                 res->SetResourcePath(m_values[i].m_original);
-            }
         }
         return true;
     }
@@ -93,16 +89,14 @@ namespace vg::core
     bool DynamicPropertyResourceVector::ApplyOverride(IObject * _object, const IProperty * _prop)
     {
         const auto count = _prop->GetPropertyResourceVectorCount(_object);
-        m_values.resize(count);
+        resize(count);
 
         for (uint i = 0; i < count; ++i)
         {
             if (isEnabledAt(i))
             {
                 if (IResource * res = _prop->GetPropertyResourceVectorElement(_object, i))
-                {
                     res->SetResourcePath(getValueAt(i));
-                }
             }
         }
 
@@ -113,14 +107,12 @@ namespace vg::core
     bool DynamicPropertyResourceVector::SetOverrideInitValue(const IObject * _object, const IProperty * _prop)
     {
         const auto count = _prop->GetPropertyResourceVectorCount(_object);
-        m_values.resize(count);
+        resize(count);
 
         for (uint i = 0; i < count; ++i)
         {
             if (IResource * res = _prop->GetPropertyResourceVectorElement(_object, i))
-            {
                 m_values[i].m_value = res->GetResourcePath();
-            }
         }
         return true;
     }
@@ -157,5 +149,19 @@ namespace vg::core
             return m_values[_index].m_enable;
         else
             return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // UID are not copied, so we must make sure each object has valid UID after resize
+    //--------------------------------------------------------------------------------------
+    void DynamicPropertyResourceVector::resize(core::uint _count)
+    {
+        if (m_values.size() != _count)
+        {
+            VG_WARNING("Resource vector is overriden with %u elements in Prefab instance \"%s\", but original data had %u elements", _count, getParent()->GetParent()->GetName().c_str(), m_values.size());
+            m_values.resize(_count);
+            for (uint i = 0; i < _count; ++i)
+                m_values[i].RegisterUID();
+        }
     }
 }

@@ -26,10 +26,11 @@
                             <Object class="VehicleBehaviour">
                                 <Property type="String" name="m_name" value="New VehicleBehaviour"/>
                                 <Property type="Uint32" name="m_uid" value="809751182"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float" name="m_damage" value="4"/>
                                 <Property type="Float" name="m_push" value="0.40000001"/>
+                                <Property type="Bool" name="m_useHelmet" value="true"/>
                                 <Property type="Float" name="m_velocityThreshold" value="2"/>
                             </Object>
                             <Object class="VehicleComponent">

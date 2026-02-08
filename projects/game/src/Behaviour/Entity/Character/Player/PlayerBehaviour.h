@@ -1,6 +1,9 @@
 #pragma once
 #include "Behaviour/Entity/Character/CharacterBehaviour.h"
 #include "core/Object/ObjectHandle.h"
+#include "core/Misc/BitMask/BitMask.h"
+
+class VehicleBehaviour;
 
 class PlayerBehaviour final : public CharacterBehaviour
 {
@@ -25,6 +28,10 @@ public:
     VG_INLINE const vg::core::u8        getViewportIndex    () const;
 
 private:
+    void                                putHelmet           (VehicleBehaviour * vehicleBehaviour);
+    void                                removeHelmet        (VehicleBehaviour * vehicleBehaviour);
+
+private:
     vg::core::InputType                 m_controllerType    = vg::core::InputType::Joypad;
     vg::core::u8                        m_controllerIndex   = 0;
     vg::core::float4                    m_customColor       = vg::core::float4(1, 1, 1, 1);
@@ -32,7 +39,10 @@ private:
     ItemBehaviour *                     m_rightHandItem     = nullptr;
     vg::core::u8                        m_viewIndex         = -1;
     float                               m_nextShootTime     = 0.0f;
-    float                               m_respawnTime       = 0.0f;    
+    float                               m_respawnTime       = 0.0f;  
+
+    bool                                m_isWearingHelmet   = false;
+    vg::core::BitMask                   m_backupHelmetBatches;
 };
 
 #if VG_ENABLE_INLINE

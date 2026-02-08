@@ -37,6 +37,9 @@ namespace vg::core
         bool isEnabledAt(core::uint _index) const;
 
     private:
+        void resize(core::uint _count);
+
+    private:
         core::vector<ResourceOverrideData> m_values;
     };
 }

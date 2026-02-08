@@ -45,6 +45,9 @@ namespace vg::engine
         MaterialIndex                       GetMaterialIndex        (const core::string & _materialName) const final override;
         IMaterialResource *                 GetMaterialResource     (MaterialIndex _materialIndex) const final override;
 
+        const core::BitMask &               GetBatchMask            () const final override;
+        void                                SetBatchMask            (const core::BitMask & _batchMask) final override;
+
         bool                                isSkeletonVisible       () const;
 
         VG_INLINE const MeshResource &      getMeshResource         () const;

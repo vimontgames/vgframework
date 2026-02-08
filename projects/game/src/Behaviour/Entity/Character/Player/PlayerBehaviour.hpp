@@ -119,6 +119,9 @@ void PlayerBehaviour::OnStop()
     enableVisual(true);
     enablePhysics(true);
 
+    if (m_isWearingHelmet)
+        removeHelmet(nullptr);
+
     m_vehicle.clear();
     m_vehicleSlot = -1;
 }
@@ -697,7 +700,8 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
     IVehicleComponent * vehicleComp = _vehicleGameobject->GetComponentT<IVehicleComponent>();
     VG_ASSERT(vehicleComp);
     uint slotIndex;
-    if (vehicleComp->EnterVehicle(this->GetGameObject(), slotIndex))
+    IGameObject * playerGO = this->GetGameObject();
+    if (vehicleComp->EnterVehicle(playerGO, slotIndex))
     {
         m_vehicle.set(_vehicleGameobject);
         m_vehicleSlot = slotIndex;
@@ -730,6 +734,9 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
                     for (IMeshComponent * meshComp : meshComponents)
                         meshComp->SetOutlineCategory(category);
                 }
+
+                // Wear helmet if vehicle requires it
+                putHelmet(vehicleBehaviour);
             }
         }
 
@@ -740,12 +747,78 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 }
 
 //--------------------------------------------------------------------------------------
+void PlayerBehaviour::putHelmet(VehicleBehaviour * vehicleBehaviour)
+{
+    if (vehicleBehaviour->useHelmet())
+    {
+        IGameObject * playerGO = GetGameObject();
+        if (auto * helmetGO = playerGO->GetChildGameObject("Helmet"))
+        {
+            helmetGO->Enable(true);
+            m_isWearingHelmet = true;
+
+            // Hide hair, ears and cap batchs
+            if (IMeshComponent * meshComponent = playerGO->GetComponentT<IMeshComponent>())
+            {
+                // Backup batch mask
+                BitMask batches = meshComponent->GetBatchMask();
+                m_backupHelmetBatches = batches;
+
+                static const char * helmetHiddenMats[] =
+                {
+                    "Hair",
+                    "Cap1",
+                    "Cap2",
+                    "Ears"
+                };
+
+                for (uint i = 0; i < countof(helmetHiddenMats); ++i)
+                {
+                    uint bitIndex = meshComponent->GetMaterialIndex(helmetHiddenMats[i]);
+                    if (-1 != bitIndex)
+                        batches.setBitValue(bitIndex, false);
+                    else
+                        VG_WARNING("Could not hide \"%s\" for helmet", helmetHiddenMats[i]);
+                }
+
+                meshComponent->SetBatchMask(batches);
+
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------------
+void PlayerBehaviour::removeHelmet(VehicleBehaviour * _vehicleBehaviour)
+{
+    if (nullptr == _vehicleBehaviour || _vehicleBehaviour->useHelmet())
+    {
+        IGameObject * playerGO = GetGameObject();
+        if (auto * helmetGO = playerGO->GetChildGameObject("Helmet"))
+        {
+            // Hide helmet 
+            helmetGO->Enable(false);
+            m_isWearingHelmet = false;
+
+            if (IMeshComponent * meshComponent = playerGO->GetComponentT<IMeshComponent>())
+            {
+                // Restore batch mask
+                meshComponent->SetBatchMask(m_backupHelmetBatches);
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------------
 bool PlayerBehaviour::exitVehicle(bool _teleport)
 {
     if (IGameObject * vehicleGO = VG_SAFE_STATIC_CAST(IGameObject, m_vehicle.getObject()))
     {
         IVehicleComponent * vehicleComp = vehicleGO->GetComponentT<IVehicleComponent>();
         VG_ASSERT(vehicleComp);
+
+        VehicleBehaviour * vehicleBehaviour = vehicleGO->GetComponentT<VehicleBehaviour>();
+        VG_ASSERT(vehicleBehaviour);
 
         if (1)
         {
@@ -770,12 +843,11 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                     // enable physics but disable if cannot exit
                     enablePhysics(true);
 
-                    
-
                     // Test if shape can fit in target position using physics
                     if (charaController->CanTeleportTo(exitMat[3].xyz))
                     {
                         VG_VERIFY(vehicleComp->ExitVehicle(go));
+                        removeHelmet(vehicleBehaviour);
                         GetGameObject()->SetGlobalMatrix(exitMat);
                         m_vehicle.clear();
                     }
@@ -815,6 +887,7 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
             else
             {
                 VG_VERIFY(vehicleComp->ExitVehicle(go));
+                removeHelmet(vehicleBehaviour);
                 m_vehicle.clear();
             }
 

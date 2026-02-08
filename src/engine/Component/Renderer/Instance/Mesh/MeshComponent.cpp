@@ -249,6 +249,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::BitMask & MeshComponent::GetBatchMask() const
+    {
+        return m_batchMask;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshComponent::SetBatchMask(const core::BitMask & _batchMask)
+    {
+        m_batchMask = _batchMask;
+        if (m_meshInstance)
+            m_meshInstance->SetBatchMask(m_batchMask);
+    }
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_meshResource)
