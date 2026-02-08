@@ -7,6 +7,48 @@ using namespace vg::engine;
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    string formatSizeInBytes(u64 _sizeInBytes)
+    {
+        const float KB = 1024.0f;
+        const float MB = KB * 1024.0f;
+        const float GB = MB * 1024.0f;
+
+        if (_sizeInBytes < 1024)
+            return fmt::sprintf("%lld B", _sizeInBytes);
+        else if (_sizeInBytes < MB)
+            return fmt::sprintf("%.1f kB", _sizeInBytes / KB);
+        else if (_sizeInBytes < GB)
+            return fmt::sprintf("%.2f MB", _sizeInBytes / MB);
+        else
+            return fmt::sprintf("%.3f GB", _sizeInBytes / GB);
+    }
+
+    //--------------------------------------------------------------------------------------
+    string formatTimeInMilliseconds(float _timeInMilliseconds)
+    {
+        if (_timeInMilliseconds < 1000)
+            return fmt::sprintf("%.0f ms", _timeInMilliseconds);
+
+        float seconds = _timeInMilliseconds / 1000.0f;
+        if (seconds < 60)
+            return fmt::sprintf("%.1f s", seconds);
+
+        float minutes = seconds / 60.0f;
+        return fmt::sprintf("%.2f m", minutes);
+    }
+
+    vg_enum_class(vg::editor, Column, core::uint,
+        Name = 0,
+        Extension,
+        Type,
+        RawSize,
+        CookedSize,
+        CookingTime,
+        LoadingTime,
+        Folder
+    );
+
+    //--------------------------------------------------------------------------------------
     ImGuiResource::ImGuiResource() :
         ImGuiWindow(style::icon::Resource, "", "Resources", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
     {
@@ -36,189 +78,244 @@ namespace vg::editor
 
             rm->Lock();
 
-            const auto resCount = rm->GetResourceCount();
-
-            // Sort Resources by resource type
-            unordered_map<string, vector<const IResourceInfo *>> resourcesByType;
-
-            #if 1
-            for (uint i = 0; i < resCount; ++i)
+            if (1)
             {
-                const IResourceInfo & resInfo = rm->GetResourceInfo(i);
-                const string resType = resInfo.GetResourceType();
-
-                auto it = resourcesByType.find(resType);
-                if (resourcesByType.end() == it)
+                const auto & resources = rm->GetAllResourceInfos();
+                uint resIndex = 0;
+                vector<const IResourceInfo *> resourceInfos(resources.size());
+                for (auto & resInfoPair : resources)
                 {
-                    vector<const IResourceInfo *> resList;
-                    it = resourcesByType.insert(std::pair<string, vector<const IResourceInfo *>>(resType, resList)).first;
+                    const IResourceInfo * resInfo = resInfoPair.second;
+                    resourceInfos[resIndex++] = resInfo;
                 }
 
-                vector<const IResourceInfo *> & resList = it->second;
-                resList.push_back(&resInfo);
-            }
-            #else
-            const auto & resources = rm->GetAllResourceInfos();
-            for (auto & resInfoPair : resources)
-            {
-                const IResourceInfo * resInfo = resInfoPair.second;
-                const string resType = resInfo->GetResourceType();
-
-                auto it = resourcesByType.find(resType);
-                if (resourcesByType.end() == it)
+                // table
+                struct ColumnDesc
                 {
-                    vector<const IResourceInfo *> resList;
-                    it = resourcesByType.insert(std::pair<string, vector<const IResourceInfo *>>(resType, resList)).first;
-                }
+                    const char * name;
+                    ImGuiTableColumnFlags flags;
+                    const char * tooltip;
+                };
 
-                vector<const IResourceInfo *> & resList = it->second;
-                resList.push_back(resInfo);
-            }
-            #endif
-
-            ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
-            {
-                char allResLabel[256];
-                sprintf_s(allResLabel, "Resources (%u)", resCount);
-                if (ImGui::TreeNodeEx(allResLabel, ImGuiTreeNodeFlags_DefaultOpen))
+                const ColumnDesc columnDescs[] = 
                 {
-                    for (auto & pair : resourcesByType)
+                    { "Name", ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort, "Resource name"},
+                    { "Extension", ImGuiTableColumnFlags_WidthFixed, "Extension type"},
+                    { "Type", ImGuiTableColumnFlags_WidthFixed, "Resource type"},
+                    { "Raw size", ImGuiTableColumnFlags_WidthFixed, "Size of the raw data file"},
+                    { "Cooked size", ImGuiTableColumnFlags_WidthFixed, "Size of the cooked data file"},
+                    { "Cook time", ImGuiTableColumnFlags_WidthFixed, "Time to cook the resource (ms)"},
+                    { "Load time", ImGuiTableColumnFlags_WidthFixed, "Time to load the resource (ms)"},
+                    { "Data folder", ImGuiTableColumnFlags_WidthStretch, "Where the file is located in the \"Data\" folder"}
+                };
+                VG_STATIC_ASSERT(countof(columnDescs) == enumCount<Column>(), "invalid size for columnDescs");
+
+                const uint columnCount = (uint)countof(columnDescs);
+                const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
+                
+                ImGui::BeginChild("resources_table_child", ImVec2(0, 0));
+                if (ImGui::BeginTable("resources_table", columnCount, ImGuiTableFlags_Sortable | ImGuiTableFlags_RowBg))
+                {
+                    ImGui::TableSetupScrollFreeze(0, 1); // freeze 1 top row
+
+                    for (int column = 0; column < columnCount; column++)
                     {
-                        string name = pair.first;
-                        const auto & list = pair.second;
+                        const auto & desc = columnDescs[column];
+                        ImGui::TableSetupColumn(desc.name, desc.flags);
+                    }
 
-                        // Remove "Resource" at the end of the resource type name
-                        const string resSuffix = "Resource";
-                        auto lastResString = name.find_last_of(resSuffix);
-                        if (-1 != lastResString)
-                            name = name.substr(0, name.length() - resSuffix.length());
+                    TableNextRow(ImGuiTableRowFlags_Headers);
+                    for (int column = 0; column < columnCount; column++)
+                    {
+                        const auto & desc = columnDescs[column];
+                        ImGui::TableSetColumnIndex(column);
+                        ImGui::TableHeader(desc.name);
 
-                        char resCatLabel[256];
-                        sprintf_s(resCatLabel, "%s (%u)", name.c_str(), (uint)list.size());
-                        if (ImGui::TreeNode(resCatLabel))
+                        if (ImGui::IsItemHovered())
+                            ImGui::SetTooltip(desc.tooltip);
+                        
+                    }
+
+                    ImGui::TableNextRow();
+
+                    ImGuiTableSortSpecs * sortSpecs = ImGui::TableGetSortSpecs();
+                    if (sortSpecs && sortSpecs->SpecsDirty && sortSpecs->SpecsCount > 0)
+                    {
+                        const ImGuiTableColumnSortSpecs & spec = sortSpecs->Specs[0];
+                        const Column column = (Column)spec.ColumnIndex;
+                        switch (column)
                         {
-                            for (uint i = 0; i < list.size(); ++i)
-                            {
-                                ImGui::PushID(i);
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(column);
+                                break;
 
-                                const IResourceInfo * resInfo = list[i];
-                                string resPath = resInfo->GetResourcePath().c_str();
-                                string fileName = io::getFileName(resPath);
-                                char resLabel[256];
-                                auto resTreeFlags = ImGuiTreeNodeFlags_None;
-                                const uint clientCount = resInfo->GetClientCount();
-                                if (clientCount > 1)
-                                    sprintf_s(resLabel, "%s (%u)", fileName.c_str(), clientCount);
-                                else
-                                    sprintf_s(resLabel, "%s", fileName.c_str());
-
-                                bool resOpen = ImGui::TreeNodeEx(resLabel, resTreeFlags);
-
-                                if (ImGui::IsItemHovered())
-                                    ImGui::SetTooltip(resPath.c_str());
-
-                                if (resOpen)
-                                {
-                                    for (uint j = 0; j < clientCount; ++j)
-                                    {
-                                        const IResource * client = resInfo->GetClient(j);
-
-                                        char clientLabel[256];
-                                        clientLabel[0] = '\0';
-
-                                        // for textures, display the material if found
-                                        if (resInfo->GetResourceType() == "TextureResource")
-                                        {
-                                            IObject * parent = client->GetParent();
-                                            IObject * material = nullptr;
-                                            while (parent)
-                                            {
-                                                if ((string)parent->GetClassName() == "MaterialResourceData")
-                                                {
-                                                    material = parent;
-                                                    break;
-                                                }
-
-                                                parent = parent->GetParent();
-                                            }
-
-                                            if (nullptr != material)
-                                            {
-                                                sprintf_s(clientLabel, "%s###%u %u", io::getFileName(material->GetFile()).c_str(), i, j);
-                                                bool openResGameObject = ImGui::TreeNodeEx(clientLabel, ImGuiTreeNodeFlags_Leaf);
-
-                                                if (ImGui::IsItemHovered())
-                                                    ImGui::SetTooltip(material->GetFile().c_str());
-
-                                                if (openResGameObject)
-                                                {
-                                                    ImGui::TreePop();
-                                                }
-
-                                                continue;
-                                            }
-                                        }
-
-                                        // Find parent IComponent
-                                        IObject * parent = client->GetParent();
-                                        IComponent * component = nullptr;
-                                        while (parent)
-                                        {
-                                            component = dynamic_cast<IComponent *>(parent);
-                                            if (component)
-                                                break;
-                                            parent = parent->GetParent();
-                                        }
-
-                                        //VG_ASSERT(component);
-                                        if (component)
-                                        {
-                                            // Find parent GameObject
-                                            IGameObject * gameobject = nullptr;
-                                            while (parent)
-                                            {
-                                                gameobject = dynamic_cast<IGameObject *>(parent);
-                                                if (gameobject)
-                                                    break;
-                                                parent = parent->GetParent();
-                                            }
-                                            VG_ASSERT(gameobject);
-
-                                            if (gameobject)
-                                            {
-                                                sprintf_s(clientLabel, "%s###%u %u", gameobject->GetName().c_str(), i, j);
-                                                bool openResGameObject = ImGui::TreeNodeEx(clientLabel, ImGuiTreeNodeFlags_Leaf);
-
-                                                if (ImGui::IsItemHovered())
-                                                    ImGui::SetTooltip(component->GetClassName());
-
-                                                if (openResGameObject)
-                                                {
-                                                    ImGui::TreePop();
-                                                }
-                                            }
-                                        }
-
-
-                                    }
-
-                                    ImGui::TreePop();
+                            case Column::Name:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetFilename() < b->GetFilename();
+                                    else
+                                        return a->GetFilename() > b->GetFilename();
                                 }
+                            );
+                            break;
 
-                                ImGui::PopID();
-                            }
+                            case Column::Extension:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetExtension() < b->GetExtension();
+                                    else
+                                        return a->GetExtension() > b->GetExtension();
+                                }
+                            );
+                            break;
 
-                            ImGui::TreePop();
+                            case Column::Type:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetResourceType() < b->GetResourceType();
+                                    else
+                                        return a->GetResourceType() > b->GetResourceType();
+                                }
+                            );
+                            break;
+
+                            case Column::RawSize:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetRawFileSize() < b->GetRawFileSize();
+                                    else
+                                        return a->GetRawFileSize() > b->GetRawFileSize();
+                                }
+                            );
+                            break;
+
+                            case Column::CookedSize:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetCookedFileSize() < b->GetCookedFileSize();
+                                    else
+                                        return a->GetCookedFileSize() > b->GetCookedFileSize();
+                                }
+                            );
+                            break;
+
+                            case Column::CookingTime:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetCookingTime() < b->GetCookingTime();
+                                    else
+                                        return a->GetCookingTime() > b->GetCookingTime();
+                                }
+                            );
+                            break;
+
+                            case Column::LoadingTime:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
+                                { 
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetLoadingTime() < b->GetLoadingTime();
+                                    else
+                                        return a->GetLoadingTime() > b->GetLoadingTime();
+                                }
+                            );
+                            break;
+
+                            case Column::Folder:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b)
+                                {
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetFolder() < b->GetFolder();
+                                    else
+                                        return a->GetFolder() > b->GetFolder();
+                                }
+                            );
+                            break;
                         }
                     }
 
-                    ImGui::TreePop();
-                }
+                    for (const IResourceInfo * resInfo : resourceInfos)
+                    {
+                        for (uint i = 0; i < enumCount<Column>(); ++i)
+                        {
+                            ImGui::TableSetColumnIndex(i);
+                            const Column column = (Column)i;
+                            switch (column)
+                            {
+                                default:
+                                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(column);
+                                    break;
 
-                //if (nullptr != rm)
-                //    displayObject(rm); 
+                                case Column::Name:
+                                    ImGui::Text(resInfo->GetFilename().c_str());
+                                    break;
+
+                                case Column::Extension:
+                                    ImGui::Text(".%s", resInfo->GetExtension().c_str());
+                                    break;
+
+                                case Column::Type:
+                                {
+                                    string resType = resInfo->GetResourceType();
+                                    const string resSuffix = "Resource";
+                                    auto lastResString = resType.find_last_of(resSuffix);
+                                    if (-1 != lastResString)
+                                        resType = resType.substr(0, resType.length() - resSuffix.length());
+                                    ImGui::Text(resType.c_str());
+                                }
+                                break;
+
+                                case Column::RawSize:
+                                {
+                                    const auto fileSize = resInfo->GetRawFileSize();
+                                    if (fileSize > 0)
+                                        ImGui::Text("%s", formatSizeInBytes(fileSize));
+                                    else
+                                        ImGui::Text("N/A");
+                                }
+                                break;
+
+                                case Column::CookedSize:
+                                {
+                                    const auto fileSize = resInfo->GetCookedFileSize();
+                                    if (fileSize > 0)
+                                        ImGui::Text("%s", formatSizeInBytes(fileSize));
+                                    else
+                                        ImGui::Text("N/A");
+                                }
+                                break;
+              
+                                case Column::CookingTime:
+                                {
+                                    const float cookingTime = resInfo->GetCookingTime();
+                                    if (cookingTime > 0.0f)
+                                        ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()));
+                                    else
+                                        ImGui::Text("N/A");
+                                }
+                                break;
+
+                                case Column::LoadingTime:
+                                    ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()));
+                                    break;
+
+
+                                case Column::Folder:
+                                    ImGui::Text(resInfo->GetFolder().c_str());
+                                    break;
+                            }
+                        }
+                        ImGui::TableNextRow();
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::EndChild();
             }
-            ImGui::EndChild();
 
             rm->Unlock();
         }  

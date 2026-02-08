@@ -12,6 +12,8 @@ namespace vg::core::io
     using FileHandle = u64;
     const FileHandle invalidFileHandle = (FileHandle)0;
 
+    u64 getFileSize(const string & _file);
+
     FileAccessTime getCurrentFileTime();
     bool getLastWriteTime(const string _file, FileAccessTime * _lastWrite);
     bool setLastWriteTime(const string & _file, FileAccessTime _filetime);
@@ -44,6 +46,8 @@ namespace vg::core::io
     string getFileDir(const string & _file);
     string getFileName(const string & _file);
     string getFileNameWithoutExt(const string & _file);
+    string getFileFolder(const string & _file);
+    string RemoveStartFolder(const std::string & _file, const std::string & _folder);
     bool fileHasExtension(const string & _file, const string & _ext);
     string getFileExtension(const string & _file);
     string addExtensionIfNotPresent(const string & _file, const core::string & _ext);

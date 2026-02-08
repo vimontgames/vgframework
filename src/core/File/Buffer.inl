@@ -42,6 +42,18 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(u16 * _value)
+    {
+        return read(_value, sizeof(u16));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(u16 _value)
+    {
+        return write(&_value, sizeof(u16));
+    }
+
+    //--------------------------------------------------------------------------------------
     inline bool Buffer::read(u32 * _value)
     {
         return read(_value, sizeof(u32));

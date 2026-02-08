@@ -42,6 +42,13 @@ namespace vg::editor
     {
         ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
 
+        //if (IconBegin(style::icon::Console, "Console", &m_isVisible))
+        //{
+        //    
+        //}
+        //ImGui::End();
+        //return;
+
         if (IconBegin(style::icon::Console, "Console", &m_isVisible))
         {
             auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
@@ -378,9 +385,8 @@ namespace vg::editor
             ImGui::SetItemDefaultFocus();
             if (reclaim_focus)
                 ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
-
-            End();
         }
+        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------

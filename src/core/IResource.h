@@ -41,7 +41,7 @@ namespace vg::core
         virtual IObject *               GetObject               () const = 0;
 
         virtual void                    SetUserData             (ResourceUserData _userData) = 0;
-        virtual ResourceUserData                GetUserData             () const = 0;
+        virtual ResourceUserData        GetUserData             () const = 0;
 
         virtual bool                    ClearResourcePath       () = 0;
         virtual bool                    SetResourcePath         (const string & _path) = 0;

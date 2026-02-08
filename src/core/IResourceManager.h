@@ -12,10 +12,17 @@ namespace vg::core
     public:
         VG_CLASS_DECL_ABSTRACT(IResourceInfo, core::Object);
 
-        virtual const core::string &    GetResourcePath () const = 0;
-        virtual const core::string      GetResourceType () const = 0;
-        virtual const core::uint        GetClientCount  () const = 0;
-        virtual const core::IResource * GetClient       (core::uint _index) const = 0;
+        virtual const core::string &    GetPath             () const = 0;
+        virtual const core::string      GetFolder           () const = 0;
+        virtual const core::string      GetFilename         () const = 0;
+        virtual const core::u64         GetRawFileSize      () const = 0;
+        virtual const core::u64         GetCookedFileSize   () const = 0;
+        virtual const float             GetCookingTime      () const = 0;
+        virtual const float             GetLoadingTime      () const = 0;
+        virtual const core::string      GetExtension        () const = 0;
+        virtual const core::string      GetResourceType     () const = 0;
+        virtual const core::uint        GetClientCount      () const = 0;
+        virtual const core::IResource * GetClient           (core::uint _index) const = 0;
     };
 
     class IResourceManager : public Object

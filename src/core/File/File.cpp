@@ -13,6 +13,16 @@ using namespace std;
 namespace vg::core::io
 {
     //--------------------------------------------------------------------------------------
+    u64 getFileSize(const string & _file)
+    {
+        WIN32_FILE_ATTRIBUTE_DATA fileAttributeData;
+        if (!GetFileAttributesExA(_file.c_str(), GetFileExInfoStandard, &fileAttributeData))
+            return 0;
+
+        return (u64(fileAttributeData.nFileSizeHigh) << 32) | fileAttributeData.nFileSizeLow;
+    }
+
+    //--------------------------------------------------------------------------------------
     FileAccessTime getCurrentFileTime()
     {
         #if VG_WINDOWS
@@ -274,6 +284,48 @@ namespace vg::core::io
         }
         else
             return filename;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getFileFolder(const string & _file)
+    {
+        if (!_file.empty())
+        {
+            size_t pos = _file.find_last_of("/\\");
+            if (pos != std::string::npos)
+                return _file.substr(0, pos);
+        }
+        return "";
+    }
+
+    //--------------------------------------------------------------------------------------
+    string RemoveStartFolder(const string & _file, const string & _folder)
+    {
+        if (_file.size() >= _folder.size())
+        {
+            bool match = true;
+            for (size_t i = 0; i < _folder.size(); ++i)
+            {
+                char fc = _file[i];
+                char pc = _folder[i];
+                if (fc != pc && !(fc == '/' && pc == '\\') && !(fc == '\\' && pc == '/'))
+                {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match)
+            {
+                string result = _file.substr(_folder.size());
+                if (!result.empty() && (result[0] == '/' || result[0] == '\\'))
+                    result = result.substr(1);
+
+                return result;
+            }
+        }
+
+        return _file;
     }
 
     //--------------------------------------------------------------------------------------

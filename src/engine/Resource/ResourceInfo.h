@@ -13,14 +13,21 @@ namespace vg::core
 
 namespace vg::engine
 {
-    class ResourceInfo : public IResourceInfo
+    class ResourceInfo final : public IResourceInfo
     {
     public:
         VG_CLASS_DECL(ResourceInfo, IResourceInfo);
 
         ResourceInfo(const string & _path);
 
-        const core::string &                                GetResourcePath     () const final override;
+        const core::string &                                GetPath             () const final override;
+        const core::string                                  GetFolder           () const final override;
+        const core::string                                  GetFilename         () const final override;
+        const core::u64                                     GetRawFileSize      () const final override;;
+        const core::u64                                     GetCookedFileSize   () const final override;;
+        const float                                         GetCookingTime      () const final override;
+        const float                                         GetLoadingTime      () const final override;
+        const core::string                                  GetExtension        () const final override;
         const core::string                                  GetResourceType     () const final override;
         const core::uint                                    GetClientCount      () const final override;
         const core::IResource *                             GetClient           (core::uint _index) const final override;
@@ -45,6 +52,11 @@ namespace vg::engine
         VG_INLINE void                                      setForceReimport    (bool _forceReimport = true);
         VG_INLINE bool                                      needReimport        () const;
 
+        void                                                setCookingTime      (float _cookingTime);
+        void                                                setLoadingTime      (float _loadingTime);
+        void                                                setRawFileSize      (core::u64 _fileSize);                                
+        void                                                setCookedFileSize   (core::u64 _fileSize);
+
     private:
         core::IObject *                                     m_object = nullptr;         // The shared object
         const core::string                                  m_path;                     // Path of the source data for the shared object
@@ -54,6 +66,10 @@ namespace vg::engine
         core::vector<core::IResource *>                     m_clientsToUpdate;
         #endif
 
+        core::u64                                           m_rawFileSize   = 0;
+        core::u64                                           m_cookedFileSize= 0;
+        float                                               m_cookingTime   = 0.0f;         
+        float                                               m_loadingTime   = 0.0f;
         bool                                                m_forceReimport = false;    // For reimport of resource on next load
     };
 }

@@ -1213,11 +1213,7 @@ namespace vg::renderer
         imported.name = _file;
 
         if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.texels, _importSettings))
-        {
-            imported.save(io::getCookedPath(_file));
-
-            return true;
-        }
+            return imported.save(io::getCookedPath(_file));
 
         return false;
     }

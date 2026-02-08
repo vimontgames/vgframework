@@ -15,9 +15,51 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::string & ResourceInfo::GetResourcePath() const
+    const core::string & ResourceInfo::GetPath() const
     {
         return m_path;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string ResourceInfo::GetFolder() const
+    {
+        return io::RemoveStartFolder(io::getFileFolder(m_path), "data");
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string ResourceInfo::GetFilename() const
+    {
+        return io::getFileNameWithoutExt(m_path);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string ResourceInfo::GetExtension() const
+    {
+        return io::getFileExtension(m_path);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::u64 ResourceInfo::GetRawFileSize() const
+    {
+        return m_rawFileSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::u64 ResourceInfo::GetCookedFileSize() const
+    {
+        return m_cookedFileSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const float ResourceInfo::GetCookingTime() const
+    {
+        return m_cookingTime;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const float ResourceInfo::GetLoadingTime() const
+    {
+        return m_loadingTime;
     }
 
     //--------------------------------------------------------------------------------------
@@ -78,5 +120,29 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setCookingTime(float _cookingTime)
+    {
+        m_cookingTime = _cookingTime;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setLoadingTime(float _loadingTime)
+    {
+        m_loadingTime = _loadingTime;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setRawFileSize(core::u64 _fileSize)
+    {
+        m_rawFileSize = _fileSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setCookedFileSize(core::u64 _fileSize)
+    {
+        m_cookedFileSize = _fileSize;
     }
 }

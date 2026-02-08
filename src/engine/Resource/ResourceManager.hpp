@@ -525,7 +525,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     CookStatus ResourceManager::needsCook(const ResourceInfo & _info)
     {
-        const auto & resourcePath = _info.GetResourcePath();
+        const auto & resourcePath = _info.GetPath();
         const string cookedPath = io::getCookedPath(resourcePath);
 
         io::FileAccessTime rawDataLastWrite;
@@ -605,7 +605,11 @@ namespace vg::engine
                     const string cookFile = io::getCookedPath(path);
 
                     if (io::setLastWriteTime(cookFile, io::getCurrentFileTime()))
-                        VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                    {
+                        const float cookTime = (float)Timer::getEnlapsedTime(startCook, Timer::getTick());
+                        VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), cookTime);
+                        _info.setCookingTime(cookTime);
+                    }
                 }
             }
 
@@ -628,7 +632,11 @@ namespace vg::engine
                 case LoadStatus::Success:
                 {
                     VG_ASSERT(_info.getObject());
-                    VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    const float loadingTime = (float)Timer::getEnlapsedTime(startLoad, Timer::getTick());
+                    _info.setLoadingTime(loadingTime);
+                    _info.setRawFileSize(io::getFileSize(path));
+                    _info.setCookedFileSize(io::getFileSize(io::getCookedPath(path)));
+                    VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), loadingTime);
                     done = true;
                 }
                 break;
