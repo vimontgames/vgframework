@@ -274,7 +274,7 @@ namespace vg::editor
                                 {
                                     const auto fileSize = resInfo->GetRawFileSize();
                                     if (fileSize > 0)
-                                        ImGui::Text("%s", formatSizeInBytes(fileSize));
+                                        ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
                                     else
                                         ImGui::Text("N/A");
                                 }
@@ -284,7 +284,7 @@ namespace vg::editor
                                 {
                                     const auto fileSize = resInfo->GetCookedFileSize();
                                     if (fileSize > 0)
-                                        ImGui::Text("%s", formatSizeInBytes(fileSize));
+                                        ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
                                     else
                                         ImGui::Text("N/A");
                                 }
@@ -294,14 +294,14 @@ namespace vg::editor
                                 {
                                     const float cookingTime = resInfo->GetCookingTime();
                                     if (cookingTime > 0.0f)
-                                        ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()));
+                                        ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()).c_str());
                                     else
                                         ImGui::Text("N/A");
                                 }
                                 break;
 
                                 case Column::LoadingTime:
-                                    ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()));
+                                    ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()).c_str());
                                     break;
 
 
