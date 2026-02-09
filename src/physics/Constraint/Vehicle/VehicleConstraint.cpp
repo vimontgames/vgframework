@@ -348,7 +348,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void VehicleConstraint::FixedUpdate(const DriveState & _driveState)
+    void VehicleConstraint::UpdateDriveState(const DriveState & _driveState)
     {
         if (m_joltVehicleConstraint)
         {
@@ -431,9 +431,79 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    // TODO: move debug display to tool update pass
-    //--------------------------------------------------------------------------------------
     void VehicleConstraint::updateVisuals()
+    {
+        if (m_joltVehicleConstraint)
+        {
+            switch (m_vehicleConstraintDesc->GetVehicleType())
+            {
+                default:
+                {
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_vehicleConstraintDesc->GetVehicleType());
+                }
+                break;
+
+                case VehicleType::Car:
+                {
+                    const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, m_vehicleConstraintDesc);
+
+                    const uint wheelCount = desc->GetWheelCount();
+
+                    for (uint i = 0; i < wheelCount; ++i)
+                    {
+                        const JPH::Wheel * wheel = m_joltVehicleConstraint->GetWheel(i);
+                        const JPH::WheelSettings * wheelSettings = wheel->GetSettings();
+
+                        const float radius = wheelSettings->mRadius;
+                        const float width = wheelSettings->mWidth;
+
+                        // transform the wheel visual
+                        const TwoWheeledAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
+                        const ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
+
+                        IObject * obj = handle.getObject();
+                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                        {
+                            float4x4 wheelMat = GetWheelMatrix(i);
+                            wheelGameobject->SetGlobalMatrix(wheelMat);
+                        }
+                    }
+                }
+                break;
+
+                case VehicleType::Bike:
+                {
+                    const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, m_vehicleConstraintDesc);
+
+                    const uint wheelCount = desc->GetWheelCount();
+
+                    for (uint i = 0; i < wheelCount; ++i)
+                    {
+                        const JPH::Wheel * wheel = m_joltVehicleConstraint->GetWheel(i);
+                        const JPH::WheelSettings * wheelSettings = wheel->GetSettings();
+
+                        const float radius = wheelSettings->mRadius;
+                        const float width = wheelSettings->mWidth;
+
+                        // transform the wheel visual
+                        const OneWheeledAxleDesc & axle = (i == 0) ? desc->m_front : desc->m_rear;
+                        const ObjectHandle & handle = axle.m_wheel;
+
+                        IObject * obj = handle.getObject();
+                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                        {
+                            float4x4 wheelMat = GetWheelMatrix(i);
+                            wheelGameobject->SetGlobalMatrix(wheelMat);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleConstraint::DrawDebug()
     {
         // debug
         renderer::IDebugDraw * debugDraw = Physics::get()->getDebugDraw();
@@ -472,20 +542,9 @@ namespace vg::physics
                             if (0 == (i & 1))
                             {
                                 float3 leftWheelPos = wheelMatDebug[3].xyz;
-                                float3 rightWheelPos = fromJoltVec3(m_joltVehicleConstraint->GetWheelWorldTransform(i+1, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()).GetTranslation());
+                                float3 rightWheelPos = fromJoltVec3(m_joltVehicleConstraint->GetWheelWorldTransform(i + 1, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()).GetTranslation());
                                 debugDraw->AddLine(m_world, leftWheelPos, rightWheelPos, 0xFF0000FF);
                             }
-                        }
-
-                        // transform the wheel visual
-                        const TwoWheeledAxleDesc & axle = (i < 2) ? desc->m_front : desc->m_rear;
-                        const ObjectHandle & handle = (i & 1) ? axle.m_rightWheel : axle.m_leftWheel;
-
-                        IObject * obj = handle.getObject();
-                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
-                        {
-                            float4x4 wheelMat = GetWheelMatrix(i);
-                            wheelGameobject->SetGlobalMatrix(wheelMat);
                         }
                     }
                 }
@@ -511,17 +570,6 @@ namespace vg::physics
                             // debug shapes
                             float4x4 wheelMatDebug = fromJoltMatrix(m_joltVehicleConstraint->GetWheelWorldTransform(i, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()));
                             debugDraw->AddWireframeCylinder(m_world, radius, width, 0xFF0000FF, wheelMatDebug);
-                        }
-
-                        // transform the wheel visual
-                        const OneWheeledAxleDesc & axle = (i == 0) ? desc->m_front : desc->m_rear;
-                        const ObjectHandle & handle = axle.m_wheel;
-
-                        IObject * obj = handle.getObject();
-                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
-                        {
-                            float4x4 wheelMat = GetWheelMatrix(i);
-                            wheelGameobject->SetGlobalMatrix(wheelMat);
                         }
                     }
                 }

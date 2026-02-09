@@ -1,9 +1,8 @@
 #include "VehicleComponent.h"
 #include "renderer/IRenderer.h"
-#include "renderer/IDebugDraw.h"
 #include "engine/ISoundComponent.h"
-#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "engine/IParticleComponent.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 
 using namespace vg::core;
 
@@ -115,7 +114,7 @@ namespace vg::engine
         if (m_vehicleConstraint == nullptr)
             createVehicleConstraint();
 
-        EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+        SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update | UpdateFlags::ToolUpdate);
     }
 
     //--------------------------------------------------------------------------------------
@@ -280,7 +279,7 @@ namespace vg::engine
     void VehicleComponent::FixedUpdate(const Context & _context)
     {
         if (m_vehicleConstraint)
-            m_vehicleConstraint->FixedUpdate(m_driveState);
+            m_vehicleConstraint->UpdateDriveState(m_driveState);
     }
 
     //--------------------------------------------------------------------------------------
@@ -343,6 +342,13 @@ namespace vg::engine
                 }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::ToolUpdate(const Context & _context)
+    {
+        if (m_vehicleConstraint)
+            m_vehicleConstraint->DrawDebug();
     }
 
     //--------------------------------------------------------------------------------------

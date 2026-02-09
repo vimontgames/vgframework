@@ -46,6 +46,7 @@ namespace vg::engine
 
         void                FixedUpdate                     (const Context & _context) final override;
         void                Update                          (const Context & _context) final override;
+        void                ToolUpdate                      (const Context & _context) final override;
 
         bool                StartEngine                     () final override;
         bool                StopEngine                      () final override;
