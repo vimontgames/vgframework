@@ -866,6 +866,7 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                             if (charaController->CanTeleportTo(exitMat[3].xyz))
                             {
                                 VG_VERIFY(vehicleComp->ExitVehicle(go));
+                                removeHelmet(vehicleBehaviour);
                                 GetGameObject()->SetGlobalMatrix(exitMat);
                                 m_vehicle.clear();
 

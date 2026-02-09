@@ -384,7 +384,7 @@
                                         <Property type="Bool" name="m_useTarget" value="true"/>
                                         <Property type="ObjectHandle" name="m_target" value="3400072077"/>
                                         <Property type="String" name="m_boneName" value="mixamorig:HeadTop_End_end"/>
-                                        <Property type="Float4x4" name="m_transform" Ix="1" Iy="2.9802326e-08" Iz="2.9802326e-08" Iw="0" Jx="-2.9802298e-08" Jy="-1.0617072e-07" Jz="-1" Jw="0" Kx="-2.9802306e-08" Ky="1" Kz="-7.6368437e-08" Kw="0" Tx="-0.0049999999" Ty="-0.67500001" Tz="-0.025" Tw="1"/>
+                                        <Property type="Float4x4" name="m_transform" Ix="1.05" Iy="3.1292441e-08" Iz="3.1292441e-08" Iw="0" Jx="-3.1292412e-08" Jy="-1.1147925e-07" Jz="-1.05" Jw="0" Kx="-3.1292419e-08" Ky="1.05" Kz="-8.0186858e-08" Kw="0" Tx="-0.0049999999" Ty="-0.67500001" Tz="-0.025" Tw="1"/>
                                     </Object>
                                     <Object class="MeshComponent">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>

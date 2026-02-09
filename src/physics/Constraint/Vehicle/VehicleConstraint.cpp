@@ -1,6 +1,6 @@
 #include "physics/Precomp.h"
 #include "core/Math/Math.h"
-#include "core/IGameObject.h"
+#include "core/GameObject/GameObject.h"
 #include "core/IComponent.h"
 #include "VehicleConstraint.h"
 #include "physics/Physics.h"
@@ -171,6 +171,20 @@ namespace vg::physics
 
                 vehicle.mMaxPitchRollAngle = degreesToRadians(desc->m_maxPitchRollAngleInDegrees);
 
+                m_steeringAxis = float3(0, 0, 1);
+
+                if (const GameObject * handlebar = desc->getHandlebar())
+                {
+                    float3 handleBarPos = handlebar->GetLocalMatrix()[3].xyz;
+
+                    if (const GameObject * frontWheel = desc->m_front.m_wheel.get<const GameObject>())
+                    {
+                        float3 wheelPos = frontWheel->GetLocalMatrix()[3].xyz;
+                        m_steeringAxis = normalize(handleBarPos - wheelPos);
+                        m_frontWheelPos = wheelPos;
+                    }
+                }
+
                 for (uint i = 0; i < 2; ++i)
                 {
                     const bool isFront = (i == 0);
@@ -182,8 +196,7 @@ namespace vg::physics
                     JPH::WheelSettingsWV * jphWheel = new JPH::WheelSettingsWV();
                     #pragma pop_macro("new")
 
-                    IObject * obj = handle.getObject();
-                    if (IGameObject * go = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                    if (GameObject * go = handle.get<GameObject>())
                     {
                         float4x4 wheelWorldMat = go->GetGlobalMatrix();
                         float4x4 wheelLocalMat = mul(wheelWorldMat, inverse(bodyMat));
@@ -197,7 +210,8 @@ namespace vg::physics
                         jphWheel->mWheelUp = JPH::Vec3(0, 0, 1);
                         jphWheel->mWheelForward = JPH::Vec3(1, 0, 0);
 
-                        jphWheel->mSteeringAxis = JPH::Vec3(0, 0, 1);
+                        jphWheel->mSteeringAxis = getJoltVec3(m_steeringAxis);// JPH::Vec3(0, 0, 1);
+                        //jphWheel->mSteeringAxis = JPH::Vec3(0, 0, 1);
                         jphWheel->mMaxSteerAngle = isFront ? degreesToRadians(axle.m_maxSteerAngleInDegrees) : 0.0f;
 
                         jphWheel->mRadius = axle.m_radius;
@@ -430,6 +444,30 @@ namespace vg::physics
         m_joltVehicleConstraint->SetVehicleCollisionTester(m_joltVehicleCollisionTester);
     }
 
+    static hlslpp_inline float3x3 rotation_axis2(const float3 & axis, float angle_rad)
+    {
+#if defined(HLSLPP_LAYOUT_COORDINATES_FLIP_SIGN)
+        angle_rad = -angle_rad;
+#endif
+
+        // Axis MUST be normalized
+        const float3 a = normalize(axis);
+
+        const float s = sinf(angle_rad);
+        const float c = cosf(angle_rad);
+        const float t = 1.0f - c;
+
+        const float x = a.x;
+        const float y = a.y;
+        const float z = a.z;
+
+        return float3x3(
+            t * x * x + c, t * x * y + s * z, t * x * z - s * y,
+            t * x * y - s * z, t * y * y + c, t * y * z + s * x,
+            t * x * z + s * y, t * y * z - s * x, t * z * z + c
+        );
+    }
+
     //--------------------------------------------------------------------------------------
     void VehicleConstraint::updateVisuals()
     {
@@ -485,15 +523,68 @@ namespace vg::physics
                         const float radius = wheelSettings->mRadius;
                         const float width = wheelSettings->mWidth;
 
-                        // transform the wheel visual
-                        const OneWheeledAxleDesc & axle = (i == 0) ? desc->m_front : desc->m_rear;
-                        const ObjectHandle & handle = axle.m_wheel;
-
-                        IObject * obj = handle.getObject();
-                        if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                        // apply steering
+                        if (i == 0)
                         {
-                            float4x4 wheelMat = GetWheelMatrix(i);
-                            wheelGameobject->SetGlobalMatrix(wheelMat);
+                            if (GameObject * handlebar = (GameObject *)desc->getHandlebar())
+                            {
+                                float steerAngle = wheel->GetSteerAngle();
+                                float4x4 localMat44 = float4x4::rotation_axis(m_steeringAxis, steerAngle);
+                                localMat44[3] = float4(handlebar->GetLocalMatrix()[3].xyz, 1);
+                                handlebar->SetLocalMatrix(localMat44);
+
+                                if (GameObject * fork = (GameObject *)desc->getFork())
+                                {
+                                    localMat44[3] = float4(fork->GetLocalMatrix()[3].xyz, 1);
+                                    fork->SetLocalMatrix(localMat44);
+                                }
+                            }
+
+                            // transform the wheel visual
+                            const OneWheeledAxleDesc & axle = desc->m_front;
+                            const ObjectHandle & handle = axle.m_wheel;
+
+                            IObject * obj = handle.getObject();
+                            if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                            {
+                                //float4x4 wheelMat = GetWheelMatrix(i);
+                                //float4x4 realWheelMat = wheelMat;// wheelGameobject->GetGlobalMatrix();
+                                //realWheelMat[0] = wheelMat[0];
+                                //realWheelMat[1] = wheelMat[1];
+                                //realWheelMat[2] = wheelMat[2];
+                                //wheelGameobject->SetGlobalMatrix(realWheelMat);
+
+                                //float4x4 globalWheelMat = GetWheelMatrix(i);
+                                //globalWheelMat[3] = float4(0, 0, 0, 1);
+                                //float4x4 localWheelMat = mul(inverse(wheelGameobject->GetParentGameObject()->GetGlobalMatrix()), globalWheelMat);
+                                //wheelGameobject->SetLocalMatrix(localWheelMat);
+
+                                float wheelRotAngle = wheel->GetRotationAngle();
+                                float4x4 wheelRotMat = float4x4::rotation_y(wheelRotAngle);
+                                //wheelRotMat[3].xyz = fromJoltVec3(wheelSettings->mPosition) + fromJoltVec3(wheelSettings->mSuspensionDirection) * wheel->GetSuspensionLength();
+                                //wheelGameobject->SetLocalMatrix(wheelRotMat);
+
+                                float4x4 wheelMat = wheelGameobject->GetGlobalMatrix();
+                                float steerAngle = wheel->GetSteerAngle();
+                                float4x4 localMat44 = float4x4::rotation_axis(m_steeringAxis, steerAngle);
+                                localMat44 = mul(wheelRotMat, localMat44);
+                                wheelMat = mul(wheelMat, localMat44);
+                                localMat44[3].xyz = fromJoltVec3(wheelSettings->mPosition) + fromJoltVec3(wheelSettings->mSuspensionDirection) * wheel->GetSuspensionLength();
+                                wheelGameobject->SetLocalMatrix(localMat44);
+                            }
+                        }
+                        else
+                        {
+                            // transform the wheel visual
+                            const OneWheeledAxleDesc & axle = desc->m_rear;
+                            const ObjectHandle & handle = axle.m_wheel;
+
+                            IObject * obj = handle.getObject();
+                            if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
+                            {
+                                float4x4 wheelMat = GetWheelMatrix(i);
+                                wheelGameobject->SetGlobalMatrix(wheelMat);
+                            }
                         }
                     }
                 }
@@ -570,6 +661,8 @@ namespace vg::physics
                             // debug shapes
                             float4x4 wheelMatDebug = fromJoltMatrix(m_joltVehicleConstraint->GetWheelWorldTransform(i, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()));
                             debugDraw->AddWireframeCylinder(m_world, radius, width, 0xFF0000FF, wheelMatDebug);
+
+                            debugDraw->AddLine(m_world, wheelMatDebug[3].xyz, wheelMatDebug[3].xyz + m_steeringAxis, 0xFFFFFFFF);
                         }
                     }
                 }

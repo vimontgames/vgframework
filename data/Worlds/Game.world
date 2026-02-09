@@ -18,6 +18,13 @@
                 <Property type="String" name="m_resourcePath" value="data/Scenes/Aiguelongue.scene"/>
             </Object>
         </Property>
-        <Property type="ResourcePtrVector" name="m_prefabsResources"/>
+        <Property type="ResourcePtrVector" name="m_prefabsResources">
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" value=""/>
+                <Property type="Uint32" name="m_uid" value="2541583185"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_resourcePath" value="data/Prefabs/Cars/Scooter.prefab"/>
+            </Object>
+        </Property>
     </Object>
 </Root>

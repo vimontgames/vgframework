@@ -49,5 +49,7 @@ namespace vg::physics
         JPH::PhysicsSystem *                    m_joltPhysicsSystem             = nullptr;
         JPH::VehicleCollisionTesterRay *        m_joltVehicleCollisionTester    = nullptr;
         JPH::VehicleConstraint *                m_joltVehicleConstraint         = nullptr;
+        core::float3                            m_steeringAxis                  = core::float3(0, 0, 1);
+        core::float3                            m_frontWheelPos;
     };    
 }

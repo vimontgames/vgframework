@@ -21,8 +21,9 @@ namespace vg::physics
             registerProperty(BikeConstraintDesc, m_maxPitchRollAngleInDegrees, "Max Pitch Roll");
             setPropertyDescription(BikeConstraintDesc, m_maxPitchRollAngleInDegrees, "Defines the maximum pitch/roll angle (rad), can be used to avoid the car from getting upside down. The vehicle up direction will stay within a cone centered around the up axis with half top angle mMaxPitchRollAngle.")
             setPropertyRange(BikeConstraintDesc, m_maxPitchRollAngleInDegrees, float2(0, 180));
-
-            //registerProperty(BikeConstraintDesc, m_fork, "Fork");
+            
+            registerProperty(BikeConstraintDesc, m_handlebar, "Handlebar");
+            registerProperty(BikeConstraintDesc, m_fork, "Fork");
         }
         //registerPropertyGroupEnd(BikeConstraintDesc);
 
@@ -55,6 +56,18 @@ namespace vg::physics
     BikeConstraintDesc::~BikeConstraintDesc()
     {
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::GameObject * BikeConstraintDesc::getHandlebar() const
+    { 
+        return m_handlebar.get<const core::GameObject>(); 
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::GameObject * BikeConstraintDesc::getFork() const
+    { 
+        return m_fork.get<const core::GameObject>();
     }
 
     //--------------------------------------------------------------------------------------
