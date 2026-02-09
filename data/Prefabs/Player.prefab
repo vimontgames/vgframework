@@ -391,7 +391,7 @@
                                         <Property type="Uint32" name="m_uid" value="1379269289"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_outlineCategory" value="None"/>
+                                        <Property type="EnumU8" name="m_outlineCategory" value="User_6"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
