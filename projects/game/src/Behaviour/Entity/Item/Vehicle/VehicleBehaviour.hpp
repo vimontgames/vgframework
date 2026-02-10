@@ -19,7 +19,7 @@ bool VehicleBehaviour::registerProperties(IClassDesc & _desc)
     super::registerProperties(_desc);
 
     registerProperty(VehicleBehaviour, m_useHelmet, "Use Helmet");
-    setPropertyDescription(VehicleBehaviour, m_velocityThreshold, "Character will wear a helmet when entering the vehicle");
+    setPropertyDescription(VehicleBehaviour, m_useHelmet, "Character will wear a helmet when entering the vehicle");
 
     registerProperty(VehicleBehaviour, m_velocityThreshold, "Threshold");
     setPropertyDescription(VehicleBehaviour, m_velocityThreshold, "Damage will start when velocity is greater than this value (in m/s)");

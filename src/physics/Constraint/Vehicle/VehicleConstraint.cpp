@@ -532,12 +532,6 @@ namespace vg::physics
                                 float4x4 localMat44 = float4x4::rotation_axis(m_steeringAxis, steerAngle);
                                 localMat44[3] = float4(handlebar->GetLocalMatrix()[3].xyz, 1);
                                 handlebar->SetLocalMatrix(localMat44);
-
-                                if (GameObject * fork = (GameObject *)desc->getFork())
-                                {
-                                    localMat44[3] = float4(fork->GetLocalMatrix()[3].xyz, 1);
-                                    fork->SetLocalMatrix(localMat44);
-                                }
                             }
 
                             // transform the wheel visual
@@ -547,22 +541,8 @@ namespace vg::physics
                             IObject * obj = handle.getObject();
                             if (IGameObject * wheelGameobject = VG_SAFE_STATIC_CAST(IGameObject, obj))
                             {
-                                //float4x4 wheelMat = GetWheelMatrix(i);
-                                //float4x4 realWheelMat = wheelMat;// wheelGameobject->GetGlobalMatrix();
-                                //realWheelMat[0] = wheelMat[0];
-                                //realWheelMat[1] = wheelMat[1];
-                                //realWheelMat[2] = wheelMat[2];
-                                //wheelGameobject->SetGlobalMatrix(realWheelMat);
-
-                                //float4x4 globalWheelMat = GetWheelMatrix(i);
-                                //globalWheelMat[3] = float4(0, 0, 0, 1);
-                                //float4x4 localWheelMat = mul(inverse(wheelGameobject->GetParentGameObject()->GetGlobalMatrix()), globalWheelMat);
-                                //wheelGameobject->SetLocalMatrix(localWheelMat);
-
                                 float wheelRotAngle = wheel->GetRotationAngle();
                                 float4x4 wheelRotMat = float4x4::rotation_y(wheelRotAngle);
-                                //wheelRotMat[3].xyz = fromJoltVec3(wheelSettings->mPosition) + fromJoltVec3(wheelSettings->mSuspensionDirection) * wheel->GetSuspensionLength();
-                                //wheelGameobject->SetLocalMatrix(wheelRotMat);
 
                                 float4x4 wheelMat = wheelGameobject->GetGlobalMatrix();
                                 float steerAngle = wheel->GetSteerAngle();

@@ -26,12 +26,12 @@
                             <Object class="PlayerBehaviour">
                                 <Property type="String" name="m_name" value="PlayerBehaviour #0"/>
                                 <Property type="Uint32" name="m_uid" value="1711303208"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Int32" name="m_life" value="3"/>
                                 <Property type="Float" name="m_hp" value="100"/>
-                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
-                                <Property type="Float" name="m_runSpeed" value="3"/>
+                                <Property type="Float" name="m_walkSpeed" value="2"/>
+                                <Property type="Float" name="m_runSpeed" value="4"/>
                                 <Property type="Float" name="m_jumpSpeed" value="4"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="6"/>
                                 <Property type="EnumU8" name="m_controllerType" value="Joypad"/>

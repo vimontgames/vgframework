@@ -734,6 +734,16 @@ namespace vg::engine
                                 break;
 
                             case PropertyType::ResourcePtr:
+                            {
+                                Resource ** res = (Resource **)prop->GetPropertyResourcePtr(_object);
+                                if (nullptr != *res)
+                                {
+                                    if (auto * found = find(*res, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+
                             case PropertyType::ResourcePtrVector:
                                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                                 return nullptr;
@@ -752,7 +762,7 @@ namespace vg::engine
 
                             case PropertyType::Resource:
                             {
-                                Object * res = (Object *)prop->GetPropertyResource(_object);
+                                Resource * res = (Resource *)prop->GetPropertyResource(_object);
                                 if (nullptr != res)
                                 {
                                     if (auto * found = find(res, _uid))

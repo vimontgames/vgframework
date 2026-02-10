@@ -25,16 +25,10 @@ namespace vg::physics
         bool RegisterUID() final override;
 
         const core::GameObject * getHandlebar() const;
-        const core::GameObject * getFork() const;
 
     public:
-        // Misc
-        float                   m_maxPitchRollAngleInDegrees = 180.0f;
-        //float                   m_maxLeanAngleInDegrees = 35.0f;
-        //float                   m_stabilizationSpeed = 5.0f;        // m/s
-        //float                   m_lowSpeedAngularDamping = 0.90f;   // 0..1
+        float                   m_maxPitchRollAngleInDegrees = 0.0f;
         core::ObjectHandle      m_handlebar;
-        core::ObjectHandle      m_fork;
         OneWheeledAxleDesc      m_front;
         OneWheeledAxleDesc      m_rear;
     };
