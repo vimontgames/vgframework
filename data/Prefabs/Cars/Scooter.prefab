@@ -135,7 +135,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Float3" name="m_offset" x="-0.1" y="-1.1920929e-07" z="0.55000001"/>
                                         <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="1.5" y="0.44999999" z="0.60000002"/>
+                                        <Property type="Float3" name="m_size" x="1.5" y="0.44999999" z="0.64999998"/>
                                     </Object>
                                 </Property>
                             </Object>
