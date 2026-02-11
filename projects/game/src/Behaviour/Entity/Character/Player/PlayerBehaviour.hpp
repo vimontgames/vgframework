@@ -69,13 +69,20 @@ void PlayerBehaviour::OnPlay()
     const auto global = GetGameObject()->GetGlobalMatrix();
     m_currentRotation = -atan2(global[1].x, global[0].x) * 180.0f / PI;
 
-    // Hide character
-    enableVisual(false);
-    enablePhysics(false);
-
     // Hide UI until the player is active
     if (auto * uiGO = m_UI.get<IGameObject>())
+    {
         uiGO->SetInstanceFlags(InstanceFlags::Enabled, false);
+
+        // Hide character
+        enableVisual(false);
+        enablePhysics(false);
+    }
+    else
+    {
+        // Zoo
+        Game::get()->setGameState(GameState::Playing);
+    }
 }
 
 //--------------------------------------------------------------------------------------
