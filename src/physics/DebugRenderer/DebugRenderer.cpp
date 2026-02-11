@@ -50,18 +50,16 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void DebugRenderer::init()
     {
-        VG_ASSERT(!m_initDone);
-        Initialize();
-        m_initDone = true;
+        if (!m_initDone)
+        {
+            Initialize();
+            m_initDone = true;
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void DebugRenderer::deinit()
     {
-        if (m_initDone)
-        {
-            m_initDone = false;
-        }
     }
     
     //--------------------------------------------------------------------------------------
