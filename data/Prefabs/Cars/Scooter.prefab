@@ -41,7 +41,7 @@
                                 <Property type="EnumU8" name="m_vehicleType" value="Bike"/>
                                 <Property type="ObjectPtr" name="m_vehicleConstraintDesc">
                                     <Object class="BikeConstraintDesc">
-                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="0"/>
+                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="30"/>
                                         <Property type="ObjectHandle" name="m_handlebar" value="3642420634"/>
                                         <Property type="Object" name="m_front">
                                             <Object class="OneWheeledAxleDesc">
@@ -133,9 +133,9 @@
                                         <Property type="String" name="m_name" value="BoxShapeDesc #1630"/>
                                         <Property type="Uint32" name="m_uid" value="1952561463"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="Float3" name="m_offset" x="-0.1" y="-1.1920929e-07" z="0.5"/>
+                                        <Property type="Float3" name="m_offset" x="-0.1" y="-1.1920929e-07" z="0.55000001"/>
                                         <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="1.5" y="0.44999999" z="0.64999998"/>
+                                        <Property type="Float3" name="m_size" x="1.5" y="0.44999999" z="0.60000002"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -157,7 +157,7 @@
                                         <Property type="EnumU16" name="m_layer" value="Moving"/>
                                         <Property type="EnumU8" name="m_motion" value="Dynamic"/>
                                         <Property type="Bool" name="m_staticMerge" value="true"/>
-                                        <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                        <Property type="EnumU8" name="m_motionQuality" value="Continuous"/>
                                         <Property type="Bool" name="m_overrideMass" value="true"/>
                                         <Property type="Float" name="m_mass" value="350"/>
                                         <Property type="Bool" name="m_overrideCenterOfMassOffset" value="true"/>
@@ -221,7 +221,7 @@
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="3467437232"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_outlineCategory" value="None"/>
                                 <Property type="Resource" name="m_meshResource">
