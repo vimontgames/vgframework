@@ -426,7 +426,6 @@ namespace vg::editor
                 ImGui::PopStyleColor();
             };
 
-#if 1
             vector<const char*> componentIcons;
             for (uint i = 0; i < (uint)components.size(); ++i)
             {
@@ -474,20 +473,6 @@ namespace vg::editor
                 }
             }
 
-#else
-            float totalSize = 0;
-            for (i64 i = components.size() - 1; i >= 0; --i)
-            {
-                const auto * component = components[i];
-                const auto * componentClassDesc = component->GetClassDesc();
-                auto icon = componentClassDesc->GetIcon();
-                if (nullptr != icon)
-                {
-                    const bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
-                    drawIcon(icon, enabled ? 1 : 0, enabled ? 0 : 1, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
-                }
-            }
-#endif
             if (isPrefab)
             {
                 bool enabled = asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());

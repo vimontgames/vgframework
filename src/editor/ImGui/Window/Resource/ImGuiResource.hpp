@@ -111,10 +111,10 @@ namespace vg::editor
                 VG_STATIC_ASSERT(countof(columnDescs) == enumCount<Column>(), "invalid size for columnDescs");
 
                 const uint columnCount = (uint)countof(columnDescs);
-                const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
-                
-                ImGui::BeginChild("resources_table_child", ImVec2(0, 0));
-                if (ImGui::BeginTable("resources_table", columnCount, ImGuiTableFlags_Sortable | ImGuiTableFlags_RowBg))
+                const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
+                ImVec2 tableSize = ImVec2(0, 200);
+
+                if (ImGui::BeginTable("resources_table", columnCount, flags))
                 {
                     ImGui::TableSetupScrollFreeze(0, 1); // freeze 1 top row
 
@@ -135,12 +135,11 @@ namespace vg::editor
                             ImGui::SetTooltip(desc.tooltip);
                         
                     }
-
-                    ImGui::TableNextRow();
-
                     ImGuiTableSortSpecs * sortSpecs = ImGui::TableGetSortSpecs();
                     if (sortSpecs && sortSpecs->SpecsDirty && sortSpecs->SpecsCount > 0)
                     {
+                        VG_PROFILE_CPU("Sort");
+
                         const ImGuiTableColumnSortSpecs & spec = sortSpecs->Specs[0];
                         const Column column = (Column)spec.ColumnIndex;
                         switch (column)
@@ -239,82 +238,92 @@ namespace vg::editor
                         }
                     }
 
-                    for (const IResourceInfo * resInfo : resourceInfos)
+                    // Draw lines
                     {
-                        for (uint i = 0; i < enumCount<Column>(); ++i)
+                        VG_PROFILE_CPU("Draw");
+
+                        ImGuiListClipper clipper;
+                        clipper.Begin((int)resourceInfos.size());
+                        while (clipper.Step())
                         {
-                            ImGui::TableSetColumnIndex(i);
-                            const Column column = (Column)i;
-                            switch (column)
+                            for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
                             {
-                                default:
-                                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(column);
-                                    break;
-
-                                case Column::Name:
-                                    ImGui::Text(resInfo->GetFilename().c_str());
-                                    break;
-
-                                case Column::Extension:
-                                    ImGui::Text(".%s", resInfo->GetExtension().c_str());
-                                    break;
-
-                                case Column::Type:
+                                ImGui::TableNextRow(); // MUST be inside the inner loop
+                                const IResourceInfo * resInfo = resourceInfos[row];
+                                for (uint i = 0; i < enumCount<Column>(); ++i)
                                 {
-                                    string resType = resInfo->GetResourceType();
-                                    const string resSuffix = "Resource";
-                                    auto lastResString = resType.find_last_of(resSuffix);
-                                    if (-1 != lastResString)
-                                        resType = resType.substr(0, resType.length() - resSuffix.length());
-                                    ImGui::Text(resType.c_str());
+                                    ImGui::TableSetColumnIndex(i);
+                                    const Column column = (Column)i;
+                                    switch (column)
+                                    {
+                                        default:
+                                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(column);
+                                            break;
+                                
+                                        case Column::Name:
+                                            ImGui::Text(resInfo->GetFilename().c_str());
+                                            break;
+                                
+                                        case Column::Extension:
+                                            ImGui::Text(".%s", resInfo->GetExtension().c_str());
+                                            break;
+                                
+                                        case Column::Type:
+                                        {
+                                            string resType = resInfo->GetResourceType();
+                                            const string resSuffix = "Resource";
+                                            auto lastResString = resType.find_last_of(resSuffix);
+                                            if (-1 != lastResString)
+                                                resType = resType.substr(0, resType.length() - resSuffix.length());
+                                            ImGui::Text(resType.c_str());
+                                        }
+                                        break;
+                                
+                                        case Column::RawSize:
+                                        {
+                                            const auto fileSize = resInfo->GetRawFileSize();
+                                            if (fileSize > 0)
+                                                ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
+                                            else
+                                                ImGui::Text("N/A");
+                                        }
+                                        break;
+                                
+                                        case Column::CookedSize:
+                                        {
+                                            const auto fileSize = resInfo->GetCookedFileSize();
+                                            if (fileSize > 0)
+                                                ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
+                                            else
+                                                ImGui::Text("N/A");
+                                        }
+                                        break;
+                                
+                                        case Column::CookingTime:
+                                        {
+                                            const float cookingTime = resInfo->GetCookingTime();
+                                            if (cookingTime > 0.0f)
+                                                ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()).c_str());
+                                            else
+                                                ImGui::Text("N/A");
+                                        }
+                                        break;
+                                
+                                        case Column::LoadingTime:
+                                            ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()).c_str());
+                                            break;
+                                
+                                
+                                        case Column::Folder:
+                                            ImGui::Text(resInfo->GetFolder().c_str());
+                                            break;
+                                    }
                                 }
-                                break;
-
-                                case Column::RawSize:
-                                {
-                                    const auto fileSize = resInfo->GetRawFileSize();
-                                    if (fileSize > 0)
-                                        ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
-                                    else
-                                        ImGui::Text("N/A");
-                                }
-                                break;
-
-                                case Column::CookedSize:
-                                {
-                                    const auto fileSize = resInfo->GetCookedFileSize();
-                                    if (fileSize > 0)
-                                        ImGui::Text("%s", formatSizeInBytes(fileSize).c_str());
-                                    else
-                                        ImGui::Text("N/A");
-                                }
-                                break;
-              
-                                case Column::CookingTime:
-                                {
-                                    const float cookingTime = resInfo->GetCookingTime();
-                                    if (cookingTime > 0.0f)
-                                        ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()).c_str());
-                                    else
-                                        ImGui::Text("N/A");
-                                }
-                                break;
-
-                                case Column::LoadingTime:
-                                    ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()).c_str());
-                                    break;
-
-
-                                case Column::Folder:
-                                    ImGui::Text(resInfo->GetFolder().c_str());
-                                    break;
                             }
                         }
-                        ImGui::TableNextRow();
                     }
                     ImGui::EndTable();
                 }
-                ImGui::EndChild();
             }
 
             rm->Unlock();
