@@ -210,8 +210,7 @@ namespace vg::physics
                         jphWheel->mWheelUp = JPH::Vec3(0, 0, 1);
                         jphWheel->mWheelForward = JPH::Vec3(1, 0, 0);
 
-                        jphWheel->mSteeringAxis = getJoltVec3(m_steeringAxis);// JPH::Vec3(0, 0, 1);
-                        //jphWheel->mSteeringAxis = JPH::Vec3(0, 0, 1);
+                        jphWheel->mSteeringAxis = getJoltVec3(m_steeringAxis);
                         jphWheel->mMaxSteerAngle = isFront ? degreesToRadians(axle.m_maxSteerAngleInDegrees) : 0.0f;
 
                         jphWheel->mRadius = axle.m_radius;
@@ -254,7 +253,8 @@ namespace vg::physics
                 // One "fake" differential driving ONLY the rear wheel (index 1)
                 controller->mDifferentials.resize(1);
                 controller->mDifferentials[0].mLeftWheel = 1;
-                controller->mDifferentials[0].mRightWheel = 1;
+                controller->mDifferentials[0].mRightWheel = -1;
+                controller->mDifferentials[0].mLeftRightSplit = 0.0f;
                 controller->mDifferentials[0].mEngineTorqueRatio = 1.0f;
 
                 // No anti-roll bars for bikes (on purpose)
@@ -377,7 +377,8 @@ namespace vg::physics
         VG_ASSERT(m_joltVehicleConstraint);
 
         JPH::BodyInterface & bodyInterface = m_vehicleBody->getPhysicsWorld()->getBodyInterface();
-        bodyInterface.ActivateBody(m_vehicleBody->getBodyID());
+        const auto & bodyID = m_vehicleBody->getBodyID();
+        bodyInterface.ActivateBody(bodyID);
 
         // To get controller
         JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
@@ -401,21 +402,6 @@ namespace vg::physics
                 engine.mMaxRPM = desc->m_maxRPM;
 
                 vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
-
-                /*// --- Low-speed stabilization (VERY important for bikes) ---
-                const float speed = length(m_vehicleBody->GetLinearVelocity());
-
-                if (speed < desc->m_stabilizationSpeed)
-                {
-                    JPH::Vec3 angVel =m_vehicleBody->getPhysicsWorld()->getBodyInterface().GetAngularVelocity(m_vehicleBody->getBodyID());
-
-                    const float t = speed / desc->m_stabilizationSpeed; // 0..1
-                    const float damping = lerp(desc->m_lowSpeedAngularDamping, 1.0f, t);
-
-                    angVel *= damping;
-
-                    m_vehicleBody->getPhysicsWorld()->getBodyInterface().SetAngularVelocity(m_vehicleBody->getBodyID(), angVel);
-                }*/
             }
             break;
 
