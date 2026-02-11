@@ -13,6 +13,7 @@
 #pragma push_macro("new")
 #undef new
 #include "Jolt/Physics/Vehicle/WheeledVehicleController.h"
+#include "Jolt/Physics/Vehicle/MotorcycleController.h"
 #pragma pop_macro("new")
 
 #include "Jolt/Physics/Vehicle/VehicleConstraint.h"
@@ -206,11 +207,21 @@ namespace vg::physics
 
                         jphWheel->mPosition = getJoltVec3(wheelLocalPos);
 
-                        jphWheel->mSuspensionDirection = JPH::Vec3(0, 0, -1);
+                        if (i == 0)
+                        {
+                            jphWheel->mSteeringAxis = getJoltVec3(m_steeringAxis);
+                            jphWheel->mSuspensionDirection = JPH::Vec3(0, 0, -1);
+                        }
+                        else
+                        {
+                            jphWheel->mSteeringAxis = JPH::Vec3(0, 0, 1);
+                            jphWheel->mSuspensionDirection = JPH::Vec3(0, 0, -1);
+                        }
+
                         jphWheel->mWheelUp = JPH::Vec3(0, 0, 1);
                         jphWheel->mWheelForward = JPH::Vec3(1, 0, 0);
 
-                        jphWheel->mSteeringAxis = getJoltVec3(m_steeringAxis);
+                        
                         jphWheel->mMaxSteerAngle = isFront ? degreesToRadians(axle.m_maxSteerAngleInDegrees) : 0.0f;
 
                         jphWheel->mRadius = axle.m_radius;
@@ -229,14 +240,7 @@ namespace vg::physics
                 }
             }
             break;
-        }
-
-        #pragma push_macro("new")
-        #undef new
-        auto * controller = new JPH::WheeledVehicleControllerSettings();
-        #pragma pop_macro("new")
-       
-        vehicle.mController = controller;
+        }        
 
         switch (_vehicleConstraintDesc->GetVehicleType())
         {
@@ -248,14 +252,21 @@ namespace vg::physics
 
             case VehicleType::Bike:
             {
+                #pragma push_macro("new")
+                #undef new
+                auto * motorcycleController =  new JPH::MotorcycleControllerSettings();
+                #pragma pop_macro("new")
+
+                vehicle.mController = motorcycleController;
+
                 const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, _vehicleConstraintDesc);
 
                 // One "fake" differential driving ONLY the rear wheel (index 1)
-                controller->mDifferentials.resize(1);
-                controller->mDifferentials[0].mLeftWheel = 1;
-                controller->mDifferentials[0].mRightWheel = -1;
-                controller->mDifferentials[0].mLeftRightSplit = 0.0f;
-                controller->mDifferentials[0].mEngineTorqueRatio = 1.0f;
+                motorcycleController->mDifferentials.resize(1);
+                motorcycleController->mDifferentials[0].mLeftWheel = 1;
+                motorcycleController->mDifferentials[0].mRightWheel = -1;
+                motorcycleController->mDifferentials[0].mLeftRightSplit = 0.0f;
+                motorcycleController->mDifferentials[0].mEngineTorqueRatio = 1.0f;
 
                 // No anti-roll bars for bikes (on purpose)
             }
@@ -263,6 +274,13 @@ namespace vg::physics
 
             case VehicleType::Car:
             {
+                #pragma push_macro("new")
+                #undef new
+                auto * controller = new JPH::WheeledVehicleControllerSettings();
+                #pragma pop_macro("new")
+
+                vehicle.mController = controller;
+
                 const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, _vehicleConstraintDesc);
 
                 if (desc->m_fourWheelDrive)
@@ -379,9 +397,7 @@ namespace vg::physics
         JPH::BodyInterface & bodyInterface = m_vehicleBody->getPhysicsWorld()->getBodyInterface();
         const auto & bodyID = m_vehicleBody->getBodyID();
         bodyInterface.ActivateBody(bodyID);
-
-        // To get controller
-        JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
+        
 
         // Probably does not need to change every frame ...
         switch (m_vehicleConstraintDesc->GetVehicleType())
@@ -396,12 +412,24 @@ namespace vg::physics
             {
                 const BikeConstraintDesc * desc = VG_SAFE_STATIC_CAST(const BikeConstraintDesc, m_vehicleConstraintDesc);
 
-                auto & engine = vehicleController->GetEngine();
+                JPH::MotorcycleController *motorcycleController = (JPH::MotorcycleController *)m_joltVehicleConstraint->GetController();
+
+                auto & engine = motorcycleController->GetEngine();
                 engine.mMaxTorque = desc->m_maxEngineTorque;
                 engine.mMinRPM = desc->m_minRPM;
                 engine.mMaxRPM = desc->m_maxRPM;
 
-                vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
+                motorcycleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
+                motorcycleController->EnableLeanController(true);
+
+                // Set slip ratios to the same for everything
+                float limited_slip_ratio = sLimitedSlipDifferentials ? 1.4f : FLT_MAX;
+                motorcycleController->SetDifferentialLimitedSlipRatio(limited_slip_ratio);
+                for (JPH::VehicleDifferentialSettings & d : motorcycleController->GetDifferentials())
+                    d.mLimitedSlipRatio = limited_slip_ratio;
+
+                // Pass the input on to the constraint
+                motorcycleController->SetDriverInput(_driveState.m_forward, _driveState.m_right, _driveState.m_brake, _driveState.m_handBrake);
             }
             break;
 
@@ -409,49 +437,31 @@ namespace vg::physics
             {
                 const CarConstraintDesc * desc = VG_SAFE_STATIC_CAST(const CarConstraintDesc, m_vehicleConstraintDesc);
 
+                JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
+
                 auto & engine = vehicleController->GetEngine();
                 engine.mMaxTorque = desc->m_maxEngineTorque;
                 engine.mMinRPM = desc->m_minRPM;
                 engine.mMaxRPM = desc->m_maxRPM;
+
                 vehicleController->GetTransmission().mClutchStrength = desc->m_clutchStrength;
+
+                // Set slip ratios to the same for everything
+                float limited_slip_ratio = sLimitedSlipDifferentials ? 1.4f : FLT_MAX;
+                vehicleController->SetDifferentialLimitedSlipRatio(limited_slip_ratio);
+                for (JPH::VehicleDifferentialSettings & d : vehicleController->GetDifferentials())
+                    d.mLimitedSlipRatio = limited_slip_ratio;
+
+                // Pass the input on to the constraint
+                vehicleController->SetDriverInput(_driveState.m_forward, _driveState.m_right, _driveState.m_brake, _driveState.m_handBrake);
             }
             break;
         }
 
-        // Set slip ratios to the same for everything
-        float limited_slip_ratio = sLimitedSlipDifferentials ? 1.4f : FLT_MAX;
-        vehicleController->SetDifferentialLimitedSlipRatio(limited_slip_ratio);
-        for (JPH::VehicleDifferentialSettings & d : vehicleController->GetDifferentials())
-            d.mLimitedSlipRatio = limited_slip_ratio;
+        
 
-        // Pass the input on to the constraint
-        vehicleController->SetDriverInput(_driveState.m_forward, _driveState.m_right, _driveState.m_brake, _driveState.m_handBrake);
 
         m_joltVehicleConstraint->SetVehicleCollisionTester(m_joltVehicleCollisionTester);
-    }
-
-    static hlslpp_inline float3x3 rotation_axis2(const float3 & axis, float angle_rad)
-    {
-#if defined(HLSLPP_LAYOUT_COORDINATES_FLIP_SIGN)
-        angle_rad = -angle_rad;
-#endif
-
-        // Axis MUST be normalized
-        const float3 a = normalize(axis);
-
-        const float s = sinf(angle_rad);
-        const float c = cosf(angle_rad);
-        const float t = 1.0f - c;
-
-        const float x = a.x;
-        const float y = a.y;
-        const float z = a.z;
-
-        return float3x3(
-            t * x * x + c, t * x * y + s * z, t * x * z - s * y,
-            t * x * y - s * z, t * y * y + c, t * y * z + s * x,
-            t * x * z + s * y, t * y * z - s * x, t * z * z + c
-        );
     }
 
     //--------------------------------------------------------------------------------------
