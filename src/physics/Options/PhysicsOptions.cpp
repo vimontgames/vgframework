@@ -31,6 +31,7 @@ namespace vg::physics
         registerPropertyEnumArray(PhysicsOptions, string, Category, m_physicsCategories, "Category");
         setPropertyDescription(PhysicsOptions, m_physicsCategories, "Use physics Categories to filter collisions")
 
+        registerPropertyEx(PhysicsOptions, m_debugRendererEnable, "DebugRendererEnable", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(PhysicsOptions, m_debugRendererEnable, "Debug Renderer");
         {
             registerProperty(PhysicsOptions, m_debugRendererDrawShape, "Shapes");

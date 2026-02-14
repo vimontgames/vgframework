@@ -313,4 +313,28 @@ namespace vg::core
     {
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::SetLastModifiedDate(core::io::FileAccessTime _lastModified)
+    {
+        m_lastModifiedDate = _lastModified;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::io::FileAccessTime Resource::GetLastModifiedDate() const
+    {
+        return m_lastModifiedDate;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::SetLastCookDate(core::io::FileAccessTime _lastCooked)
+    {
+        m_lastCookDate = _lastCooked;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::io::FileAccessTime Resource::GetLastCookDate() const
+    {
+        return m_lastCookDate;
+    }
 }

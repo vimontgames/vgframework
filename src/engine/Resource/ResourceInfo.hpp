@@ -51,15 +51,27 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const float ResourceInfo::GetCookingTime() const
+    const io::FileAccessTime ResourceInfo::GetLastCookDate() const
     {
-        return m_cookingTime;
+        return m_lastCookDate;
     }
 
     //--------------------------------------------------------------------------------------
-    const float ResourceInfo::GetLoadingTime() const
+    const io::FileAccessTime ResourceInfo::GetLastModifiedDate() const
     {
-        return m_loadingTime;
+        return m_lastModifiedDate;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const float ResourceInfo::GetCookingDuration() const
+    {
+        return m_cookingDuration;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const float ResourceInfo::GetLoadingDuration() const
+    {
+        return m_loadingDuration;
     }
 
     //--------------------------------------------------------------------------------------
@@ -125,13 +137,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceInfo::setCookingTime(float _cookingTime)
     {
-        m_cookingTime = _cookingTime;
+        m_cookingDuration = _cookingTime;
     }
 
     //--------------------------------------------------------------------------------------
     void ResourceInfo::setLoadingTime(float _loadingTime)
     {
-        m_loadingTime = _loadingTime;
+        m_loadingDuration = _loadingTime;
     }
 
     //--------------------------------------------------------------------------------------
@@ -144,5 +156,17 @@ namespace vg::engine
     void ResourceInfo::setCookedFileSize(core::u64 _fileSize)
     {
         m_cookedFileSize = _fileSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setLastModifiedDate(core::io::FileAccessTime _lastModified)
+    {
+        m_lastModifiedDate = _lastModified;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::setLastCookDate(core::io::FileAccessTime _lastCooked)
+    {
+        m_lastCookDate = _lastCooked;
     }
 }

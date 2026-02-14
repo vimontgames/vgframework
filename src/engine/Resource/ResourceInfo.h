@@ -23,10 +23,12 @@ namespace vg::engine
         const core::string &                                GetPath             () const final override;
         const core::string                                  GetFolder           () const final override;
         const core::string                                  GetFilename         () const final override;
-        const core::u64                                     GetRawFileSize      () const final override;;
-        const core::u64                                     GetCookedFileSize   () const final override;;
-        const float                                         GetCookingTime      () const final override;
-        const float                                         GetLoadingTime      () const final override;
+        const io::FileAccessTime                            GetLastModifiedDate () const final override;
+        const io::FileAccessTime                            GetLastCookDate     () const final override;
+        const core::u64                                     GetRawFileSize      () const final override;
+        const core::u64                                     GetCookedFileSize   () const final override;
+        const float                                         GetCookingDuration  () const final override;
+        const float                                         GetLoadingDuration  () const final override;
         const core::string                                  GetExtension        () const final override;
         const core::string                                  GetResourceType     () const final override;
         const core::uint                                    GetClientCount      () const final override;
@@ -56,6 +58,8 @@ namespace vg::engine
         void                                                setLoadingTime      (float _loadingTime);
         void                                                setRawFileSize      (core::u64 _fileSize);                                
         void                                                setCookedFileSize   (core::u64 _fileSize);
+        void                                                setLastModifiedDate (core::io::FileAccessTime _lastModified);
+        void                                                setLastCookDate     (core::io::FileAccessTime _lastCooked);
 
     private:
         core::IObject *                                     m_object = nullptr;         // The shared object
@@ -66,11 +70,13 @@ namespace vg::engine
         core::vector<core::IResource *>                     m_clientsToUpdate;
         #endif
 
-        core::u64                                           m_rawFileSize   = 0;
-        core::u64                                           m_cookedFileSize= 0;
-        float                                               m_cookingTime   = 0.0f;         
-        float                                               m_loadingTime   = 0.0f;
-        bool                                                m_forceReimport = false;    // For reimport of resource on next load
+        core::io::FileAccessTime                            m_lastModifiedDate  = (core::io::FileAccessTime)0;
+        core::io::FileAccessTime                            m_lastCookDate      = (core::io::FileAccessTime)0;
+        core::u64                                           m_rawFileSize       = 0;
+        core::u64                                           m_cookedFileSize    = 0;
+        float                                               m_cookingDuration   = 0.0f;         
+        float                                               m_loadingDuration   = 0.0f;
+        bool                                                m_forceReimport     = false;    // For reimport of resource on next load
     };
 }
 

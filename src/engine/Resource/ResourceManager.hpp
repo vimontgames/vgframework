@@ -519,6 +519,8 @@ namespace vg::engine
             _resource->UnloadSubResources();
             _resource->GetParent()->OnResourceUnloaded(_resource);  
             _resource->SetObject(nullptr);
+            _resource->SetLastModifiedDate(0);
+            _resource->SetLastCookDate(0);
         }
     }
 
@@ -590,6 +592,8 @@ namespace vg::engine
 
         while (!done)
         {
+            const string cookFile = io::getCookedPath(path);
+
             const auto startCook = Timer::getTick();
             if (CookStatus::UP_TO_DATE != needCook)
             {
@@ -602,8 +606,6 @@ namespace vg::engine
 
                 if (isFileCooked)
                 {
-                    const string cookFile = io::getCookedPath(path);
-
                     if (io::setLastWriteTime(cookFile, io::getCurrentFileTime()))
                     {
                         const float cookTime = (float)Timer::getEnlapsedTime(startCook, Timer::getTick());
@@ -636,6 +638,15 @@ namespace vg::engine
                     _info.setLoadingTime(loadingTime);
                     _info.setRawFileSize(io::getFileSize(path));
                     _info.setCookedFileSize(io::getFileSize(io::getCookedPath(path)));
+
+                    io::FileAccessTime lastCookTime = 0;
+                    VG_VERIFY(io::getLastWriteTime(cookFile, &lastCookTime));
+                    _info.setLastCookDate(lastCookTime);
+
+                    io::FileAccessTime lastModifiedTime = 0;
+                    VG_VERIFY(io::getLastWriteTime(path, &lastModifiedTime));
+                    _info.setLastModifiedDate(lastModifiedTime);
+
                     VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), loadingTime);
                     done = true;
                 }
@@ -807,6 +818,8 @@ namespace vg::engine
                             VG_ASSERT(info);
                             // Set Shared Resource Object and Notify owner
                             res->SetObject(info->getObject());
+                            res->SetLastModifiedDate(info->GetLastModifiedDate());
+                            res->SetLastCookDate(info->GetLastCookDate());
                             if (!res->HasValidUID())
                                 res->RegisterUID();
                             res->LoadSubResources();
@@ -863,6 +876,8 @@ namespace vg::engine
                             {
                                 VG_ASSERT(res->GetSharedObject() == nullptr);
                                 res->SetObject(object);
+                                res->SetLastModifiedDate(info->GetLastModifiedDate());
+                                res->SetLastCookDate(info->GetLastCookDate());
                                 res->LoadSubResources();
                                 res->GetParent()->OnResourceLoaded(res);
 
@@ -895,6 +910,8 @@ namespace vg::engine
                     {
                         VG_ASSERT(res->GetSharedObject() == nullptr);
                         res->SetObject(object);
+                        res->SetLastModifiedDate(info->GetLastModifiedDate());
+                        res->SetLastCookDate(info->GetLastCookDate());
                         res->LoadSubResources();
                         res->GetParent()->OnResourceLoaded(res);
 

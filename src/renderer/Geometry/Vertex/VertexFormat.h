@@ -21,7 +21,7 @@ namespace vg::renderer
         {
             inline core::size_t operator() (const FatVertex & _this) const
             {
-                core::size_t hash = core::Hash(_this.pos) ^ core::Hash(_this.nrm) ^ core::Hash(_this.nrm) ^ core::Hash(_this.bin) ^ core::Hash(_this.tan) ^ core::Hash(_this.color) ^ core::Hash(_this.uv[0]) ^ core::Hash(_this.uv[1]);
+                core::size_t hash = core::hashValue(_this.pos) ^ core::hashValue(_this.nrm) ^ core::hashValue(_this.nrm) ^ core::hashValue(_this.bin) ^ core::hashValue(_this.tan) ^ core::hashValue(_this.color) ^ core::hashValue(_this.uv[0]) ^ core::hashValue(_this.uv[1]);
                 return hash;
             }
         };

@@ -3,6 +3,19 @@
 
 using namespace vg::core;
 
+#define USE_MESH_COLLIDER_POOL 1
+
+#if USE_MESH_COLLIDER_POOL
+struct SharedMeshShape
+{
+    JPH::MeshShape * shape = nullptr;
+    float mass = 0.0f;
+    u64 refCount = 1;
+};
+
+static map<u64, SharedMeshShape> g_meshColliderPool;
+#endif
+
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
@@ -65,6 +78,35 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     MeshShape::~MeshShape()
     {
+        #if USE_MESH_COLLIDER_POOL
+        // Remove from pool
+        if (m_shape)
+        {
+            const u64 key = hash<string>()(m_meshResource->GetResourcePath()) ^ m_meshResource->GetLastCookDate();
+            if (0 != key)
+            {
+                auto it = g_meshColliderPool.find(key);
+
+                if (it != g_meshColliderPool.end())
+                {
+                    SharedMeshShape & entry = it->second;
+                    entry.refCount--;
+
+                    if (entry.refCount == 0)
+                    {
+                        VG_INFO("[Physics] Release MeshShape \"%s\" with key 0x%016llx from pool", m_meshResource->GetResourcePath().c_str(), key);
+                        VG_SAFE_RELEASE(entry.shape);
+                        g_meshColliderPool.erase(it);
+                    }
+                    else
+                    {
+                        VG_INFO("[Physics] Decrease RefCount of MeshShape \"%s\" with key 0x%016llx from pool (%u remaining)", m_meshResource->GetResourcePath().c_str(), key, entry.refCount);
+                    }
+                }
+            }
+        }
+        #endif
+
         VG_SAFE_RELEASE(m_meshResource);
     }
 
@@ -79,6 +121,68 @@ namespace vg::physics
     {
         VG_SAFE_RELEASE(m_shape);
 
+#if USE_MESH_COLLIDER_POOL
+        // Unique key from file name and last access time
+        const u64 key = hash<string>()(m_meshResource->GetResourcePath()) ^ m_meshResource->GetLastCookDate();
+
+        // use existing mesh or create it
+        JPH::MeshShape * meshShape = nullptr;
+        float mass = 0.0f;
+
+        auto it = g_meshColliderPool.find(key);
+        if (it != g_meshColliderPool.end())
+        {
+            SharedMeshShape & entry = it->second;
+            meshShape = entry.shape;
+            mass = entry.mass;
+            entry.refCount++;
+            VG_INFO("[Physics] Increase RefCount of MeshShape \"%s\" with key 0x%016llx from pool (%u remaining)", m_meshResource->GetResourcePath().c_str(), key, entry.refCount);
+        }
+        else
+        {
+            if (CreateMeshShape(_triangles, meshShape, mass))
+            {
+               SharedMeshShape entry;
+               entry.shape = meshShape;
+               entry.mass = mass;
+               entry.refCount = 1;
+               VG_INFO("[Physics] Creating shared MeshShape \"%s\" with key 0x%016llx", m_meshResource->GetResourcePath().c_str(), key);
+               g_meshColliderPool.insert({ key, entry });
+            }
+        }
+
+        #pragma push_macro("new")
+        #undef new
+        m_shape = new JPH::RotatedTranslatedShape(getJoltVec3(m_translation), getJoltQuaternion(m_rotation), meshShape);
+        m_mass = mass;
+        #pragma pop_macro("new")
+
+        m_shape->AddRef();
+
+#else
+
+        JPH::MeshShape * meshShape = nullptr;
+        float mass = 0.0f;
+
+        if (CreateMeshShape(_triangles, meshShape, mass))
+        {
+            #pragma push_macro("new")
+            #undef new
+            m_shape = new JPH::RotatedTranslatedShape(getJoltVec3(m_translation), getJoltQuaternion(m_rotation), meshShape);
+            m_mass = mass;
+            #pragma pop_macro("new")
+
+            // Intermediate shape should not be deleted after use (Will be deleted by the RotatedTranslatedShape m_shape?)
+            VG_SAFE_RELEASE(meshShape);
+
+            m_shape->AddRef();
+        }
+#endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshShape::CreateMeshShape(const core::vector<renderer::ColliderTriangle> & _triangles, JPH::MeshShape *& _shape, float & _mass)
+    {
         JPH::TriangleList triangleList;
 
         triangleList.resize(_triangles.size());
@@ -90,7 +194,7 @@ namespace vg::physics
             {
                 const auto & src = _triangles[i].v[2 - v];
                 auto & dst = triangleList[i].mV[v];
-                
+
                 dst.x = src.x;
                 dst.y = src.y;
                 dst.z = src.z;
@@ -104,24 +208,24 @@ namespace vg::physics
 
         // Jolt cannot compute mass for mesh shapes, then use the AABB as a quick estimate
         const float eps = 0.01f;
-        m_mass = max(float(maxPos.x - minPos.x), eps) * max(float(maxPos.y - minPos.y), eps) * max(float(maxPos.z - minPos.z), eps);
+        float mass = max(float(maxPos.x - minPos.x), eps) * max(float(maxPos.y - minPos.y), eps) * max(float(maxPos.z - minPos.z), eps);
 
         JPH::MeshShapeSettings meshShapeSettings(triangleList);
         JPH::Shape::ShapeResult result;
-        
+
         #pragma push_macro("new")
         #undef new
         auto shape = new JPH::MeshShape(meshShapeSettings, result);
         if (result.HasError())
             VG_WARNING("[Physics] %s", result.GetError().c_str());
         #pragma pop_macro("new")
-        
-        #pragma push_macro("new")
-        #undef new
-        m_shape = new JPH::RotatedTranslatedShape(getJoltVec3(m_translation), getJoltQuaternion(m_rotation), shape);
-        #pragma pop_macro("new")
-       
-        m_shape->AddRef();
+
+        _shape = shape;
+        _mass = mass;
+
+        _shape->AddRef();
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

@@ -70,16 +70,15 @@ namespace vg::core
     template <typename T1, typename T2> using pair = std::pair<T1, T2>;
     
     template <typename T> using hash = std::hash<T>;
+    using HashValue = core::u64;
+
 	template <typename K, typename V> using map											= std::map<K, V>;
 	template <typename K, typename V, typename H = core::hash<K>> using unordered_map	= std::unordered_map<K, V, H>;
 
 	template <typename T> using set														= std::set<T>;
 	template <typename T> using unordered_set											= std::unordered_set<T>;
 
-    template <typename T> const auto to_string(T _val)
-    {
-        return std::to_string(_val);
-    }
+    template <typename T> const auto to_string(T _val) { return std::to_string(_val); }
 
     template <typename T> using dictionary = core::unordered_map<core::string, T, core::hash<core::string> >;
 

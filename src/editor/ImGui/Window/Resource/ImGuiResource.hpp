@@ -37,15 +37,44 @@ namespace vg::editor
         return fmt::sprintf("%.2f m", minutes);
     }
 
+    //--------------------------------------------------------------------------------------
+    string formatTimestamp(io::FileAccessTime _timestamp)
+    {
+        if (_timestamp == 0)
+            return "";
+
+        FILETIME ft;
+        ft.dwHighDateTime = (DWORD)(_timestamp >> 32);
+        ft.dwLowDateTime = (DWORD)(_timestamp & 0xFFFFFFFFULL);
+
+        SYSTEMTIME stUTC;
+        if (!FileTimeToSystemTime(&ft, &stUTC)) return "<invalid>";
+
+        SYSTEMTIME stLocal;
+        if (!SystemTimeToTzSpecificLocalTime(nullptr, &stUTC, &stLocal)) return "<invalid>";
+
+        const char * months[12] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
+        return fmt::sprintf("%02d %s %02d %02d:%02d:%02d",
+            stLocal.wDay,
+            months[stLocal.wMonth - 1],
+            stLocal.wYear % 100,
+            stLocal.wHour,
+            stLocal.wMinute,
+            stLocal.wSecond);
+    }
+
     vg_enum_class(vg::editor, Column, core::uint,
-        Name = 0,
+        Name,
         Extension,
         Type,
-        RawSize,
+        LastCook,
         CookedSize,
         CookingTime,
         LoadingTime,
-        Folder
+        LastModified,
+        RawSize,
+        Folder,
+        Clients
     );
 
     //--------------------------------------------------------------------------------------
@@ -92,27 +121,27 @@ namespace vg::editor
                 // table
                 struct ColumnDesc
                 {
-                    const char * name;
-                    ImGuiTableColumnFlags flags;
-                    const char * tooltip;
+                    const char * name = nullptr;
+                    ImGuiTableColumnFlags flags = 0x0;
+                    const char * tooltip = nullptr;
                 };
 
-                const ColumnDesc columnDescs[] = 
-                {
-                    { "Name", ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort, "Resource name"},
-                    { "Extension", ImGuiTableColumnFlags_WidthFixed, "Extension type"},
-                    { "Type", ImGuiTableColumnFlags_WidthFixed, "Resource type"},
-                    { "Raw size", ImGuiTableColumnFlags_WidthFixed, "Size of the raw data file"},
-                    { "Cooked size", ImGuiTableColumnFlags_WidthFixed, "Size of the cooked data file"},
-                    { "Cook time", ImGuiTableColumnFlags_WidthFixed, "Time to cook the resource (ms)"},
-                    { "Load time", ImGuiTableColumnFlags_WidthFixed, "Time to load the resource (ms)"},
-                    { "Data folder", ImGuiTableColumnFlags_WidthStretch, "Where the file is located in the \"Data\" folder"}
-                };
-                VG_STATIC_ASSERT(countof(columnDescs) == enumCount<Column>(), "invalid size for columnDescs");
+                ColumnDesc columnDescs[enumCount<Column>()];
+
+                columnDescs[asInteger(Column::Type)]        = { "Type",        ImGuiTableColumnFlags_WidthFixed,   "Resource type" };
+                columnDescs[asInteger(Column::Name)]        = { "Name",        ImGuiTableColumnFlags_WidthStretch, "Resource name" };
+                columnDescs[asInteger(Column::Extension)]   = { "Extension",   ImGuiTableColumnFlags_WidthFixed,   "Extension type" };
+                columnDescs[asInteger(Column::Folder)]      = { "Path",        ImGuiTableColumnFlags_WidthStretch, "Where the file is located in the \"Data\" folder" };
+                columnDescs[asInteger(Column::LoadingTime)] = { "Load time",   ImGuiTableColumnFlags_WidthFixed,   "Time to load the resource (ms)" };
+                columnDescs[asInteger(Column::RawSize)]     = { "Raw size",    ImGuiTableColumnFlags_WidthFixed,   "Size of the raw data file" };
+                columnDescs[asInteger(Column::LastModified)]= { "Modified",    ImGuiTableColumnFlags_WidthFixed,   "Last time the resource source was modified" };
+                columnDescs[asInteger(Column::CookedSize)]  = { "Cooked size", ImGuiTableColumnFlags_WidthFixed,   "Size of the cooked data file" };
+                columnDescs[asInteger(Column::CookingTime)] = { "Cook time",   ImGuiTableColumnFlags_WidthFixed,   "Time to cook the resource (ms)" };
+                columnDescs[asInteger(Column::LastCook)]    = { "Cooked",      ImGuiTableColumnFlags_WidthFixed,   "Last time the resource was cooked" };
+                columnDescs[asInteger(Column::Clients)]     = { "Clients",     ImGuiTableColumnFlags_WidthFixed,   "Resource Clients" };
 
                 const uint columnCount = (uint)countof(columnDescs);
                 const ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
-                ImVec2 tableSize = ImVec2(0, 200);
 
                 if (ImGui::BeginTable("resources_table", columnCount, flags))
                 {
@@ -129,9 +158,10 @@ namespace vg::editor
                     {
                         const auto & desc = columnDescs[column];
                         ImGui::TableSetColumnIndex(column);
+                        VG_ASSERT(desc.name, "Column '%s' has no name", asCString((Column)column));
                         ImGui::TableHeader(desc.name);
 
-                        if (ImGui::IsItemHovered())
+                        if (desc.tooltip && ImGui::IsItemHovered())
                             ImGui::SetTooltip(desc.tooltip);
                         
                     }
@@ -207,9 +237,9 @@ namespace vg::editor
                             std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
                                 { 
                                     if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
-                                        return a->GetCookingTime() < b->GetCookingTime();
+                                        return a->GetCookingDuration() < b->GetCookingDuration();
                                     else
-                                        return a->GetCookingTime() > b->GetCookingTime();
+                                        return a->GetCookingDuration() > b->GetCookingDuration();
                                 }
                             );
                             break;
@@ -218,9 +248,9 @@ namespace vg::editor
                             std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b) 
                                 { 
                                     if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
-                                        return a->GetLoadingTime() < b->GetLoadingTime();
+                                        return a->GetLoadingDuration() < b->GetLoadingDuration();
                                     else
-                                        return a->GetLoadingTime() > b->GetLoadingTime();
+                                        return a->GetLoadingDuration() > b->GetLoadingDuration();
                                 }
                             );
                             break;
@@ -235,6 +265,39 @@ namespace vg::editor
                                 }
                             );
                             break;
+
+                            case Column::LastCook:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b)
+                                {
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetLastCookDate() < b->GetLastCookDate();
+                                    else
+                                        return a->GetLastCookDate() > b->GetLastCookDate();
+                                }
+                            );
+                            break;     
+
+                            case Column::LastModified:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b)
+                                {
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetLastModifiedDate() < b->GetLastModifiedDate();
+                                    else
+                                        return a->GetLastModifiedDate() > b->GetLastModifiedDate();
+                                }
+                            );
+                            break;   
+
+                            case Column::Clients:
+                            std::sort(resourceInfos.begin(), resourceInfos.end(), [=](const IResourceInfo * a, const IResourceInfo * b)
+                                {
+                                    if (sortSpecs->Specs[0].SortDirection == ImGuiSortDirection_Ascending)
+                                        return a->GetClientCount() < b->GetClientCount();
+                                    else
+                                        return a->GetClientCount() > b->GetClientCount();
+                                }
+                            );
+                            break;   
                         }
                     }
 
@@ -301,21 +364,33 @@ namespace vg::editor
                                 
                                         case Column::CookingTime:
                                         {
-                                            const float cookingTime = resInfo->GetCookingTime();
+                                            const float cookingTime = resInfo->GetCookingDuration();
                                             if (cookingTime > 0.0f)
-                                                ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingTime()).c_str());
+                                                ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetCookingDuration()).c_str());
                                             else
                                                 ImGui::Text("N/A");
                                         }
                                         break;
                                 
                                         case Column::LoadingTime:
-                                            ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingTime()).c_str());
+                                            ImGui::Text("%s", formatTimeInMilliseconds(resInfo->GetLoadingDuration()).c_str());
                                             break;
                                 
                                 
                                         case Column::Folder:
                                             ImGui::Text(resInfo->GetFolder().c_str());
+                                            break;
+
+                                        case Column::LastCook:
+                                            ImGui::Text(formatTimestamp(resInfo->GetLastCookDate()).c_str());
+                                            break;
+
+                                        case Column::LastModified:
+                                            ImGui::Text(formatTimestamp(resInfo->GetLastModifiedDate()).c_str());
+                                            break;
+
+                                        case Column::Clients:
+                                            ImGui::Text("%u", resInfo->GetClientCount());
                                             break;
                                     }
                                 }

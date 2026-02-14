@@ -61,11 +61,18 @@ namespace vg::core
         IResourceMeta *             CreateResourceMeta      (const core::string & _path) const override;
         bool                        CanOverrideProperties   () const override;
 
+        void                        SetLastModifiedDate     (core::io::FileAccessTime _lastModified) final override;
+        core::io::FileAccessTime    GetLastModifiedDate     () const final override;
+        void                        SetLastCookDate         (core::io::FileAccessTime _lastCooked) final override;
+        core::io::FileAccessTime    GetLastCookDate         () const final override;
+
 	protected:
         string                      m_resourcePath;
         bool                        m_instanciate = false;
         IObject *                   m_shared = nullptr;
         IObject *                   m_instance = nullptr;
-        ResourceUserData                    m_userData = 0x0;
+        ResourceUserData            m_userData = 0x0;
+        core::io::FileAccessTime    m_lastModifiedDate;
+        core::io::FileAccessTime    m_lastCookDate;
     };
 }

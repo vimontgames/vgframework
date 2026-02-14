@@ -27,8 +27,9 @@ namespace vg::core::io
     {
         #if VG_WINDOWS
         FILETIME fileTime;
-        GetSystemTimeAsFileTime(&fileTime);
-        return ((FileAccessTime)(fileTime.dwHighDateTime) << 32) | fileTime.dwLowDateTime;
+        GetSystemTimeAsFileTime(&fileTime); // UTC
+        return ((FileAccessTime)(fileTime.dwHighDateTime) << 32) |
+                (FileAccessTime)(fileTime.dwLowDateTime);
         #elif
         VG_STATIC_ASSERT_NOT_IMPLEMENTED();
         #endif
@@ -76,7 +77,7 @@ namespace vg::core::io
             {
                 FILETIME timeStamp;
                          timeStamp.dwHighDateTime = DWORD(_lastWrite >> 32);
-                         timeStamp.dwLowDateTime = DWORD(_lastWrite);
+                         timeStamp.dwLowDateTime = DWORD(_lastWrite & 0xFFFFFFFFULL);
 
                 succeeded = ::SetFileTime(file, &creation, &lastAccess, &timeStamp);
             }

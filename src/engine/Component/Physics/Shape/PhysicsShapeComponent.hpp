@@ -128,16 +128,11 @@ namespace vg::engine
     {
         if (m_shape)
         {
-            if (auto * triangles = getColliderTriangles(m_shape))
+            if (m_shapeType == physics::ShapeType::Mesh)
             {
-                m_shape->OnGeometryLoaded(*triangles);
-
-                if (auto * bodyComp = getBodyComponent())
-                    bodyComp->onShapeUpdated();
-            }
-            else
-            {
-                VG_WARNING("[Physics] Mesh \"%s\" has no collision data. Please check \"Collision data\" in mesh metadata", _resource->GetResourcePath().c_str());
+                VG_SAFE_RELEASE(m_shape);
+                if (!createShape())
+                    VG_WARNING("[Physics] Mesh \"%s\" has no collision data. Please check \"Collision data\" in mesh metadata", _resource->GetResourcePath().c_str());
             }
         }
     }
@@ -209,8 +204,20 @@ namespace vg::engine
         VG_ASSERT(m_shapeDesc);
 
         if (m_shapeDesc)
+        {
             m_shape = getPhysics()->CreateShape(m_shapeDesc);
-        
+
+            if (m_shapeType == physics::ShapeType::Mesh)
+            {
+                if (auto * triangles = getColliderTriangles(m_shape))
+                {
+                    m_shape->OnGeometryLoaded(*triangles);
+                    if (auto * bodyComp = getBodyComponent())
+                        bodyComp->onShapeUpdated();
+                }
+            }
+        }
+
         if (auto * bodyComp = getBodyComponent())
             m_shape->SetColor(bodyComp->getShapesColor());
 

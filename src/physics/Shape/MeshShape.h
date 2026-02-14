@@ -34,6 +34,9 @@ namespace vg::physics
         float GetMass() const final override;
 
     private:
+        static bool CreateMeshShape(const core::vector<renderer::ColliderTriangle> & _triangles, JPH::MeshShape *& _shape, float & _mass);
+
+    private:
         core::IResource *   m_meshResource = nullptr;
         core::quaternion    m_rotation = core::quaternion(0, 0, 0, 1);
         core::float3        m_translation = core::float3(0, 0, 0);
