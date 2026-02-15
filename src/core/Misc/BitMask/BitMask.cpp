@@ -38,14 +38,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    //bool BitMask::setNames(const core::vector<core::string> & _names)
-    //{
-    //    VG_ASSERT(_names.size() == m_bitCount);
-    //    m_names = _names;
-    //    return true; // Return 'false' if unchanged?
-    //}
-
-    //--------------------------------------------------------------------------------------
     bool BitMask::setBitValue(core::uint _index, bool _value)
     {
         auto itemIndex = _index / getNumBitsPerItem();
