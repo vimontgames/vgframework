@@ -41,7 +41,7 @@
                                 <Property type="EnumU8" name="m_vehicleType" value="Bike"/>
                                 <Property type="ObjectPtr" name="m_vehicleConstraintDesc">
                                     <Object class="BikeConstraintDesc">
-                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="30"/>
+                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="35"/>
                                         <Property type="ObjectHandle" name="m_handlebar" value="1483033699"/>
                                         <Property type="Object" name="m_front">
                                             <Object class="OneWheeledAxleDesc">
@@ -50,8 +50,8 @@
                                                 <Property type="Uint32" name="m_uid" value="3967581907"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="Float" name="m_radius" value="0.34999999"/>
-                                                <Property type="Float" name="m_width" value="0.2"/>
-                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="35"/>
+                                                <Property type="Float" name="m_width" value="0.25"/>
+                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="30"/>
                                                 <Property type="Float" name="m_inertia" value="0.75"/>
                                                 <Property type="Float" name="m_angularDamping" value="0.25"/>
                                                 <Property type="Float" name="m_suspensionMinLength" value="0"/>
@@ -91,7 +91,7 @@
                                         <Property type="Float" name="m_maxEngineTorque" value="500"/>
                                         <Property type="Float" name="m_minRPM" value="1000"/>
                                         <Property type="Float" name="m_maxRPM" value="4000"/>
-                                        <Property type="Float" name="m_clutchStrength" value="10"/>
+                                        <Property type="Float" name="m_clutchStrength" value="8"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_slots">
