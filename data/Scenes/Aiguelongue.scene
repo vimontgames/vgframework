@@ -1336,7 +1336,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" value="1093025436"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="-8.7422777e-08" Iz="0" Iw="0" Jx="8.7422777e-08" Jy="-1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="18" Ty="0" Tz="0" Tw="1"/>
@@ -2138,7 +2138,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -23001,21 +23001,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3575900411"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2269661377"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="2210904707"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.72941178" y="0.56862748" z="0.32941177" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="1833064756"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3685520203"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -23082,21 +23067,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3575900411"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2269661377"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="2823108959"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.72941178" y="0.56862748" z="0.32941177" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="1833064756"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3685520203"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -23131,21 +23101,6 @@
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3575900411"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2269661377"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3414325452"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.72941178" y="0.56862748" z="0.32941177" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="1833064756"/>
@@ -24167,21 +24122,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3558377082"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3238291753"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -24216,21 +24156,6 @@
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3684421953"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
@@ -24269,21 +24194,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="807703516"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3238291753"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -24320,21 +24230,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3042697126"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3238291753"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -24353,7 +24248,7 @@
                                             <Object class="PrefabGameObject">
                                                 <Property type="String" name="m_name" value="House18_Large_WindowB_3x3_16"/>
                                                 <Property type="Uint32" name="m_uid" value="3375037593"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" Ix="-1" Iy="-1.1993706e-08" Iz="0" Iw="0" Jx="-5.6685241e-08" Jy="-1.0000005" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-36.000061" Ty="29.999928" Tz="3.0000007" Tw="1"/>
@@ -24369,21 +24264,6 @@
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="1639420136"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
@@ -24422,21 +24302,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3868471605"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3238291753"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -24473,21 +24338,6 @@
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="875759072"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3238291753"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
@@ -24522,21 +24372,6 @@
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
-                                                    <Object class="DynamicPropertyList">
-                                                        <Property type="String" name="m_name" value="Wall"/>
-                                                        <Property type="Uint32" name="m_uid" value="3238342181"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2197855556"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_properties">
-                                                            <Object class="DynamicPropertyFloat4">
-                                                                <Property type="String" name="m_name" value="m_color"/>
-                                                                <Property type="Uint32" name="m_uid" value="3021597858"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="Float4" name="m_value" x="0.96862745" y="0.98431373" z="0.83529413" w="1"/>
-                                                            </Object>
-                                                        </Property>
-                                                    </Object>
                                                     <Object class="DynamicPropertyList">
                                                         <Property type="String" name="m_name" value="Wall"/>
                                                         <Property type="Uint32" name="m_uid" value="2267409125"/>
@@ -26310,7 +26145,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_Generic_3x3_83"/>
                                         <Property type="Uint32" name="m_uid" value="1086700118"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.99999958" Iy="-0.00048834283" Iz="0" Iw="0" Jx="0.00048852165" Jy="-1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="27.000004" Ty="-30.000031" Tz="0" Tw="1"/>
@@ -26376,7 +26211,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_Generic_3x3_87"/>
                                         <Property type="Uint32" name="m_uid" value="1419131298"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="3.5527137e-14" Iz="0" Iw="0" Jx="4.2632564e-14" Jy="1.0000004" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="-33.000011" Tz="0" Tw="1"/>
@@ -26928,7 +26763,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_WindowB_3x3_13"/>
                                         <Property type="Uint32" name="m_uid" value="389721389"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-3.1786506e-08" Iz="0" Iw="0" Jx="1.9841693e-09" Jy="-1.0000002" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="33.000023" Ty="-29.999992" Tz="3.0000012" Tw="1"/>
@@ -26979,7 +26814,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_WindowB_3x3_15"/>
                                         <Property type="Uint32" name="m_uid" value="2435067265"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-3.1786506e-08" Iz="0" Iw="0" Jx="1.9841693e-09" Jy="-1.0000002" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="30.000023" Ty="-29.999992" Tz="4.7683727e-07" Tw="1"/>
@@ -27030,7 +26865,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_WindowB_3x3_16"/>
                                         <Property type="Uint32" name="m_uid" value="2948623716"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-3.1786506e-08" Iz="0" Iw="0" Jx="1.9841693e-09" Jy="-1.0000002" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24.000023" Ty="-29.99999" Tz="4.7683727e-07" Tw="1"/>
@@ -27081,7 +26916,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_WindowB_3x3_17"/>
                                         <Property type="Uint32" name="m_uid" value="350879455"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-3.1786506e-08" Iz="0" Iw="0" Jx="1.9841693e-09" Jy="-1.0000002" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="33.000023" Ty="-29.999994" Tz="4.7683727e-07" Tw="1"/>
@@ -27132,7 +26967,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="House18_WindowB_3x3_19"/>
                                         <Property type="Uint32" name="m_uid" value="1739665209"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-3.1786506e-08" Iz="0" Iw="0" Jx="1.9841693e-09" Jy="-1.0000002" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="27.000023" Ty="-29.99999" Tz="3.0000012" Tw="1"/>
@@ -27855,7 +27690,7 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="RoadBlock_B_04"/>
                                         <Property type="Uint32" name="m_uid" value="3336796378"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="2.4040276e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="2.4040276e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="8.2500944" Ty="-71.749641" Tz="0" Tw="1"/>
