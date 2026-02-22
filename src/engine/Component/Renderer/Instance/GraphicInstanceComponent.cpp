@@ -115,12 +115,15 @@ namespace vg::engine
             {
                 if (getGameObject()->removeGraphicInstance(instance))
                 {
-                    auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                    picking->ReleasePickingID(instance->GetPickingID());
-                    instance->ClearPickingID();
-
                     m_registered = false;
                     return true;
+                }
+
+                auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                if (const auto pickingID = instance->GetPickingID())
+                {
+                    picking->ReleasePickingID(pickingID);
+                    instance->ClearPickingID();
                 }
             }
         }

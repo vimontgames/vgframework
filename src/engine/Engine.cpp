@@ -1011,6 +1011,9 @@ namespace vg::engine
             }
         }
 
+        if (m_editor)
+            m_editor->EndFrame();
+
         g_RunningOneFrame = false;
 	}
 

@@ -3,6 +3,8 @@
 #include "editor/IEditor.h"
 #include "core/Singleton/Singleton.h"
 
+#define GAMEOBJECT_ASYNC_DELETE 1
+
 namespace vg
 {
 	namespace core
@@ -36,45 +38,47 @@ namespace vg
             Editor(const core::string & _name, core::IObject * _parent);
             ~Editor();
 
-			bool								RegisterClasses		() final override;
-			bool								UnregisterClasses	() final override;
+			bool								RegisterClasses		        () final override;
+			bool								UnregisterClasses	        () final override;
 
 			#ifdef _WIN32
-			LRESULT CALLBACK                    WndProc				(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
+			LRESULT CALLBACK                    WndProc				        (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
 			#endif
 
-			void							    Init				(const core::Singletons & _singletons) final override;
-			void							    Deinit				() final override;
+			void							    Init				        (const core::Singletons & _singletons) final override;
+			void							    Deinit				        () final override;
 
-			void								RunOneFrame			() final override;
+			void								RunOneFrame			        () final override;
+            void                                EndFrame                    () final override;
 
-			void							    DrawGUI				(const GUIContext & _context) final override;
+			void							    DrawGUI				        (const GUIContext & _context) final override;
 
-			IEditorOptions *					GetOptions			() const final override;
+			IEditorOptions *					GetOptions			        () const final override;
 
-			const core::vector<ImGuiWindow *> & GetWindows			() const { return m_imGuiWindows; }
-			core::vector<ImGuiWindow*>			GetWindows			(const core::string & _className) const;
-			template <class T> T *				getMenu				(const core::string _name = {}) const;
+			const core::vector<ImGuiWindow *> & GetWindows			        () const { return m_imGuiWindows; }
+			core::vector<ImGuiWindow*>			GetWindows			        (const core::string & _className) const;
+			template <class T> T *				getMenu				        (const core::string _name = {}) const;
 
-			core::IFactory *					getFactory			() const;
-			core::ISelection *					getSelection		() const;
+			core::IFactory *					getFactory			        () const;
+			core::ISelection *					getSelection		        () const;
 
-			engine::IEngine *					findEngine			() const;
-			renderer::IRenderer *				findRenderer		() const;
+			engine::IEngine *					findEngine			        () const;
+			renderer::IRenderer *				findRenderer		        () const;
 
-            VG_INLINE engine::IEngine *			getEngine			() const { return m_engine; }
-            VG_INLINE renderer::IRenderer *		getRenderer			() const { return m_renderer; }
+            VG_INLINE engine::IEngine *			getEngine			        () const { return m_engine; }
+            VG_INLINE renderer::IRenderer *		getRenderer			        () const { return m_renderer; }
 
-			void								openPrefabView		(const core::IResource * _prefabRes);
-			void								focus				(core::IGameObject * _gameObject);
-			void								focus				(const core::vector<core::IGameObject *> & _gameObjects);
-			void								deleteGameObjects	(core::vector<core::IGameObject*> & _gameObjects);
+			void								openPrefabView		        (const core::IResource * _prefabRes);
+			void								focus				        (core::IGameObject * _gameObject);
+			void								focus				        (const core::vector<core::IGameObject *> & _gameObjects);
+			void								deleteGameObjects	        (core::vector<core::IGameObject*> & _gameObjects);
 
-			void								destroyWindow		(ImGuiWindow * _window);
+			void								destroyWindow		        (ImGuiWindow * _window);
 
 		private:
-			template <class T> T *				getWindow			(const core::string _name = {}) const;
-			template <class T> core::vector<T*>	getWindows			(const core::string _name = {}) const;
+			template <class T> T *				getWindow			        (const core::string _name = {}) const;
+			template <class T> core::vector<T*>	getWindows			        (const core::string _name = {}) const;
+            void                                deleteGameObjectsInternal   (const core::vector<core::IGameObject *> & _gameObjects);
 
 		private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
@@ -83,6 +87,10 @@ namespace vg
 
 			vg::engine::IEngine *				m_engine			= nullptr;
 			vg::renderer::IRenderer *			m_renderer			= nullptr;
+
+            #if GAMEOBJECT_ASYNC_DELETE
+            core::vector<core::IGameObject *>   m_gameObjectsToDelete;
+            #endif
 		};
 
 		//--------------------------------------------------------------------------------------

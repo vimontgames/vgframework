@@ -419,9 +419,9 @@ namespace vg::gfx
             const float ratio = (float)size / (float)bufferSize;
 
             if (ratio > 0.95f)
-                VG_ERROR("[Upload] Buffer #%u is used at %.2f%% of its capacity (%u/%u kb)", m_index, (float(size) * 100.0f) / float(bufferSize), size >> 10, bufferSize >> 10);
-            else if (ratio > 0.80f)
                 VG_WARNING("[Upload] Buffer #%u is used at %.2f%% of its capacity (%u/%u kb)", m_index, (float(size) * 100.0f) / float(bufferSize), size >> 10, bufferSize >> 10);
+            else if (ratio > 0.80f)
+                VG_INFO("[Upload] Buffer #%u is used at %.2f%% of its capacity (%u/%u kb)", m_index, (float(size) * 100.0f) / float(bufferSize), size >> 10, bufferSize >> 10);
 
             m_previousRanges = std::move(m_ranges);
         }

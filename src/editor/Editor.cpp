@@ -317,6 +317,21 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    // Editor::EndFrame is called after Render so it can process inputs from editor pass.
+    // For example, GameObjects should not be deleted directly from the editor render.
+    //--------------------------------------------------------------------------------------
+    void Editor::EndFrame()
+    {
+        #if GAMEOBJECT_ASYNC_DELETE
+        if (m_gameObjectsToDelete.size() > 0)
+        {
+            deleteGameObjectsInternal(m_gameObjectsToDelete);
+            m_gameObjectsToDelete.clear();
+        }
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
     void drawMenuItemRecur(ImGuiWindow * window, vector<string> folders, int _depth = 0)
     {
         if (_depth == folders.size())
@@ -778,30 +793,40 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    void Editor::deleteGameObjectsInternal(const core::vector<IGameObject *> & _gameObjects)
+    {
+        auto * undoRedoManager = Kernel::getUndoRedoManager();
+
+        // Prepare undo/redo
+        UndoRedoTarget undoRedoTarget(this, nullptr);
+
+        auto * undoRedoGroup = new UndoRedoEntryGroup("Destroy");
+        for (uint i = 0; i < _gameObjects.size(); ++i)
+            undoRedoGroup->AddSubEntry(new UndoRedoDestroyEntry(_gameObjects[i], _gameObjects[i]->GetParent(), i));
+        undoRedoManager->BeforeChange(undoRedoGroup);
+
+        for (uint i = 0; i < _gameObjects.size(); ++i)
+        {
+            IGameObject * gameObjectToDelete = _gameObjects[i];
+            IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->GetParent());
+            if (nullptr != parentGameObject)
+                parentGameObject->RemoveChild(gameObjectToDelete);
+        }
+
+        // Finalize Undo/Redo entry after editing
+        undoRedoManager->AfterChange();
+    }
+
+    //--------------------------------------------------------------------------------------
     void Editor::deleteGameObjects(core::vector<IGameObject *> & _gameObjects)
     {
         ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
         {
-            auto * undoRedoManager = Kernel::getUndoRedoManager();
-
-            // Prepare undo/redo
-            UndoRedoTarget undoRedoTarget(this, nullptr);
-
-            auto * undoRedoGroup = new UndoRedoEntryGroup("Destroy");
-            for (uint i = 0; i < _gameObjects.size(); ++i)
-                undoRedoGroup->AddSubEntry(new UndoRedoDestroyEntry(_gameObjects[i], _gameObjects[i]->GetParent(), i));
-            undoRedoManager->BeforeChange(undoRedoGroup);
-
-            for (uint i = 0; i < _gameObjects.size(); ++i)
-            {
-                IGameObject * gameObjectToDelete = _gameObjects[i];
-                IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->GetParent());
-                if (nullptr != parentGameObject)
-                    parentGameObject->RemoveChild(gameObjectToDelete);
-            }
-
-            // Finalize Undo/Redo entry after editing
-            undoRedoManager->AfterChange();
+            #if GAMEOBJECT_ASYNC_DELETE
+            m_gameObjectsToDelete.insert(m_gameObjectsToDelete.end(), _gameObjects.begin(), _gameObjects.end());
+            #else
+            deleteGameObjectsInternal(_gameObjects);
+            #endif
 
             return true;
         };

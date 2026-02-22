@@ -87,7 +87,7 @@ namespace vg::renderer
                 for (uint i = 0; i < instances.size(); ++i)
                 {
                     const GraphicInstance * instance = instances[i];
-                    VG_ASSERT(instance->getGPUInstanceDataOffset() == offset);
+                    VG_ASSERT(instance->getGPUInstanceDataOffset() == offset, "GPUInstanceDataOffset 0x%016llx does not match expected offset 0x%016llx", instance->getGPUInstanceDataOffset(), offset);
                     const uint instanceDataSize = instance->FillGPUInstanceData(buffer);
                     VG_ASSERT(instanceDataSize <= bufferMaxSize);
                     memcpy((u8 *)data + offset, buffer, instanceDataSize);

@@ -27,6 +27,7 @@ namespace vg
 		    virtual void						Deinit		        () = 0;
 
             virtual void                        RunOneFrame         () = 0;
+            virtual void                        EndFrame            () = 0;
                                                 
             #ifdef _WIN32                       
             virtual LRESULT CALLBACK            WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
