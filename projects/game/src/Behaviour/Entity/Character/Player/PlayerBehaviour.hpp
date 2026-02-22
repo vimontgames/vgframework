@@ -740,11 +740,11 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
                     auto meshComponents = vehicleBehaviour->GetGameObject()->GetComponentsInChildrenT<vg::engine::IMeshComponent>();
                     for (IMeshComponent * meshComp : meshComponents)
                         meshComp->SetOutlineCategory(category);
-                }
-
-                // Wear helmet if vehicle requires it
-                putHelmet(vehicleBehaviour);
+                }                
             }
+
+            // Wear helmet if vehicle requires it
+            putHelmet(vehicleBehaviour);
         }
 
         return true;
