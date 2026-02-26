@@ -47,7 +47,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void SnapComponent::snapObjectRecur(IGameObject * _gameObject)
     {
-        if (_gameObject->IsPrefab())
+        if (isEnabled() && _gameObject->IsPrefab())
         {
             bool dirty = false;
 
@@ -125,7 +125,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool SnapComponent::TryGetSnapTranslate(core::float3 & _translate) const
     {
-        if (m_snapTranslation)
+        if (isEnabled() && m_snapTranslation)
         {
             _translate = m_translation;
             return true;
@@ -136,7 +136,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool SnapComponent::TryGetSnapRotate(float & _rotate) const
     {
-        if (m_snapRotation)
+        if (isEnabled() && m_snapRotation)
         {
             _rotate = m_rotation;
             return true;
@@ -148,7 +148,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool SnapComponent::TryGetSnapScale(float & _scale) const 
     {
-        if (m_snapScale)
+        if (isEnabled() && m_snapScale)
         {
             _scale = m_scale;
             return true;
