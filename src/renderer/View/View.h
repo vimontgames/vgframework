@@ -124,6 +124,9 @@ namespace vg::renderer
 
         VG_INLINE const Frustum &           getCameraFrustum                    () const;
 
+        // Cache the settings used to build the FrameGraph. Must be called once per frame, before 'RegisterFrameGraph'
+        void                                snapshotRenderSettings              ();
+
         virtual void                        RegisterFrameGraph                  (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
         const ViewCullingJobOutput &        getCullingJobResult                 () const;
@@ -176,11 +179,19 @@ namespace vg::renderer
     private:
         void                                computeCameraFrustum                ();
 
+        bool                                updateOutlinePassNeeded             () const;
+        bool                                updateComputePostProcessNeeded      () const;
+
     private:
         IViewport *                         m_viewport                          = nullptr;
         const core::IGameObject *           m_cameraGO                          = nullptr;
         PickingID                           m_pickingID                         = 0;
         const ICameraSettings *             m_cameraSettings                    = nullptr;
+
+        // Snapshot of the camera settings used by the FrameGraph for the current frame
+        ScreenSpaceAmbient                  m_screenSpaceAmbient;
+        bool                                m_outlinePassNeeded                 = false;
+        bool                                m_computePostProcessNeeded          = false;
         gfx::ViewID                         m_viewID;
         ViewFlags                           m_flags                             = (ViewFlags)0;
         gfx::Texture *                      m_renderTarget                      = nullptr;   // use 'nullptr' for backbuffer
