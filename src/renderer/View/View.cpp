@@ -38,6 +38,7 @@ namespace vg::renderer
     {
         m_viewport = _params.viewport;
         m_viewID.target = _params.target;
+        m_screenSpaceAmbient = ScreenSpaceAmbient::None;
 
         SetRenderTargetSize(_params.size);
 
@@ -679,14 +680,37 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool View::IsComputePostProcessNeeded() const
+    // The editor GUI is drawn *during* the FrameGraph render (cf. ImGuiPass::Render => IEditor::DrawGUI)
+    // and updates the camera settings from there (cf. ImGuiView::updateEditorCamera). As render passes
+    // are recorded by parallel RenderJobs, the camera settings can change while the FrameGraph is being
+    // rendered, i.e. *after* the passes have been registered and setup.
+    // Snapshot the settings driving the FrameGraph topology once per frame so that RegisterFrameGraph,
+    // UserPass::Setup and UserPass::Render always agree on which resources exist.
+    //--------------------------------------------------------------------------------------
+    void View::snapshotRenderSettings()
     {
-        const auto options = RendererOptions::get();
-        return options->isPostProcessEnabled() || IsOutlinePassNeeded() || (isToolmode() && IsUsingRayTracing() && options->anyRayTracingDebugDisplay());
+        const auto * camSettings = GetCameraSettings();
+
+        m_screenSpaceAmbient = camSettings ? camSettings->GetScreenSpaceAmbient() : ScreenSpaceAmbient::None;
+        m_outlinePassNeeded = updateOutlinePassNeeded();
+        m_computePostProcessNeeded = updateComputePostProcessNeeded();
     }
 
     //--------------------------------------------------------------------------------------
-    bool View::IsOutlinePassNeeded() const
+    bool View::updateComputePostProcessNeeded() const
+    {
+        const auto options = RendererOptions::get();
+        return options->isPostProcessEnabled() || m_outlinePassNeeded || (isToolmode() && IsUsingRayTracing() && options->anyRayTracingDebugDisplay());
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsComputePostProcessNeeded() const
+    {
+        return m_computePostProcessNeeded;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::updateOutlinePassNeeded() const
     {
         const auto * camSettings = GetCameraSettings();
         if (nullptr != camSettings)
@@ -700,12 +724,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool View::IsOutlinePassNeeded() const
+    {
+        return m_outlinePassNeeded;
+    }
+
+    //--------------------------------------------------------------------------------------
     ScreenSpaceAmbient View::GetScreenSpaceAmbient() const
     {
-        const auto * camSettings = GetCameraSettings();
-        if (nullptr != camSettings)
-            return camSettings->GetScreenSpaceAmbient();
-        return ScreenSpaceAmbient::None;
+        return m_screenSpaceAmbient;
     }
 
     //--------------------------------------------------------------------------------------
@@ -745,6 +772,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::RegisterFrameGraph(const RenderPassContext & _rc, FrameGraph & _frameGraph)
     {
+        // Views registered by another view (e.g. shadow views) do not go through Renderer::RunOneFrame
+        snapshotRenderSettings();
+
         _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "View Constants Update");
     }
 

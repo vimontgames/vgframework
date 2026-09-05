@@ -290,9 +290,8 @@ namespace vg::editor
     {
         float padding = 1;
 
-        // TODO : update editor camera *BEFORE* render?
-        if (m_target == gfx::ViewportTarget::Editor)
-            updateEditorCamera(getEngine()->GetTime().m_realDeltaTime);
+        // Editor cameras are updated by Editor::RunOneFrame, before the renderer builds the FrameGraph:
+        // 'DrawGUI' is called from ImGuiPass::Render, i.e. while the render passes are being recorded.
 
         // Update
         {

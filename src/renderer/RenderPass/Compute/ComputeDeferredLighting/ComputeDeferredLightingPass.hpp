@@ -53,12 +53,13 @@ namespace vg::renderer
         const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
 
-        if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
+        m_useScreenSpaceAmbient = ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient();
+        if (m_useScreenSpaceAmbient)
         {
             const auto screenSpaceAmbientID = _renderPassContext.getFrameGraphID("ScreenSpaceAmbient");
             readRWTexture(screenSpaceAmbientID);
         }
-       
+
         const MSAA msaa = options->GetMSAA();
         if (MSAA::None != msaa)
         {
@@ -171,7 +172,7 @@ namespace vg::renderer
         deferredLighting.setStencil(stencil);
         deferredLighting.setRWBufferOut(dstTex->getRWTextureHandle());
 
-        if (ScreenSpaceAmbient::None != view->GetScreenSpaceAmbient())
+        if (m_useScreenSpaceAmbient)
         {
             const auto screenSpaceAmbientID = _renderPassContext.getFrameGraphID("ScreenSpaceAmbient");
             auto screenSpaceAmbient= getRWTexture(screenSpaceAmbientID)->getTextureHandle();

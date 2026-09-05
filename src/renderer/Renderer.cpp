@@ -776,6 +776,10 @@ namespace vg::renderer
                     {
                         View * view = (View *)visibleViews[v];
 
+                        // Camera settings can be updated by the editor GUI while the FrameGraph is rendered,
+                        // so freeze the values used to build the graph before registering the passes
+                        view->snapshotRenderSettings();
+
                         gfx::RenderPassContext rc;
                         rc.setView(view);
                         rc.setWorld(view->getWorld());

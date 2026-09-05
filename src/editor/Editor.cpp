@@ -5,6 +5,7 @@
 #include "core/IResource.h"
 #include "core/IGameObject.h"
 #include "core/File/File.h"
+#include "core/Time/Time.h"
 #include "core/Time/Timer.h"
 #include "core/UndoRedo/UndoRedo.h"
 #include "renderer/IUIRenderer.h"
@@ -313,6 +314,23 @@ namespace vg::editor
 
             else if (input->IsKeyJustPressed(Key::Y))
                 Kernel::getUndoRedoManager()->Redo();
+        }
+
+        // Update editor cameras *before* the renderer builds and renders the FrameGraph.
+        // The editor GUI is drawn from ImGuiPass::Render, so updating the views from ImGuiView::DrawGUI
+        // would change the camera (and its settings) while the render passes are being recorded.
+        {
+            VG_PROFILE_CPU("EditorCameras");
+
+            const float dt = getEngine()->GetTime().m_realDeltaTime;
+
+            for (uint i = 0; i < m_imGuiWindows.size(); ++i)
+            {
+                auto * imGuiView = dynamic_cast<ImGuiView *>(m_imGuiWindows[i]);
+
+                if (nullptr != imGuiView && imGuiView->isVisible() && gfx::ViewportTarget::Editor == imGuiView->getViewportTarget())
+                    imGuiView->updateEditorCamera(dt);
+            }
         }
     }
 

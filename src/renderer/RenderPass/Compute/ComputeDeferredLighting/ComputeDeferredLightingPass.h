@@ -18,5 +18,6 @@ namespace vg::renderer
     private:
         gfx::RootSignatureHandle    m_computeDeferredLightingRootSignature;
         gfx::ComputeShaderKey       m_computeDeferredLightingShaderKey;
+        bool                        m_useScreenSpaceAmbient = false;    // Set during Setup so that Render uses the resources actually declared in the FrameGraph
     };
 }
