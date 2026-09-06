@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   submit:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:  
       - name: Submit Notification
