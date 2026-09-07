@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.55
+# VGFramework 0.56
 VGFramework is a pet game engine for fun, modern graphics APIs, and fast iteration.
 
 ![Demo](doc/img/0.54.6.gif)
@@ -93,9 +93,7 @@ e.g.:
 will generate only the Win64 targets using the MSVC compiler and the DirectX12 API.
 
 ## IDE
-Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.
-
-However, the engine is currently being ported to other platforms than Windows so ultimately a project generator solution will be used.
+The recommended IDE is [Visual Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/), but the engine is being ported to platforms other than Windows and you can use [Sharpmake](https://github.com/ubisoft/Sharpmake) project generator to generate solutions for other platforms or IDEs.
 
 To compile the solution you will need the following components if they are not already installed:
 - MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)
