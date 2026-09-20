@@ -1582,7 +1582,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Billboards"/>
                                 <Property type="Uint32" name="m_uid" value="2532357560"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0.0625" Tw="1"/>
@@ -2138,7 +2138,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2148,7 +2148,7 @@
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Concrete"/>
                                         <Property type="Uint32" name="m_uid" value="2945606717"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3" Ty="2.9999998" Tz="0" Tw="1"/>
@@ -5036,7 +5036,7 @@
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Grass"/>
                                         <Property type="Uint32" name="m_uid" value="914119281"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -7268,7 +7268,7 @@
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Street"/>
                                         <Property type="Uint32" name="m_uid" value="1367698627"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-5.3143594e-08" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="-5.3143594e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999982" Kw="0" Tx="-9.5367432e-07" Ty="-12" Tz="0" Tw="1"/>
@@ -19955,7 +19955,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Houses"/>
                                 <Property type="Uint32" name="m_uid" value="80605140"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -27768,7 +27768,7 @@
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Fences"/>
                                 <Property type="Uint32" name="m_uid" value="3420263264"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -27779,7 +27779,7 @@
                                         <Property type="String" name="m_name" value="FenceWall"/>
                                         <Property type="Uint32" name="m_uid" value="1492064284"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="51" Ty="-28.500071" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27799,7 +27799,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_01"/>
                                         <Property type="Uint32" name="m_uid" value="376895120"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="54" Ty="-28.500093" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27819,7 +27819,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_02"/>
                                         <Property type="Uint32" name="m_uid" value="1869151706"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="57" Ty="-28.500074" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27839,7 +27839,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_03"/>
                                         <Property type="Uint32" name="m_uid" value="868757590"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="60" Ty="-28.500072" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27859,7 +27859,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_04"/>
                                         <Property type="Uint32" name="m_uid" value="2699132944"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="62.999996" Ty="-28.500072" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27878,8 +27878,8 @@
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="FenceWall_05"/>
                                         <Property type="Uint32" name="m_uid" value="1021836670"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="66" Ty="-28.500072" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27899,7 +27899,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_07"/>
                                         <Property type="Uint32" name="m_uid" value="12096102"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-30.000072" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27919,7 +27919,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_08"/>
                                         <Property type="Uint32" name="m_uid" value="4227346945"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-33.000057" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27939,7 +27939,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_09"/>
                                         <Property type="Uint32" name="m_uid" value="534323174"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-36.000046" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27959,7 +27959,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_10"/>
                                         <Property type="Uint32" name="m_uid" value="1220664283"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-39.00005" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27979,7 +27979,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_11"/>
                                         <Property type="Uint32" name="m_uid" value="944769716"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-42.000046" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -27999,7 +27999,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_13"/>
                                         <Property type="Uint32" name="m_uid" value="626706964"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="39" Ty="-28.500071" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28019,7 +28019,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_14"/>
                                         <Property type="Uint32" name="m_uid" value="877831949"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="36" Ty="-28.500071" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28039,7 +28039,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_15"/>
                                         <Property type="Uint32" name="m_uid" value="1217005683"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-45.000019" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28059,7 +28059,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_16"/>
                                         <Property type="Uint32" name="m_uid" value="1155641875"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-47.999989" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28079,7 +28079,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_17"/>
                                         <Property type="Uint32" name="m_uid" value="3913258167"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-50.999989" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28099,7 +28099,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_18"/>
                                         <Property type="Uint32" name="m_uid" value="2768546126"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-3.1786513e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-3.1786513e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="67.5" Ty="-53.999981" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -28119,7 +28119,7 @@
                                         <Property type="String" name="m_name" value="FenceWall_19"/>
                                         <Property type="Uint32" name="m_uid" value="3504025425"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="66" Ty="-55.500011" Tz="0" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -32194,7 +32194,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Ennemies"/>
                         <Property type="Uint32" name="m_uid" value="1638339078"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>

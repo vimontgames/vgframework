@@ -8,7 +8,7 @@
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="2627441013"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -18,7 +18,7 @@
                         <Property type="String" name="m_name" value="Metal Fence"/>
                         <Property type="Uint32" name="m_uid" value="3470277739"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="0.73640168" y="0.73640168" z="0.73640168" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0.40000001" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -72,8 +72,8 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Bool" name="m_trigger" value="false"/>
                                         <Property type="Bool" name="m_softBody" value="false"/>
-                                        <Property type="EnumU16" name="m_layer" value="NonMoving"/>
-                                        <Property type="EnumU8" name="m_motion" value="Static"/>
+                                        <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                        <Property type="EnumU8" name="m_motion" value="Dynamic"/>
                                         <Property type="Bool" name="m_staticMerge" value="true"/>
                                         <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                         <Property type="Bool" name="m_overrideMass" value="false"/>
