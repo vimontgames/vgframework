@@ -34,6 +34,11 @@
 #include "editor/IEditorOptions.h"
 #include "application/IGame.h"
 
+#if VG_ENABLE_MCPBRIDGE
+#include "mcpbridge/IMCPBridge.h"
+#include <cstdlib>
+#endif
+
 #include "RegisterInterfaces.hpp"
 
 #ifdef VG_WINDOWS
@@ -47,6 +52,12 @@
 
 using namespace vg::core;
 using namespace vg::engine;
+
+#if VG_ENABLE_MCPBRIDGE
+// Additive MCP bridge plugin (src/mcpbridge). Loaded only when the VG_MCP_BRIDGE
+// environment variable is set, so a normal run is completely unaffected.
+static vg::mcpbridge::IMCPBridge * g_mcpBridge = nullptr;
+#endif
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
@@ -430,6 +441,16 @@ namespace vg::engine
                 m_editor->Init(_singletons);
             }
 
+            #if VG_ENABLE_MCPBRIDGE
+            // Load the additive level-design bridge only when explicitly opted-in.
+            if (nullptr != getenv("VG_MCP_BRIDGE"))
+            {
+                g_mcpBridge = Plugin::create<mcpbridge::IMCPBridge>("mcpbridge");
+                if (nullptr != g_mcpBridge)
+                    g_mcpBridge->Init(this, _singletons);
+            }
+            #endif
+
             // Create default world resource or load world path from command line (TODO)
             VG_ASSERT(m_worldResource == nullptr);
             m_worldResource = new WorldResource("Default", this);
@@ -625,6 +646,14 @@ namespace vg::engine
 	{
         m_renderer->WaitGPUIdle();
         m_resourceManager->stopLoadingThread();
+
+        #if VG_ENABLE_MCPBRIDGE
+        if (nullptr != g_mcpBridge)
+        {
+            g_mcpBridge->Deinit();
+            VG_SAFE_RELEASE(g_mcpBridge);
+        }
+        #endif
 
         UnloadGame();
 
@@ -991,6 +1020,11 @@ namespace vg::engine
                 world->toolUpdate(worldUpdateContext);                
             }
         }
+
+        #if VG_ENABLE_MCPBRIDGE
+        if (nullptr != g_mcpBridge)
+            g_mcpBridge->Tick();
+        #endif
 
         if (m_editor)
             m_editor->RunOneFrame();

@@ -1,4 +1,5 @@
 src/commit.h
+mcp/
 Game.exe
 Editor.exe
 lib/*
