@@ -53,6 +53,10 @@ namespace vg
             conf.AddProject<Engine>(target);
             //conf.AddProject<EngineTests>(target, false, "tests");
 
+            // Additive level-design bridge (see docs/architecture.md). Purely optional:
+            // the engine only loads it when the VG_MCP_BRIDGE environment variable is set.
+            conf.AddProject<MCPBridge>(target);
+
             conf.AddProject<Audio>(target);
             //conf.AddProject<AudioTests>(target, false, "tests");
 

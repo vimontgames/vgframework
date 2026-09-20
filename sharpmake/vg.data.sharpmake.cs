@@ -147,6 +147,7 @@ namespace vg
             SourceFilesExcludeRegex.Add(@".*\\editor(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\engine(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\gfx(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\mcpbridge(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\physics(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\renderer(\.*)?");
         }
