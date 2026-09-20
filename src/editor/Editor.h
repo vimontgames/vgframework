@@ -76,6 +76,7 @@ namespace vg
 			void								destroyWindow		        (ImGuiWindow * _window);
 
 		private:
+            void                                updateEditorCamera          ();
 			template <class T> T *				getWindow			        (const core::string _name = {}) const;
 			template <class T> core::vector<T*>	getWindows			        (const core::string _name = {}) const;
             void                                deleteGameObjectsInternal   (const core::vector<core::IGameObject *> & _gameObjects);
