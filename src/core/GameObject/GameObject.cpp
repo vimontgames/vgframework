@@ -1017,6 +1017,7 @@ namespace vg::core
     void GameObject::recomputeFlagsFromChildren()
     {
         bool allChildrenAreStatic = true;
+        GameObject * firstNonStaticGameObjectFound = nullptr;
 
         for (uint i = 0; i < m_children.size(); ++i)
         {
@@ -1025,7 +1026,12 @@ namespace vg::core
                 m_update |= child->getUpdateFlags();
 
                 if (!asBool(InstanceFlags::Static & child->getInstanceFlags()))
+                {
                     allChildrenAreStatic = false;
+
+                    if (!firstNonStaticGameObjectFound)
+                        firstNonStaticGameObjectFound = child;
+                }
             }
         }
 
@@ -1035,16 +1041,16 @@ namespace vg::core
             {
                 if (!asBool(InstanceFlags::Static & getInstanceFlags()))
                 {
-                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been set on GameObject \"%s\" because all its children are static", GetFullName().c_str());
-                    setInstanceFlags(InstanceFlags::Static, true);
+                    VG_WARNING_OBJECT(this, "[GameObject] GameObject \"%s\" is not static but all its children are static", GetFullName().c_str());
+                    //setInstanceFlags(InstanceFlags::Static, true);
                 }
             }
             else
             {
                 if (asBool(InstanceFlags::Static & getInstanceFlags()))
                 {
-                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least one of its children is not static", GetFullName().c_str());
-                    setInstanceFlags(InstanceFlags::Static, false);
+                    VG_WARNING_OBJECT(this, "[GameObject] GameObject \"%s\" is static but at least one of its children (\"%s\") is not static", GetFullName().c_str(), firstNonStaticGameObjectFound->GetFullName().c_str());
+                    //setInstanceFlags(InstanceFlags::Static, false);
                 }
             }
         }
